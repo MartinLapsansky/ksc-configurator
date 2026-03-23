@@ -1,11 +1,12 @@
 "use client";
 
 import React from "react";
+import {StaticImageData} from "next/image";
 
 export type ColorOption = {
   name: string;
   hex: string;
-  file?: string;
+  file?: string | StaticImageData;
 };
 
 type ColorSwatchPickerProps = {
