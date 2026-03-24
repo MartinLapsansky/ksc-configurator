@@ -1,10 +1,24 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ColorOption } from "../pickerComponents/ColorSwatchPicker";
 import type { StaticLogoOption } from "../pickerComponents/StaticLogoPicker";
 
 import overlayImg from "../../app/assets/overlay.png";
+
+const DESIGN_POSITIONS = {
+    branding: { x: 0.31, y: 0.30 },
+    leftChest: { x: 0.38, y: 0.32 },
+    rightChest: { x: 0.25, y: 0.32 },
+    sponsor: { x: 0.31, y: 0.40 },
+};
+
+type LogoPositions = {
+    branding: { left: number; top: number };
+    leftChest: { left: number; top: number };
+    rightChest: { left: number; top: number };
+    sponsor: { left: number; top: number };
+};
 
 type JerseyPreviewProps = {
   bgColor: ColorOption;
@@ -26,8 +40,12 @@ const JerseyPreview: React.FC<JerseyPreviewProps> = ({
   const overlayCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const previewContainerRef = useRef<HTMLDivElement | null>(null);
   const overlayImageRef = useRef<HTMLImageElement | null>(null);
+  const bgImageRef = useRef<HTMLImageElement | null>(null);
 
-  const drawOverlay = useCallback((hex: string) => {
+  const [logoPositions, setLogoPositions] = useState<LogoPositions | null>(null);
+
+
+    const drawOverlay = useCallback((hex: string) => {
     const canvas = overlayCanvasRef.current;
     const container = previewContainerRef.current;
     const overlayImage = overlayImageRef.current;
@@ -82,6 +100,49 @@ const JerseyPreview: React.FC<JerseyPreviewProps> = ({
     ctx.globalCompositeOperation = "source-over";
   }, []);
 
+
+    // Funkcia, ktorá prepočíta pozície log podľa veľkosti kontajnera & obrázka
+
+    const recalcLogoPositions = useCallback(() => {
+        const container = previewContainerRef.current;
+        const bgImg = bgImageRef.current;
+
+        if (!container || !bgImg || !bgImg.naturalWidth || !bgImg.naturalHeight) {
+            return;
+        }
+
+        const rect = container.getBoundingClientRect();
+        const w = rect.width;
+        const h = rect.height;
+
+        const iw = bgImg.naturalWidth;
+        const ih = bgImg.naturalHeight;
+
+        // rovnaká logika ako "object-contain"
+        const s = Math.min(w / iw, h / ih);
+        const drawnWidth = iw * s;
+        const drawnHeight = ih * s;
+        const offsetX = (w - drawnWidth) / 2;
+        const offsetY = (h - drawnHeight) / 2;
+
+        const makePos = (xNorm: number, yNorm: number) => {
+            const xPx = offsetX + xNorm * drawnWidth;
+            const yPx = offsetY + yNorm * drawnHeight;
+            return {
+                left: (xPx / w) * 100,
+                top: (yPx / h) * 100,
+            };
+        };
+
+        setLogoPositions({
+            branding: makePos(DESIGN_POSITIONS.branding.x, DESIGN_POSITIONS.branding.y),
+            leftChest: makePos(DESIGN_POSITIONS.leftChest.x, DESIGN_POSITIONS.leftChest.y),
+            rightChest: makePos(DESIGN_POSITIONS.rightChest.x, DESIGN_POSITIONS.rightChest.y),
+            sponsor: makePos(DESIGN_POSITIONS.sponsor.x, DESIGN_POSITIONS.sponsor.y),
+        });
+    }, []);
+  
+
   // inicializácia overlay obrázka + prvé vykreslenie
   useEffect(() => {
     if (!overlayImageRef.current) {
@@ -102,10 +163,11 @@ const JerseyPreview: React.FC<JerseyPreviewProps> = ({
   useEffect(() => {
     const handleResize = () => {
       drawOverlay(stripeColor.hex);
+      recalcLogoPositions();
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [stripeColor.hex, drawOverlay]);
+  }, [stripeColor.hex, drawOverlay,recalcLogoPositions]);
 
 
 
@@ -117,19 +179,27 @@ const JerseyPreview: React.FC<JerseyPreviewProps> = ({
     }
     return bgColor.file.src;
   }, [bgColor.file]);
+  
+  
+  
 
   return (
-    <div className="flex flex-1 items-center justify-center">
+    <div className="flex w-full">
       <div
         ref={previewContainerRef}
-        className="relative aspect-[3/4] w-full max-w-md overflow-hidden rounded-lg bg-gray-200 shadow-md"
+        className="relative aspect-[3/4] h-full w-full overflow-hidden rounded-lg bg-gray-200 shadow-md"
       >
         {/* základný dres */}
-        <img
-          src={bgImageSrc}
-          alt="Jersey base"
-          className="absolute inset-0 h-full w-full object-contain"
-        />
+          <img
+              ref={bgImageRef}
+              src={bgImageSrc}
+              alt="Jersey base"
+              className="absolute inset-0 h-full w-full object-contain"
+              onLoad={() => {
+                  drawOverlay(stripeColor.hex);
+                  recalcLogoPositions();
+              }}
+          />
 
         {/* canvas pre pruhy / overlay */}
         <canvas
@@ -137,46 +207,72 @@ const JerseyPreview: React.FC<JerseyPreviewProps> = ({
           className="absolute inset-0 h-full w-full"
         />
 
-        {/* KSC branding text */}
-        <div
-          className="pointer-events-none absolute left-1/2 top-[30%] -translate-x-1/2 text-3xl font-extrabold tracking-widest"
-          style={{ color: brandingColor.hex }}
-        >
-          KSC
-        </div>
+        {/* KSC branding text – stred hrude na prednej (ľavej) polovici */}
+          {/* KSC branding text */}
+          {logoPositions && (
+              <div
+                  className="pointer-events-none absolute text-xl font-extrabold tracking-widest -translate-x-1/2 -translate-y-1/2"
+                  style={{
+                      color: brandingColor.hex,
+                      left: `${logoPositions.branding.left}%`,
+                      top: `${logoPositions.branding.top}%`,
+                  }}
+              >
+                  KSC
+              </div>
+          )}
 
-        {/* ľavé logo na hrudi */}
-        {leftChestLogoUrl && (
-          <div className="pointer-events-none absolute left-[35%] top-[24%] h-10 w-10 -translate-x-1/2 -translate-y-1/2">
-            <img
-              src={leftChestLogoUrl}
-              alt="Left chest logo"
-              className="h-full w-full object-contain"
-            />
-          </div>
-        )}
+        {/* ľavé logo na hrudi – trochu viac k “ľavému ramenu” na prednej polovici */}
+          {leftChestLogoUrl && logoPositions && (
+              <div
+                  className="pointer-events-none absolute h-10 w-10 -translate-x-1/2 -translate-y-1/2"
+                  style={{
+                      left: `${logoPositions.leftChest.left}%`,
+                      top: `${logoPositions.leftChest.top}%`,
+                  }}
+              >
+                  <img
+                      src={leftChestLogoUrl}
+                      alt="Left chest logo"
+                      className="h-full w-full object-contain"
+                  />
+              </div>
+          )}
 
-        {/* pravé logo na hrudi */}
-        {rightLogo && (
-          <div className="pointer-events-none absolute left-[65%] top-[24%] h-10 w-10 -translate-x-1/2 -translate-y-1/2">
-            <img
-              src={rightLogo.src}
-              alt={rightLogo.name}
-              className="h-full w-full object-contain"
-            />
-          </div>
-        )}
+        {/* pravé logo na hrudi – smerom k “pravému ramenu” na prednej polovici */}
+          {rightLogo && logoPositions && (
+              <div
+                  className="pointer-events-none absolute h-10 w-10 -translate-x-1/2 -translate-y-1/2"
+                  style={{
+                      left: `${logoPositions.rightChest.left}%`,
+                      top: `${logoPositions.rightChest.top}%`,
+                  }}
+              >
+                  <img
+                      src={rightLogo.src}
+                      alt={rightLogo.name}
+                      className="h-full w-full object-contain"
+                  />
+              </div>
+          )}
 
-        {/* sponzor v strede */}
-        {sponsorLogoUrl && (
-          <div className="pointer-events-none absolute left-1/2 top-[48%] h-16 w-32 -translate-x-1/2 -translate-y-1/2">
-            <img
-              src={sponsorLogoUrl}
-              alt="Sponsor logo"
-              className="h-full w-full object-contain"
-            />
-          </div>
-        )}
+        {/* sponzor v strede predku – stred prednej polovice */}
+          {sponsorLogoUrl && logoPositions && (
+              <div
+                  className="pointer-events-none absolute h-16 w-32 -translate-x-1/2 -translate-y-1/2"
+                  style={{
+                      left: `${logoPositions.sponsor.left}%`,
+                      top: `${logoPositions.sponsor.top}%`,
+                  }}
+              >
+                  <img
+                      src={sponsorLogoUrl}
+                      alt="Sponsor logo"
+                      className="h-full w-full object-contain"
+                  />
+              </div>
+          )}
+
       </div>
     </div>
   );

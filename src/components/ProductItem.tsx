@@ -61,8 +61,8 @@ const ProductItem: React.FC = () => {
   );
 
   return (
-    <div className="flex min-h-[600px] flex-col gap-6 rounded-lg border border-gray-200 bg-gray-50 p-4 md:flex-row">
-      <aside className="w-full max-w-sm md:w-80">
+    <div className="flex min-h-[600px] flex-col gap-6 rounded-lg border border-gray-200 bg-gray-50 p-4 md:flex-row w-screen h-screen mx-auto">
+      <aside className="w-full max-w-sm md:w-100">
         <h1 className="mb-1 text-lg font-semibold">Jersey Design 146</h1>
         <p className="mb-4 text-xs text-gray-500">
           Preview: jersey base + stripes overlay + logos
