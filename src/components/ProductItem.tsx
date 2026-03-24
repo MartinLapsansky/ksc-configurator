@@ -5,6 +5,7 @@ import ColorSwatchPicker, { ColorOption } from './pickerComponents/ColorSwatchPi
 import StaticLogoPicker, { StaticLogoOption } from "./pickerComponents/StaticLogoPicker";
 import LogoUploadPicker from "./pickerComponents/LogoUploadPicker";
 import JerseyPreview from "./productPreviewComponent/JerseyPreview";
+import {BackLogoTextConfig} from "@/components/pickerComponents/TextInsertPicker";
 
 // imports z src/app/assets
 import bgHotPink from "../app/assets/bg-hot-pink.jpg";
@@ -15,6 +16,7 @@ import bgHotPastelgreen from "../app/assets/bg-hot-pastelgreen.jpg";
 import camogieLogo from "../app/assets/camogie_logo.svg";
 import gaaLogo from "../app/assets/gaa_logo.png";
 import lgfaLogo from "../app/assets/lgfa_logo.jpg";
+import TextInsertPicker from "@/components/pickerComponents/TextInsertPicker";
 
 const BG_OPTIONS: ColorOption[] = [
   { name: "Pink", hex: "#e4007f", file: bgHotPink },
@@ -43,6 +45,10 @@ const RIGHT_LOGO_OPTIONS: StaticLogoOption[] = [
   { name: "Gaa", src: gaaLogo.src },
   { name: "Lgfa", src: lgfaLogo.src },
 ];
+const BACK_TEXT_OPTIONS: ColorOption[] = [
+  { name: "Black", hex: "#000000" },
+  { name: "White", hex: "#ffffff" },
+];
 
 const ProductItem: React.FC = () => {
   const [bgColor, setBgColor] = useState<ColorOption>(BG_OPTIONS[0]);
@@ -59,6 +65,14 @@ const ProductItem: React.FC = () => {
   const [rightLogo, setRightLogo] = useState<StaticLogoOption>(
     RIGHT_LOGO_OPTIONS[0],
   );
+  const [backLogoUrl, setBackLogoUrl] = useState<string | undefined>(
+    undefined,
+  );
+  const [backTextConfig, setBackTextConfig] = useState<BackLogoTextConfig>({
+    enabled: false,
+    text: "",
+    color: BACK_TEXT_OPTIONS[0],
+  });
 
   return (
     <div className="flex min-h-[600px] flex-col gap-6 rounded-lg border border-gray-200 bg-gray-50 p-4 md:flex-row w-screen h-screen mx-auto">
@@ -112,6 +126,15 @@ const ProductItem: React.FC = () => {
           imageUrl={sponsorLogoUrl}
           onImageChange={setSponsorLogoUrl}
         />
+
+          <LogoUploadPicker
+              label="Front Sponsor Logo"
+              valueLabel="Sponsor logo"
+              imageUrl={backLogoUrl}
+              onImageChange={setBackLogoUrl}
+          />
+
+          <TextInsertPicker label="Back Sponsor Text" value={backTextConfig} colorOptions={BACK_TEXT_OPTIONS} onChange={setBackTextConfig}/>
       </aside>
 
       <JerseyPreview
@@ -121,6 +144,8 @@ const ProductItem: React.FC = () => {
         leftChestLogoUrl={leftChestLogoUrl}
         rightLogo={rightLogo}
         sponsorLogoUrl={sponsorLogoUrl}
+        backLogoUrl={backLogoUrl}
+        backSponsorText={backTextConfig}
       />
     </div>
   );

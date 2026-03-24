@@ -16,6 +16,7 @@ const LogoUploadPicker: React.FC<LogoUploadPickerProps> = ({
   onImageChange,
 }) => {
 
+//vytvori logo upload picker
 
   const handleFileChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {

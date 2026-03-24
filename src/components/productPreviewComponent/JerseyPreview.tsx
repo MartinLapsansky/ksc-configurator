@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ColorOption } from "../pickerComponents/ColorSwatchPicker";
 import type { StaticLogoOption } from "../pickerComponents/StaticLogoPicker";
+import type { BackLogoTextConfig } from "../pickerComponents/TextInsertPicker";
 
 import overlayImg from "../../app/assets/overlay.png";
 
@@ -11,6 +12,8 @@ const DESIGN_POSITIONS = {
     leftChest: { x: 0.38, y: 0.32 },
     rightChest: { x: 0.25, y: 0.32 },
     sponsor: { x: 0.31, y: 0.40 },
+    backSponsor: { x: 0.50, y: 0.30 },
+    backSponsorText: { x: 0.70, y: 0.30 },
 };
 
 type LogoPositions = {
@@ -18,6 +21,8 @@ type LogoPositions = {
     leftChest: { left: number; top: number };
     rightChest: { left: number; top: number };
     sponsor: { left: number; top: number };
+    backSponsor: { left: number; top: number };
+    backSponsorText: { left: number; top: number };
 };
 
 type JerseyPreviewProps = {
@@ -27,6 +32,8 @@ type JerseyPreviewProps = {
   leftChestLogoUrl?: string;
   rightLogo?: StaticLogoOption;
   sponsorLogoUrl?: string;
+  backLogoUrl?: string;
+  backSponsorText?: BackLogoTextConfig;
 };
 
 const JerseyPreview: React.FC<JerseyPreviewProps> = ({
@@ -36,6 +43,8 @@ const JerseyPreview: React.FC<JerseyPreviewProps> = ({
   leftChestLogoUrl,
   rightLogo,
   sponsorLogoUrl,
+  backLogoUrl,
+  backSponsorText
 }) => {
   const overlayCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const previewContainerRef = useRef<HTMLDivElement | null>(null);
@@ -139,6 +148,8 @@ const JerseyPreview: React.FC<JerseyPreviewProps> = ({
             leftChest: makePos(DESIGN_POSITIONS.leftChest.x, DESIGN_POSITIONS.leftChest.y),
             rightChest: makePos(DESIGN_POSITIONS.rightChest.x, DESIGN_POSITIONS.rightChest.y),
             sponsor: makePos(DESIGN_POSITIONS.sponsor.x, DESIGN_POSITIONS.sponsor.y),
+            backSponsor: makePos(DESIGN_POSITIONS.backSponsor.x, DESIGN_POSITIONS.backSponsor.y),
+            backSponsorText: makePos(DESIGN_POSITIONS.backSponsorText.x, DESIGN_POSITIONS.backSponsorText.y),
         });
     }, []);
   
@@ -270,6 +281,36 @@ const JerseyPreview: React.FC<JerseyPreviewProps> = ({
                       alt="Sponsor logo"
                       className="h-full w-full object-contain"
                   />
+              </div>
+          )}
+          {/*logo na vrchu zadnej strany dresu */}
+          {backLogoUrl && logoPositions && (
+              <div
+                  className="pointer-events-none absolute h-16 w-32 -translate-x-1/2 -translate-y-1/2"
+                  style={{
+                      left: `${logoPositions.backSponsor.left}%`,
+                      top: `${logoPositions.backSponsor.top}%`,
+                  }}
+              >
+                  <img
+                      src={backLogoUrl}
+                      alt="Sponsor logo"
+                      className="h-full w-full object-contain"
+                  />
+              </div>
+              )
+          }
+          {logoPositions && backSponsorText?.enabled && (
+              <div
+                  className="pointer-events-none absolute text-xl font-extrabold tracking-widest -translate-x-1/2 -translate-y-1/2"
+                  style={{
+                      color: backSponsorText.color.hex,
+                      left: `${logoPositions.backSponsorText.left}%`,
+                      top: `${logoPositions.backSponsorText.top}%`,
+                  }}
+              >
+
+                  {backSponsorText.text}
               </div>
           )}
 
