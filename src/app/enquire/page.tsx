@@ -249,7 +249,7 @@ export default function EnquirePage() {
               Jersey configuration summary
             </h2>
             {config ? (
-              <div className="mt-3 space-y-3">
+                    <div className="mt-3 space-y-3">
                 <div>
                   <h3 className="font-medium text-black">Colours</h3>
                   <ul className="mt-1 space-y-1">
