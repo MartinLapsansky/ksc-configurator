@@ -12,8 +12,9 @@ const DESIGN_POSITIONS = {
     leftChest: { x: 0.38, y: 0.32 },
     rightChest: { x: 0.25, y: 0.32 },
     sponsor: { x: 0.31, y: 0.40 },
-    backSponsor: { x: 0.50, y: 0.30 },
-    backSponsorText: { x: 0.70, y: 0.30 },
+    sponsorText: {x: 0.31,y: 0.47},
+    backSponsor: { x: 0.69, y: 0.30 },
+    backSponsorText: { x: 0.70, y: 0.37 },
 };
 
 type LogoPositions = {
@@ -21,6 +22,7 @@ type LogoPositions = {
     leftChest: { left: number; top: number };
     rightChest: { left: number; top: number };
     sponsor: { left: number; top: number };
+    sponsorText: {left: number; top: number};
     backSponsor: { left: number; top: number };
     backSponsorText: { left: number; top: number };
 };
@@ -32,6 +34,7 @@ type JerseyPreviewProps = {
   leftChestLogoUrl?: string;
   rightLogo?: StaticLogoOption;
   sponsorLogoUrl?: string;
+  sponsorText?: BackLogoTextConfig;
   backLogoUrl?: string;
   backSponsorText?: BackLogoTextConfig;
 };
@@ -43,9 +46,12 @@ const JerseyPreview: React.FC<JerseyPreviewProps> = ({
   leftChestLogoUrl,
   rightLogo,
   sponsorLogoUrl,
+  sponsorText,
   backLogoUrl,
   backSponsorText
 }) => {
+
+
   const overlayCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const previewContainerRef = useRef<HTMLDivElement | null>(null);
   const overlayImageRef = useRef<HTMLImageElement | null>(null);
@@ -148,6 +154,7 @@ const JerseyPreview: React.FC<JerseyPreviewProps> = ({
             leftChest: makePos(DESIGN_POSITIONS.leftChest.x, DESIGN_POSITIONS.leftChest.y),
             rightChest: makePos(DESIGN_POSITIONS.rightChest.x, DESIGN_POSITIONS.rightChest.y),
             sponsor: makePos(DESIGN_POSITIONS.sponsor.x, DESIGN_POSITIONS.sponsor.y),
+            sponsorText: makePos(DESIGN_POSITIONS.sponsorText.x, DESIGN_POSITIONS.sponsorText.y),
             backSponsor: makePos(DESIGN_POSITIONS.backSponsor.x, DESIGN_POSITIONS.backSponsor.y),
             backSponsorText: makePos(DESIGN_POSITIONS.backSponsorText.x, DESIGN_POSITIONS.backSponsorText.y),
         });
@@ -194,44 +201,43 @@ const JerseyPreview: React.FC<JerseyPreviewProps> = ({
   
   
 
-  return (
-    <div className="flex w-full">
-      <div
-        ref={previewContainerRef}
-        className="relative aspect-[3/4] h-full w-full overflow-hidden rounded-lg bg-gray-200 shadow-md"
-      >
-        {/* základný dres */}
-          <img
+      return (
+        <div className="flex flex-col w-full h-[70vh]">
+          <div
+            ref={previewContainerRef}
+            className="relative h-full w-full overflow-hidden rounded-lg bg-gray-200 shadow-md"
+          >
+            {/* základný dres */}
+            <img
               ref={bgImageRef}
               src={bgImageSrc}
               alt="Jersey base"
-              className="absolute inset-0 h-full w-full object-contain"
+              className="absolute inset-0 h-full w-full object-contain md:object-contain"
               onLoad={() => {
-                  drawOverlay(stripeColor.hex);
-                  recalcLogoPositions();
+                drawOverlay(stripeColor.hex);
+                recalcLogoPositions();
               }}
-          />
+            />
 
-        {/* canvas pre pruhy / overlay */}
-        <canvas
-          ref={overlayCanvasRef}
-          className="absolute inset-0 h-full w-full"
-        />
+            {/* canvas pre pruhy / overlay */}
+            <canvas
+              ref={overlayCanvasRef}
+              className="pointer-events-none absolute inset-0 w-full h-full"
+            />
 
-        {/* KSC branding text – stred hrude na prednej (ľavej) polovici */}
-          {/* KSC branding text */}
-          {logoPositions && (
+            {/* KSC branding text – stred hrude na prednej (ľavej) polovici */}
+            {logoPositions && (
               <div
-                  className="pointer-events-none absolute text-xl font-extrabold tracking-widest -translate-x-1/2 -translate-y-1/2"
-                  style={{
-                      color: brandingColor.hex,
-                      left: `${logoPositions.branding.left}%`,
-                      top: `${logoPositions.branding.top}%`,
-                  }}
+                className="pointer-events-none absolute text-xl font-extrabold tracking-widest -translate-x-1/2 -translate-y-1/2"
+                style={{
+                  color: brandingColor.hex,
+                  left: `${logoPositions.branding.left}%`,
+                  top: `${logoPositions.branding.top}%`,
+                }}
               >
-                  KSC
+                KSC
               </div>
-          )}
+            )}
 
         {/* ľavé logo na hrudi – trochu viac k “ľavému ramenu” na prednej polovici */}
           {leftChestLogoUrl && logoPositions && (
@@ -283,6 +289,22 @@ const JerseyPreview: React.FC<JerseyPreviewProps> = ({
                   />
               </div>
           )}
+
+          {logoPositions && sponsorText?.enabled && (
+              <div
+                  className="pointer-events-none absolute text-xl font-extrabold tracking-widest -translate-x-1/2 -translate-y-1/2"
+                  style={{
+                      color: sponsorText.color.hex,
+                      left: `${logoPositions.sponsorText.left}%`,
+                      top: `${logoPositions.sponsorText.top}%`,
+                  }}
+              >
+
+                  {sponsorText.text}
+              </div>
+          )}
+
+
           {/*logo na vrchu zadnej strany dresu */}
           {backLogoUrl && logoPositions && (
               <div
@@ -315,6 +337,10 @@ const JerseyPreview: React.FC<JerseyPreviewProps> = ({
           )}
 
       </div>
+
+        <div className="flex">
+            <button className="flex border-2 text-white bg-gray-500"></button>
+        </div>
     </div>
   );
 };

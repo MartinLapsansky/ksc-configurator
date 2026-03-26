@@ -35,45 +35,45 @@ const LogoUploadPicker: React.FC<LogoUploadPickerProps> = ({
     onImageChange(undefined);
   };
 
-  return (
-    <section className="mb-4 rounded-md border border-gray-200 bg-white p-3 shadow-sm">
-      <div className="mb-2 flex items-baseline justify-between text-sm">
-        <strong>{label}</strong>
-        <span className="text-xs text-gray-500">
-          {imageUrl ? valueLabel : "No logo"}
-        </span>
-      </div>
-      <div className="flex items-center gap-3">
-        <label className="cursor-pointer rounded-md border border-gray-300 bg-gray-50 px-3 py-1 text-xs font-medium hover:bg-gray-100">
-          Upload
-          <input
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={handleFileChange}
-          />
-        </label>
-        {imageUrl && (
-          <>
-            <button
-              type="button"
-              onClick={handleClear}
-              className="rounded-md border border-gray-300 bg-white px-2 py-1 text-xs hover:bg-gray-50"
-            >
-              Remove
-            </button>
-            <div className="h-10 w-10 overflow-hidden rounded border border-gray-200 bg-white">
-              <img
-                src={imageUrl}
-                alt={`${label} preview`}
-                className="h-full w-full object-contain"
+      return (
+        <section className="mb-4 min-w-[50vw] md:min-w-0 md:w-full rounded-md border border-gray-200 bg-white p-3 shadow-sm">
+          <div className="mb-2 flex items-baseline justify-between text-sm">
+            <strong className="text-black">{label}</strong>
+            <span className="text-xs text-gray-500">
+              {imageUrl ? valueLabel : "No logo"}
+            </span>
+          </div>
+          <div className="flex items-center gap-3">
+            <label className="cursor-pointer rounded-md border text-black border-gray-300 bg-gray-50 px-3 py-1 text-xs font-medium hover:bg-gray-100">
+              Upload
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleFileChange}
               />
-            </div>
-          </>
-        )}
-      </div>
-    </section>
-  );
+            </label>
+            {imageUrl && (
+              <>
+                <button
+                  type="button"
+                  onClick={handleClear}
+                  className="rounded-md border border-gray-300 bg-white px-2 py-1 text-xs hover:bg-gray-50"
+                >
+                  Remove
+                </button>
+                <div className="h-10 w-10 overflow-hidden rounded border border-gray-200 bg-white">
+                  <img
+                    src={imageUrl}
+                    alt={`${label} preview`}
+                    className="h-full w-full object-contain"
+                  />
+                </div>
+              </>
+            )}
+          </div>
+        </section>
+      );
 };
 
 export default LogoUploadPicker;

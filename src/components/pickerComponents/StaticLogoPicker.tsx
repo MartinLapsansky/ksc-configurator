@@ -21,9 +21,9 @@ const StaticLogoPicker: React.FC<StaticLogoPickerProps> = ({
   onChange,
 }) => {
   return (
-    <section className="mb-4 rounded-md border border-gray-200 bg-white p-3 shadow-sm">
+      <section className="mb-4 min-w-[50vw] md:min-w-0 md:w-full rounded-md border border-gray-200 bg-white p-3 shadow-sm">
       <div className="mb-2 flex items-baseline justify-between text-sm">
-        <strong>{label}</strong>
+          <strong className="text-black">{label}</strong>
         <span className="text-xs text-gray-500">{selected?.name}</span>
       </div>
       <div className="flex gap-3">

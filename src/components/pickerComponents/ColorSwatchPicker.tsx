@@ -25,10 +25,10 @@ const ColorSwatchPicker: React.FC<ColorSwatchPickerProps> = ({
   onChange,
 }) => {
   return (
-    <section className="mb-4 rounded-md border border-gray-200 bg-white p-3 shadow-sm">
+      <section className="mb-4 min-w-[50vw] md:min-w-0 md:w-full rounded-md border border-gray-200 bg-white p-3 shadow-sm">
       <div className="mb-2 flex items-baseline justify-between text-sm">
-        <strong>{label}</strong>
-        <span className="text-xs text-gray-500">{valueLabel}</span>
+        <strong className="text-black">{label}</strong>
+        <span className="text-xs text-black">{valueLabel}</span>
       </div>
       <div className="flex flex-wrap gap-2">
         {options.map((o) => {
