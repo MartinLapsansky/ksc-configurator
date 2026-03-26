@@ -115,10 +115,10 @@ const ProductItem: React.FC = () => {
                 <h1 className="flex mb-1 text-lg text-black font-semibold">Jersey Design 146</h1>
 
 
-                <aside className="w-full max-w-full md:w-100 h-[30vh] md:h-[80vh] overflow-x-auto md:overflow-x-visible">
+                <aside className="w-full max-w-full md:w-100 h-[30vh] md:h-[80vh] overflow-x-auto hide-scrollbar md:overflow-x-visible hide-scrollbar">
 
 
-                    <div className="h-full flex gap-4 pr-2 overflow-y-hidden md:block md:overflow-y-auto md:gap-0">
+                    <div className="h-full flex gap-4 pr-2 overflow-y-hidden md:block md:overflow-y-auto hide-scrollbar md:gap-0 hide-scrollbar">
 
 
                         <ColorSwatchPicker

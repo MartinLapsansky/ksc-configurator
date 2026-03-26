@@ -58,6 +58,8 @@ const JerseyPreview: React.FC<JerseyPreviewProps> = ({
   const bgImageRef = useRef<HTMLImageElement | null>(null);
 
   const [logoPositions, setLogoPositions] = useState<LogoPositions | null>(null);
+  const [chestLogoSize, setChestLogoSize] = useState<number>(20);
+
 
 
     const drawOverlay = useCallback((hex: string) => {
@@ -158,6 +160,10 @@ const JerseyPreview: React.FC<JerseyPreviewProps> = ({
             backSponsor: makePos(DESIGN_POSITIONS.backSponsor.x, DESIGN_POSITIONS.backSponsor.y),
             backSponsorText: makePos(DESIGN_POSITIONS.backSponsorText.x, DESIGN_POSITIONS.backSponsorText.y),
         });
+        const chestSizePx = drawnWidth * 0.08;
+        // môžeš to aj obmedziť pomocou clamp:
+        const clamped = Math.max(40, Math.min(chestSizePx, 20)); // min 24px, max 64px
+        setChestLogoSize(clamped);
     }, []);
   
 
@@ -205,7 +211,7 @@ const JerseyPreview: React.FC<JerseyPreviewProps> = ({
         <div className="flex flex-col w-full h-[70vh]">
           <div
             ref={previewContainerRef}
-            className="relative h-full w-full overflow-hidden rounded-lg bg-gray-200 shadow-md"
+            className="relative h-full w-full overflow-hidden rounded-lg  shadow-md"
           >
             {/* základný dres */}
             <img
@@ -242,10 +248,12 @@ const JerseyPreview: React.FC<JerseyPreviewProps> = ({
         {/* ľavé logo na hrudi – trochu viac k “ľavému ramenu” na prednej polovici */}
           {leftChestLogoUrl && logoPositions && (
               <div
-                  className="pointer-events-none absolute h-10 w-10 -translate-x-1/2 -translate-y-1/2"
+                  className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2"
                   style={{
                       left: `${logoPositions.leftChest.left}%`,
                       top: `${logoPositions.leftChest.top}%`,
+                      width: `${chestLogoSize}px`,
+                      height: `${chestLogoSize}px`,
                   }}
               >
                   <img
@@ -259,10 +267,12 @@ const JerseyPreview: React.FC<JerseyPreviewProps> = ({
         {/* pravé logo na hrudi – smerom k “pravému ramenu” na prednej polovici */}
           {rightLogo && logoPositions && (
               <div
-                  className="pointer-events-none absolute h-10 w-10 -translate-x-1/2 -translate-y-1/2"
+                  className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2"
                   style={{
                       left: `${logoPositions.rightChest.left}%`,
                       top: `${logoPositions.rightChest.top}%`,
+                      width: `${chestLogoSize}px`,
+                      height: `${chestLogoSize}px`,
                   }}
               >
                   <img
