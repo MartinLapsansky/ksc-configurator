@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, {useState} from "react";
 import { useJerseyConfig } from "@/components/JerseyConfigContext";
 
 interface EnquiryFormState {
@@ -37,16 +37,34 @@ export default function EnquirePage() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // TU neskôr napojíme API endpoint + DB.
-    // Zatiaľ iba log:
-    console.log("Enquiry submit payload:", {
-      form,
-      jerseyConfig: config,
-    });
-    alert("Form submitted in FE (check console). Backend napojíme neskôr.");
+  
+    try {
+      const response = await fetch("/api/enquire", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          form,
+          jerseyConfig: config,
+        }),
+      });
+  
+      if (!response.ok) {
+          console.error("API error:", response.status, response.statusText);
+          alert("Failed to submit enquiry. Please try again.");
+          return;
+      }
+  
+      const data = await response.json();
+      alert("Enquiry submitted successfully!");
+      console.log("Response:", data);
+    } catch (error) {
+      console.error("Enquiry submission failed:", error);
+      alert("Failed to submit enquiry. Please try again.");
+    }
   };
 
   return (
