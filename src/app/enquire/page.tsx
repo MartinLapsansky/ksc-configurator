@@ -41,7 +41,7 @@ export default function EnquirePage() {
     e.preventDefault();
   
     try {
-      const response = await fetch("/api/enquire", {
+      const response = await fetch("/api/order", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

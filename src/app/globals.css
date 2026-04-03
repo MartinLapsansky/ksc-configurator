@@ -33,3 +33,7 @@ body {
 .hide-scrollbar::-webkit-scrollbar {
     display: none;             /* Chrome, Safari, Opera */
 }
+
+input{
+  color: #0a0a0a;
+}

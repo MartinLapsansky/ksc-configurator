@@ -38,20 +38,22 @@ export default function SignInPage() {
             setError("Nesprávny email alebo heslo.");
         }
 
-        const me = await fetch("/api/auth/me", {cache: "no-store"}).then(res => res.json().catch(() => null));
+        // const me = await fetch("/api/auth/me", {cache: "no-store"}).then(res => res.json().catch(() => null));
 
-        const role = me?.user?.role as string | undefined;
+        // const role = me?.user?.role as string | undefined;
+        //
+        // if (role === "SUPERADMIN"){
+        //     router.push("/admin/dashboard");
+        // }
 
-        if (role === "SUPERADMIN"){
-            router.push("/admin/dashboard");
-        }
+        router.push("/");
     }
 
 
     return (
         <div className="min-h-screen flex items-center justify-center w-1/3 mx-auto">
             <div className="bg-white p-8 mt-15 rounded-lg shadow-md w-500">
-                <h1 className="text-3xl font-bold mb-6 text-center">
+                <h1 className="text-3xl font-bold mb-6 text-black text-center">
                     Prihlásenie
                 </h1>
 
@@ -65,7 +67,7 @@ export default function SignInPage() {
                             id="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--highlight)]"
+                            className="mt-1 block w-full px-3 text-black py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--highlight)]"
                             required
                         />
                     </div>
@@ -79,28 +81,26 @@ export default function SignInPage() {
                             id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--highlight)]"
+                            className="mt-1 block w-full px-3 py-2 text-black border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--highlight)]"
                             required
                         />
                     </div>
 
                     {error && <p className="text-sm text-red-600">{error}</p>}
 
-                    <a href="/auth/forgot-password" className="text-sm text-[var(--highlight)] hover:underline mb-2">
+                    <a href="/auth/forgot-password" className="text-sm text-black hover:underline mb-2">
                         Zabudnuté heslo?
                     </a>
+                    <div className="flex items-center justify-center">
+                        <button
+                            type="submit"
+                            className="mt-3 w-30 py-2 px-4 cursor-pointer bg-green-800 text-white font-semibold rounded-md hover:bg-green-700 transition-colors"
+                        >
+                            Prihlásiť sa
+                        </button>
+                    </div>
 
-                    <button
-                        type="submit"
-                        className="mt-3 w-full py-2 px-4 bg-[var(--highlight)] text-black font-semibold rounded-md hover:bg-[#b8925f] transition-colors"
-                    >
-                        Prihlásiť sa
-                    </button>
                 </form>
-
-                <p className="mt-4 text-center text-sm text-gray-600">
-                    Nemáš účet? Registrácia je možná iba cez pozvánku.
-                </p>
             </div>
         </div>
 
