@@ -73,10 +73,6 @@ export default function EnquirePage() {
         <h1 className="text-2xl text-black font-semibold tracking-tight">
           Enquire about this jersey
         </h1>
-        <p className="mt-1 text-sm text-gray-600">
-          Vyplň svoje kontaktné údaje a detaily objednávky. Konfigurácia dresu,
-          ktorú si práve navrhol, sa odošle spolu s týmto formulárom.
-        </p>
 
         <div className="mt-8 grid gap-8 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
           {/* Formulár */}
