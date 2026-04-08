@@ -40,7 +40,7 @@ export default function SignInForm() {
         <div className="min-h-screen flex items-center justify-center w-1/3 mx-auto">
             <div className="bg-white p-8 mt-15 rounded-lg shadow-md w-500">
                 <h1 className="text-3xl font-bold mb-6 text-black text-center">
-                    Prihlásenie
+                    Log in to your account
                 </h1>
 
                 <form onSubmit={handleLogin} className="space-y-4">
@@ -66,7 +66,7 @@ export default function SignInForm() {
                             htmlFor="password"
                             className="block text-sm font-medium text-gray-700"
                         >
-                            Heslo
+                            Password
                         </label>
                         <input
                             type="password"
@@ -84,7 +84,7 @@ export default function SignInForm() {
                         href="/auth/forgot-password"
                         className="text-sm text-black hover:underline mb-2"
                     >
-                        Zabudnuté heslo?
+                        Forgot password?
                     </a>
 
                     <div className="flex items-center justify-center">
@@ -92,7 +92,7 @@ export default function SignInForm() {
                             type="submit"
                             className="mt-3 w-30 py-2 px-4 cursor-pointer bg-green-800 text-white font-semibold rounded-md hover:bg-green-700 transition-colors"
                         >
-                            Prihlásiť sa
+                            Log in
                         </button>
                     </div>
                 </form>
