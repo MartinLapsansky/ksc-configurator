@@ -208,7 +208,7 @@ const ProductItem: React.FC = () => {
                         onClick={handleEnquireClick}
                         className="inline-flex items-center cursor-pointer rounded-md bg-gray-600 px-5 py-2.5 text-xl font-semibold text-white shadow-sm hover:bg-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                     >
-                        Checkout
+                        Enquiry
                     </button>
                 </div>
             </div>

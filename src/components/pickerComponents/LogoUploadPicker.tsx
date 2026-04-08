@@ -50,7 +50,7 @@ const LogoUploadPicker: React.FC<LogoUploadPickerProps> = ({
         onImageChange(data.url);
       } catch (error) {
         console.error(error);
-        setUploadError("Nepodarilo sa nahrať obrázok.");
+        setUploadError("Failed to upload image.");
       } finally {
         setUploading(false);
         e.target.value = "";
