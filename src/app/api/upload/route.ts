@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs/promises";
-import path from "path";
+import { put } from "@vercel/blob";
 
 export const runtime = "nodejs";
-
-const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
 
 function sanitizeFileName(fileName: string) {
   return fileName
@@ -32,20 +29,22 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    await fs.mkdir(UPLOAD_DIR, { recursive: true });
+    const ext = file.name.includes(".")
+      ? file.name.slice(file.name.lastIndexOf("."))
+      : `.${file.type.split("/")[1] || "png"}`;
 
-    const buffer = Buffer.from(await file.arrayBuffer());
-    const ext = path.extname(file.name) || `.${file.type.split("/")[1] || "png"}`;
     const safeName = sanitizeFileName(file.name.replace(ext, ""));
     const uniqueName = `${safeName}-${Date.now()}${ext}`;
-    const filePath = path.join(UPLOAD_DIR, uniqueName);
 
-    await fs.writeFile(filePath, buffer);
+    const blob = await put(uniqueName, file, {
+      access: "public",
+      contentType: file.type,
+    });
 
     return NextResponse.json(
       {
         message: "File uploaded successfully.",
-        url: `/uploads/${uniqueName}`,
+        url: blob.url,
         fileName: uniqueName,
       },
       { status: 200 },
