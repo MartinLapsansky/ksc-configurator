@@ -22,14 +22,14 @@ interface TextConfig {
 
 interface JerseyConfig {
     bgColor: ColorOption;
-    stripeColor: ColorOption;
-    brandingColor: ColorOption;
+    stripeColor?: ColorOption;
+    brandingColor?: ColorOption;
     leftChestLogoUrl?: string;
     sponsorLogoUrl?: string;
-    rightLogo: StaticLogoOption;
+    rightLogo?: StaticLogoOption;
     backLogoUrl?: string;
-    backTextConfig: TextConfig;
-    frontTextConfig: TextConfig;
+    backTextConfig?: TextConfig;
+    frontTextConfig?: TextConfig;
 }
 
 interface EnquiryFormState {
