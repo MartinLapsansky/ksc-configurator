@@ -1,358 +1,356 @@
+
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import type { ColorOption } from "../pickerComponents/ColorSwatchPicker";
 import type { StaticLogoOption } from "../pickerComponents/StaticLogoPicker";
 import type { BackLogoTextConfig } from "../pickerComponents/TextInsertPicker";
 
-import overlayImg from "../../app/assets/overlay.png";
+import stripeImgLayer from "../../app/assets/layers/front-stripes-layer.png";
+import brandImg from "../../app/assets/layers/kcs-logo-layer.png";
+import leftChestImg from "../../app/assets/layers/crest-logo-layer.png";
+import rightLogoGaaImg from "../../app/assets/layers/gaa-logo-layer.png";
+import rightLogoCamogieImg from "../../app/assets/layers/camogie-logo-layer.png";
+import rightLogoLgfaImg from "../../app/assets/layers/lgfa-logo-layer.png";
+import sponsorLogoImg from "../../app/assets/layers/sponsor-logo-layer.png";
 
-const DESIGN_POSITIONS = {
-    branding: { x: 0.31, y: 0.30 },
-    leftChest: { x: 0.38, y: 0.32 },
-    rightChest: { x: 0.25, y: 0.32 },
-    sponsor: { x: 0.31, y: 0.40 },
-    sponsorText: {x: 0.31,y: 0.47},
-    backSponsor: { x: 0.69, y: 0.30 },
-    backSponsorText: { x: 0.70, y: 0.37 },
+import SponsorTextOverlay from "@/components/productPreviewComponent/sponsorTextOverlay";
+
+const RIGHT_LOGO_LAYER_MAP: Record<string, typeof rightLogoGaaImg> = {
+    Gaa: rightLogoGaaImg,
+    Camogie: rightLogoCamogieImg,
+    Lgfa: rightLogoLgfaImg,
 };
 
-type LogoPositions = {
-    branding: { left: number; top: number };
-    leftChest: { left: number; top: number };
-    rightChest: { left: number; top: number };
-    sponsor: { left: number; top: number };
-    sponsorText: {left: number; top: number};
-    backSponsor: { left: number; top: number };
-    backSponsorText: { left: number; top: number };
+type OverlayEntry = {
+    key: string;
+    layerSrc: string;
+    tintHex?: string;
+    /** URL uploadnutého obrázka – vykreslí sa do oblasti layeru ako maska */
+    uploadSrc?: string;
+    active: boolean;
 };
 
 type JerseyPreviewProps = {
-  bgColor: ColorOption;
-  stripeColor: ColorOption;
-  brandingColor: ColorOption;
-  leftChestLogoUrl?: string;
-  rightLogo?: StaticLogoOption;
-  sponsorLogoUrl?: string;
-  sponsorText?: BackLogoTextConfig;
-  backLogoUrl?: string;
-  backSponsorText?: BackLogoTextConfig;
+    bgColor: ColorOption;
+    stripeColor: ColorOption;
+    brandingColor: ColorOption;
+    leftChestLogoUrl?: string;
+    rightLogo?: StaticLogoOption;
+    sponsorLogoUrl?: string;
+    sponsorText?: BackLogoTextConfig;
 };
 
 const JerseyPreview: React.FC<JerseyPreviewProps> = ({
-  bgColor,
-  stripeColor,
-  brandingColor,
-  leftChestLogoUrl,
-  rightLogo,
-  sponsorLogoUrl,
-  sponsorText,
-  backLogoUrl,
-  backSponsorText
-}) => {
+                                                         bgColor,
+                                                         stripeColor,
+                                                         brandingColor,
+                                                         leftChestLogoUrl,
+                                                         rightLogo,
+                                                         sponsorLogoUrl,
+                                                         sponsorText,
+                                                     }) => {
+    const canvasRef = useRef<HTMLCanvasElement | null>(null);
+    const previewContainerRef = useRef<HTMLDivElement | null>(null);
+    const bgImageRef = useRef<HTMLImageElement | null>(null);
+    const imageCache = useRef<Map<string, HTMLImageElement>>(new Map());
 
+    const loadImage = useCallback((src: string): Promise<HTMLImageElement> => {
+        const cached = imageCache.current.get(src);
+        if (cached && cached.complete && cached.naturalWidth > 0) {
+            return Promise.resolve(cached);
+        }
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.onload = () => {
+                imageCache.current.set(src, img);
+                resolve(img);
+            };
+            img.onerror = reject;
+            img.src = src;
+        });
+    }, []);
 
-  const overlayCanvasRef = useRef<HTMLCanvasElement | null>(null);
-  const previewContainerRef = useRef<HTMLDivElement | null>(null);
-  const overlayImageRef = useRef<HTMLImageElement | null>(null);
-  const bgImageRef = useRef<HTMLImageElement | null>(null);
+    const overlays: OverlayEntry[] = useMemo(() => {
+        const list: OverlayEntry[] = [];
 
-  const [logoPositions, setLogoPositions] = useState<LogoPositions | null>(null);
-  const [chestLogoSize, setChestLogoSize] = useState<number>(20);
+        // 1) Pruhy – tintované
+        list.push({
+            key: "stripes",
+            layerSrc: stripeImgLayer.src,
+            tintHex: stripeColor.hex,
+            active: true,
+        });
 
+        // 2) KCS branding – tintované
+        list.push({
+            key: "branding",
+            layerSrc: brandImg.src,
+            tintHex: brandingColor.hex,
+            active: true,
+        });
 
+        // 3) Left chest – vždy aktívny, s uploadom alebo bez
+        list.push({
+            key: "leftChest",
+            layerSrc: leftChestImg.src,
+            uploadSrc: leftChestLogoUrl,
+            active: true,
+        });
 
-    const drawOverlay = useCallback((hex: string) => {
-    const canvas = overlayCanvasRef.current;
-    const container = previewContainerRef.current;
-    const overlayImage = overlayImageRef.current;
+        // 4) Right logo
+        const rightLayerImg = rightLogo?.name
+            ? RIGHT_LOGO_LAYER_MAP[rightLogo.name]
+            : undefined;
+        list.push({
+            key: "rightLogo",
+            layerSrc: rightLayerImg?.src ?? "",
+            active: !!rightLogo && !!rightLayerImg,
+        });
 
-    if (!canvas || !container || !overlayImage || !overlayImage.complete) {
-      return;
-    }
+        // 5) Sponsor logo – vždy aktívny, s uploadom alebo bez
+        list.push({
+            key: "sponsorLogo",
+            layerSrc: sponsorLogoImg.src,
+            uploadSrc: sponsorLogoUrl,
+            active: true,
+        });
 
-    const rect = container.getBoundingClientRect();
-    const dpr = window.devicePixelRatio || 1;
+        return list;
+    }, [
+        stripeColor.hex,
+        brandingColor.hex,
+        leftChestLogoUrl,
+        rightLogo,
+        sponsorLogoUrl,
+    ]);
 
-    canvas.width = Math.round(rect.width * dpr);
-    canvas.height = Math.round(rect.height * dpr);
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    const w = rect.width;
-    const h = rect.height;
-
-    ctx.clearRect(0, 0, w, h);
-
-    // vyplnenie farbou pruhov
-    ctx.globalCompositeOperation = "source-over";
-    ctx.fillStyle = hex;
-    ctx.fillRect(0, 0, w, h);
-
-    const drawContain = (img: HTMLImageElement) => {
-      const iw = img.naturalWidth;
-      const ih = img.naturalHeight;
-      if (!iw || !ih) return;
-
-      const s = Math.min(w / iw, h / ih);
-      const dw = iw * s;
-      const dh = ih * s;
-      const x = (w - dw) / 2;
-      const y = (h - dh) / 2;
-
-      ctx.drawImage(img, x, y, dw, dh);
-    };
-
-    // multiply overlay textúra
-    ctx.globalCompositeOperation = "multiply";
-    drawContain(overlayImage);
-
-    // orezať do tvaru overlayu
-    ctx.globalCompositeOperation = "destination-in";
-    drawContain(overlayImage);
-
-    ctx.globalCompositeOperation = "source-over";
-  }, []);
-
-
-    // Funkcia, ktorá prepočíta pozície log podľa veľkosti kontajnera & obrázka
-
-    const recalcLogoPositions = useCallback(() => {
+    const draw = useCallback(async () => {
+        const canvas = canvasRef.current;
         const container = previewContainerRef.current;
         const bgImg = bgImageRef.current;
-
-        if (!container || !bgImg || !bgImg.naturalWidth || !bgImg.naturalHeight) {
-            return;
-        }
+        if (!canvas || !container) return;
 
         const rect = container.getBoundingClientRect();
-        const w = rect.width;
-        const h = rect.height;
+        const dpr = window.devicePixelRatio || 1;
+
+        canvas.width = Math.round(rect.width * dpr);
+        canvas.height = Math.round(rect.height * dpr);
+
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        const cw = rect.width;
+        const ch = rect.height;
+
+        ctx.clearRect(0, 0, cw, ch);
+
+        if (!bgImg || !bgImg.naturalWidth || !bgImg.naturalHeight) return;
 
         const iw = bgImg.naturalWidth;
         const ih = bgImg.naturalHeight;
+        const scale = Math.min(cw / iw, ch / ih);
+        const drawnW = iw * scale;
+        const drawnH = ih * scale;
+        const offsetX = (cw - drawnW) / 2;
+        const offsetY = (ch - drawnH) / 2;
 
-        // rovnaká logika ako "object-contain"
-        const s = Math.min(w / iw, h / ih);
-        const drawnWidth = iw * s;
-        const drawnHeight = ih * s;
-        const offsetX = (w - drawnWidth) / 2;
-        const offsetY = (h - drawnHeight) / 2;
-
-        const makePos = (xNorm: number, yNorm: number) => {
-            const xPx = offsetX + xNorm * drawnWidth;
-            const yPx = offsetY + yNorm * drawnHeight;
-            return {
-                left: (xPx / w) * 100,
-                top: (yPx / h) * 100,
-            };
+        const drawFitted = (
+            targetCtx: CanvasRenderingContext2D,
+            img: HTMLImageElement,
+        ) => {
+            if (!img.naturalWidth || !img.naturalHeight) return;
+            targetCtx.drawImage(img, offsetX, offsetY, drawnW, drawnH);
         };
 
-        setLogoPositions({
-            branding: makePos(DESIGN_POSITIONS.branding.x, DESIGN_POSITIONS.branding.y),
-            leftChest: makePos(DESIGN_POSITIONS.leftChest.x, DESIGN_POSITIONS.leftChest.y),
-            rightChest: makePos(DESIGN_POSITIONS.rightChest.x, DESIGN_POSITIONS.rightChest.y),
-            sponsor: makePos(DESIGN_POSITIONS.sponsor.x, DESIGN_POSITIONS.sponsor.y),
-            sponsorText: makePos(DESIGN_POSITIONS.sponsorText.x, DESIGN_POSITIONS.sponsorText.y),
-            backSponsor: makePos(DESIGN_POSITIONS.backSponsor.x, DESIGN_POSITIONS.backSponsor.y),
-            backSponsorText: makePos(DESIGN_POSITIONS.backSponsorText.x, DESIGN_POSITIONS.backSponsorText.y),
-        });
-        const chestSizePx = drawnWidth * 0.08;
-        // môžeš to aj obmedziť pomocou clamp:
-        const clamped = Math.max(40, Math.min(chestSizePx, 20)); // min 24px, max 64px
-        setChestLogoSize(clamped);
-    }, []);
-  
+        /**
+         * Vykreslí uploadnutý obrázok do bounding boxu nepriehľadných pixelov layeru.
+         * Layer slúži ako maska – uploadnutý obrázok sa orezáva do tvaru layeru.
+         */
+        const drawUploadIntoLayerBounds = async (
+            layerImg: HTMLImageElement,
+            uploadImg: HTMLImageElement,
+        ) => {
+            const offscreen = document.createElement("canvas");
+            offscreen.width = canvas.width;
+            offscreen.height = canvas.height;
+            const offCtx = offscreen.getContext("2d");
+            if (!offCtx) return;
 
-  // inicializácia overlay obrázka + prvé vykreslenie
-  useEffect(() => {
-    if (!overlayImageRef.current) {
-      const img = new Image();
-      img.src = overlayImg.src; // použitie importu
-      img.onload = () => {
-        drawOverlay(stripeColor.hex);
-      };
-      overlayImageRef.current = img;
-    } else if (overlayImageRef.current.complete) {
-      drawOverlay(stripeColor.hex);
-    }
-  }, [stripeColor.hex, drawOverlay]);
+            offCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
+            // 1) nakreslíme layer iba na analýzu bounding boxu
+            offCtx.clearRect(0, 0, cw, ch);
+            offCtx.globalCompositeOperation = "source-over";
+            drawFitted(offCtx, layerImg);
 
+            // 2) zisti bounding box nepriehľadných pixelov
+            const fx = Math.round(offsetX * dpr);
+            const fy = Math.round(offsetY * dpr);
+            const fw = Math.round(drawnW * dpr);
+            const fh = Math.round(drawnH * dpr);
 
-  // pri zmene veľkosti okna prerenderuj overlay
-  useEffect(() => {
-    const handleResize = () => {
-      drawOverlay(stripeColor.hex);
-      recalcLogoPositions();
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [stripeColor.hex, drawOverlay,recalcLogoPositions]);
+            const imageData = offCtx.getImageData(fx, fy, fw, fh);
+            const pixels = imageData.data;
 
+            let minX = fw, minY = fh, maxX = 0, maxY = 0;
+            for (let y = 0; y < fh; y++) {
+                for (let x = 0; x < fw; x++) {
+                    const alpha = pixels[(y * fw + x) * 4 + 3];
+                    if (alpha > 10) {
+                        if (x < minX) minX = x;
+                        if (x > maxX) maxX = x;
+                        if (y < minY) minY = y;
+                        if (y > maxY) maxY = y;
+                    }
+                }
+            }
 
+            if (maxX <= minX || maxY <= minY) return;
 
-  // výber správneho src pre základný dres (z ColorOption.file)
-  const bgImageSrc = useMemo(() => {
-    if (!bgColor.file) return "";
-    if (typeof bgColor.file === "string") {
-      return bgColor.file;
-    }
-    return bgColor.file.src;
-  }, [bgColor.file]);
-  
-  
-  
+            // 3) prepočítaj bounding box do CSS súradníc
+            const bx = offsetX + minX / dpr;
+            const by = offsetY + minY / dpr;
+            const bw = (maxX - minX + 1) / dpr;
+            const bh = (maxY - minY + 1) / dpr;
 
-      return (
+            // 4) vymaž offscreen canvas (už nechceme vidieť overlay)
+            offCtx.clearRect(0, 0, cw, ch);
+
+            // 5) nakresli upload do bounding boxu overlayu (object-contain)
+            const uiw = uploadImg.naturalWidth;
+            const uih = uploadImg.naturalHeight;
+
+            const uScale = Math.min(bw / uiw, bh / uih);
+            const udw = uiw * uScale;
+            const udh = uih * uScale;
+
+            const ux = bx + (bw - udw) / 2;
+            const uy = by + (bh - udh) / 2;
+
+            offCtx.drawImage(uploadImg, ux, uy, udw, udh);
+
+            // 6) prenes výsledok na hlavný canvas
+            ctx.save();
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            ctx.globalCompositeOperation = "source-over";
+            ctx.drawImage(offscreen, 0, 0);
+            ctx.restore();
+        };
+
+        for (const overlay of overlays) {
+            if (!overlay.active || !overlay.layerSrc) continue;
+
+            let layerImg: HTMLImageElement;
+            try {
+                layerImg = await loadImage(overlay.layerSrc);
+            } catch {
+                continue;
+            }
+
+            if (overlay.uploadSrc) {
+                // Má upload – vykreslíme uploadnutý obrázok do masky layeru
+                let uploadImg: HTMLImageElement;
+                try {
+                    uploadImg = await loadImage(overlay.uploadSrc);
+                } catch {
+                    // Upload sa nepodaril načítať – zobrazíme layer placeholder
+                    ctx.globalCompositeOperation = "source-over";
+                    drawFitted(ctx, layerImg);
+                    continue;
+                }
+                drawUploadIntoLayerBounds(layerImg, uploadImg);
+            } else if (overlay.tintHex) {
+                // Tintovaný overlay
+                const offscreen = document.createElement("canvas");
+                offscreen.width = canvas.width;
+                offscreen.height = canvas.height;
+                const offCtx = offscreen.getContext("2d");
+                if (!offCtx) continue;
+
+                offCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+                offCtx.globalCompositeOperation = "source-over";
+                drawFitted(offCtx, layerImg);
+
+                offCtx.globalCompositeOperation = "source-in";
+                offCtx.fillStyle = overlay.tintHex;
+                offCtx.fillRect(0, 0, cw, ch);
+
+                offCtx.globalCompositeOperation = "multiply";
+                drawFitted(offCtx, layerImg);
+
+                offCtx.globalCompositeOperation = "destination-in";
+                drawFitted(offCtx, layerImg);
+
+                ctx.save();
+                ctx.setTransform(1, 0, 0, 1, 0, 0);
+                ctx.globalCompositeOperation = "source-over";
+                ctx.drawImage(offscreen, 0, 0);
+                ctx.restore();
+            } else {
+                // Netintovaný overlay – layer priamo
+                ctx.globalCompositeOperation = "source-over";
+                drawFitted(ctx, layerImg);
+            }
+        }
+
+        ctx.globalCompositeOperation = "source-over";
+    }, [overlays, loadImage]);
+
+    useEffect(() => {
+        draw();
+    }, [draw]);
+
+    useEffect(() => {
+        const handleResize = () => { draw(); };
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, [draw]);
+
+    const bgImageSrc = useMemo(() => {
+        if (!bgColor.file) return "";
+        if (typeof bgColor.file === "string") return bgColor.file;
+        return bgColor.file.src;
+    }, [bgColor.file]);
+
+    return (
         <div className="flex flex-col w-full h-[70vh]">
-          <div
-            ref={previewContainerRef}
-            className="relative h-full w-full overflow-hidden rounded-lg  shadow-md"
-          >
-            {/* základný dres */}
-            <img
-              ref={bgImageRef}
-              src={bgImageSrc}
-              alt="Jersey base"
-              className="absolute inset-0 h-full w-full object-contain md:object-contain"
-              onLoad={() => {
-                drawOverlay(stripeColor.hex);
-                recalcLogoPositions();
-              }}
-            />
+            <div
+                ref={previewContainerRef}
+                className="relative h-full w-full overflow-hidden rounded-lg shadow-md"
+            >
+                <img
+                    ref={bgImageRef}
+                    src={bgImageSrc}
+                    alt="Jersey base"
+                    className="absolute inset-0 h-full w-full object-contain md:object-contain"
+                    onLoad={() => draw()}
+                />
 
-            {/* canvas pre pruhy / overlay */}
-            <canvas
-              ref={overlayCanvasRef}
-              className="pointer-events-none absolute inset-0 w-full h-full"
-            />
+                <canvas
+                    ref={canvasRef}
+                    className="pointer-events-none absolute inset-0 w-full h-full"
+                />
 
-            {/* KSC branding text – stred hrude na prednej (ľavej) polovici */}
-            {logoPositions && (
-              <div
-                className="pointer-events-none absolute text-xl font-extrabold tracking-widest -translate-x-1/2 -translate-y-1/2"
-                style={{
-                  color: brandingColor.hex,
-                  left: `${logoPositions.branding.left}%`,
-                  top: `${logoPositions.branding.top}%`,
-                }}
-              >
-                KSC
-              </div>
-            )}
+                {sponsorText?.enabled && (
+                    <SponsorTextOverlay
+                        text={sponsorText.text}
+                        colorHex={sponsorText.color.hex}
+                        containerRef={previewContainerRef}
+                        bgImageRef={bgImageRef}
+                    />
+                )}
+            </div>
 
-        {/* ľavé logo na hrudi – trochu viac k “ľavému ramenu” na prednej polovici */}
-          {leftChestLogoUrl && logoPositions && (
-              <div
-                  className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2"
-                  style={{
-                      left: `${logoPositions.leftChest.left}%`,
-                      top: `${logoPositions.leftChest.top}%`,
-                      width: `${chestLogoSize}px`,
-                      height: `${chestLogoSize}px`,
-                  }}
-              >
-                  <img
-                      src={leftChestLogoUrl}
-                      alt="Left chest logo"
-                      className="h-full w-full object-contain"
-                  />
-              </div>
-          )}
-
-        {/* pravé logo na hrudi – smerom k “pravému ramenu” na prednej polovici */}
-          {rightLogo && logoPositions && (
-              <div
-                  className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2"
-                  style={{
-                      left: `${logoPositions.rightChest.left}%`,
-                      top: `${logoPositions.rightChest.top}%`,
-                      width: `${chestLogoSize}px`,
-                      height: `${chestLogoSize}px`,
-                  }}
-              >
-                  <img
-                      src={rightLogo.src}
-                      alt={rightLogo.name}
-                      className="h-full w-full object-contain"
-                  />
-              </div>
-          )}
-
-        {/* sponzor v strede predku – stred prednej polovice */}
-          {sponsorLogoUrl && logoPositions && (
-              <div
-                  className="pointer-events-none absolute h-16 w-32 -translate-x-1/2 -translate-y-1/2"
-                  style={{
-                      left: `${logoPositions.sponsor.left}%`,
-                      top: `${logoPositions.sponsor.top}%`,
-                  }}
-              >
-                  <img
-                      src={sponsorLogoUrl}
-                      alt="Sponsor logo"
-                      className="h-full w-full object-contain"
-                  />
-              </div>
-          )}
-
-          {logoPositions && sponsorText?.enabled && (
-              <div
-                  className="pointer-events-none absolute text-xl font-extrabold tracking-widest -translate-x-1/2 -translate-y-1/2"
-                  style={{
-                      color: sponsorText.color.hex,
-                      left: `${logoPositions.sponsorText.left}%`,
-                      top: `${logoPositions.sponsorText.top}%`,
-                  }}
-              >
-
-                  {sponsorText.text}
-              </div>
-          )}
-
-
-          {/*logo na vrchu zadnej strany dresu */}
-          {backLogoUrl && logoPositions && (
-              <div
-                  className="pointer-events-none absolute h-16 w-32 -translate-x-1/2 -translate-y-1/2"
-                  style={{
-                      left: `${logoPositions.backSponsor.left}%`,
-                      top: `${logoPositions.backSponsor.top}%`,
-                  }}
-              >
-                  <img
-                      src={backLogoUrl}
-                      alt="Sponsor logo"
-                      className="h-full w-full object-contain"
-                  />
-              </div>
-              )
-          }
-          {logoPositions && backSponsorText?.enabled && (
-              <div
-                  className="pointer-events-none absolute text-xl font-extrabold tracking-widest -translate-x-1/2 -translate-y-1/2"
-                  style={{
-                      color: backSponsorText.color.hex,
-                      left: `${logoPositions.backSponsorText.left}%`,
-                      top: `${logoPositions.backSponsorText.top}%`,
-                  }}
-              >
-
-                  {backSponsorText.text}
-              </div>
-          )}
-
-      </div>
-
-        <div className="flex">
-            <button className="flex border-2 text-white bg-gray-500"></button>
+            <div className="flex">
+                <button className="flex border-2 text-white bg-gray-500"></button>
+            </div>
         </div>
-    </div>
-  );
+    );
 };
 
 export default JerseyPreview;

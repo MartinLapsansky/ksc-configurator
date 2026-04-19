@@ -1,23 +1,23 @@
 "use client";
 
-import React, { useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import ColorSwatchPicker, { ColorOption } from './pickerComponents/ColorSwatchPicker'
 import StaticLogoPicker, { StaticLogoOption } from "./pickerComponents/StaticLogoPicker";
 import LogoUploadPicker from "./pickerComponents/LogoUploadPicker";
 import JerseyPreview from "./productPreviewComponent/JerseyPreview";
 import {BackLogoTextConfig} from "@/components/pickerComponents/TextInsertPicker";
 
-import {useJerseyConfig} from "@/components/JerseyConfigContext";
+import {useJerseyConfig} from "@/app/contexts/JerseyConfigContext";
 
 // imports z src/app/assets
-import bgHotPink from "../app/assets/bg-hot-pink.jpg";
-import bgHotPurple from "../app/assets/bg-hot-purple.jpg";
-import bgHotLavender from "../app/assets/bg-hot-lavender.jpg";
-import bgHotPastelgreen from "../app/assets/bg-hot-pastelgreen.jpg";
+import bgHotPink from "../app/assets/jerseys/jersey-hot-pink.png";
+import bgHotPurple from "../app/assets/jerseys/jersey-purple.png";
+import bgHotLavender from "../app/assets/jerseys/jersey-levender.png";
+import bgHotPastelgreen from "../app/assets/jerseys/jersey-lime-green.png";
 
-import camogieLogo from "../app/assets/camogie_logo.svg";
-import gaaLogo from "../app/assets/gaa_logo.png";
-import lgfaLogo from "../app/assets/lgfa_logo.jpg";
+import camogieLogo from "../app/assets/camogie-logo.png";
+import gaaLogo from "../app/assets/gaa-logo.png";
+import lgfaLogo from "../app/assets/lgfa-logo.png";
 import TextInsertPicker from "@/components/pickerComponents/TextInsertPicker";
 import {useRouter} from "next/navigation";
 
@@ -55,6 +55,7 @@ const BACK_TEXT_OPTIONS: ColorOption[] = [
 const FRONT_TEXT_OPTIONS: ColorOption[] = [
     { name: "Black", hex: "#000000" },
     { name: "Gold", hex: "#F4C531" },
+    { name: "White", hex: "#FFFFFF" },
 ]
 
 const ProductItem: React.FC = () => {
@@ -91,6 +92,37 @@ const ProductItem: React.FC = () => {
       color: FRONT_TEXT_OPTIONS[0]
   });
 
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const totalDots = 5;
+
+    useEffect(() => {
+        const el = scrollRef.current;
+        if (!el) return;
+
+        const handleScroll = () => {
+            const scrollLeft = el.scrollLeft;
+            const maxScroll = el.scrollWidth - el.clientWidth;
+
+            if (maxScroll <= 0) {
+                setActiveIndex(0);
+                return;
+            }
+
+            const progress = scrollLeft / maxScroll;
+            const index = Math.round(progress * (totalDots - 1));
+            setActiveIndex(index);
+        };
+
+        el.addEventListener("scroll", handleScroll, { passive: true });
+        handleScroll();
+
+        return () => el.removeEventListener("scroll", handleScroll);
+    }, []);
+
+
+
     const handleEnquireClick = () => {
         setConfig({
             bgColor,
@@ -118,7 +150,7 @@ const ProductItem: React.FC = () => {
                 <aside className="w-full max-w-full md:w-100 h-[30vh] md:h-[80vh] overflow-x-auto hide-scrollbar md:overflow-x-visible hide-scrollbar">
 
 
-                    <div className="h-full flex gap-4 pr-2 overflow-y-hidden md:block md:overflow-y-auto hide-scrollbar md:gap-0 hide-scrollbar">
+                    <div ref={scrollRef} className="h-full flex gap-4 pr-2 overflow-y-hidden md:block md:overflow-y-auto hide-scrollbar md:gap-0 hide-scrollbar">
 
 
                         <ColorSwatchPicker
@@ -138,7 +170,7 @@ const ProductItem: React.FC = () => {
                         />
 
                         <ColorSwatchPicker
-                            label='Branding "KSC" Colour'
+                            label='Branding "KCS" Colour'
                             valueLabel={brandingColor.name}
                             options={BRANDING_OPTIONS}
                             selected={brandingColor}
@@ -185,7 +217,21 @@ const ProductItem: React.FC = () => {
                             colorOptions={BACK_TEXT_OPTIONS}
                             onChange={setBackTextConfig}/>
                     </div>
+
+
                 </aside>
+
+                {/* Pagination dots - len na mobile */}
+                <div className="mt-3 flex justify-center gap-2 md:hidden">
+                    {Array.from({ length: totalDots }).map((_, i) => (
+                        <span
+                            key={i}
+                            className={`h-2 w-2 rounded-full transition-all ${
+                                i === activeIndex ? "bg-gray-800 scale-110" : "bg-gray-300"
+                            }`}
+                        />
+                    ))}
+                </div>
             </div>
 
 
@@ -198,17 +244,17 @@ const ProductItem: React.FC = () => {
                     rightLogo={rightLogo}
                     sponsorLogoUrl={sponsorLogoUrl}
                     sponsorText={frontTextConfig}
-                    backLogoUrl={backLogoUrl}
-                    backSponsorText={backTextConfig}
+                    // backLogoUrl={backLogoUrl}
+                    // backSponsorText={backTextConfig}
                 />
             <div className="flex flex-1 justify-center items-center">
                 <div className="mt-3 h-15 flex md:justify-center items-center">
                     <button
                         type="button"
                         onClick={handleEnquireClick}
-                        className="inline-flex items-center cursor-pointer rounded-md bg-gray-600 px-5 py-2.5 text-xl font-semibold text-white shadow-sm hover:bg-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                        className="inline-flex items-center cursor-pointer rounded-md bg-black px-5 py-2.5 text-xl font-semibold text-white shadow-sm hover:bg-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                     >
-                        Enquiry
+                        Enquire
                     </button>
                 </div>
             </div>

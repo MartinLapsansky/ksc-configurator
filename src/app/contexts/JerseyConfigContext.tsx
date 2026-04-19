@@ -1,9 +1,9 @@
 "use client";
 
 import React, { createContext, useContext, useState } from "react";
-import type { ColorOption } from "./pickerComponents/ColorSwatchPicker";
-import type { StaticLogoOption } from "./pickerComponents/StaticLogoPicker";
-import type { BackLogoTextConfig } from "./pickerComponents/TextInsertPicker";
+import type { ColorOption } from "@/components/pickerComponents/ColorSwatchPicker";
+import type { StaticLogoOption } from "@/components/pickerComponents/StaticLogoPicker";
+import type { BackLogoTextConfig } from "@/components/pickerComponents/TextInsertPicker";
 
 export interface JerseyConfig {
   bgColor: ColorOption;

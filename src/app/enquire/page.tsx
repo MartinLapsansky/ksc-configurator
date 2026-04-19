@@ -1,7 +1,7 @@
 "use client";
 
 import React, {useState} from "react";
-import { useJerseyConfig } from "@/components/JerseyConfigContext";
+import { useJerseyConfig } from "@/app/contexts/JerseyConfigContext";
 
 interface EnquiryFormState {
   firstName: string;
@@ -41,7 +41,7 @@ export default function EnquirePage() {
     e.preventDefault();
   
     try {
-      const response = await fetch("/api/order", {
+      const response = await fetch("/api/enquire", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -82,7 +82,7 @@ export default function EnquirePage() {
                 <div>
                   <label
                     htmlFor="firstName"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium text-black"
                   >
                     First name
                   </label>
@@ -93,7 +93,7 @@ export default function EnquirePage() {
                     required
                     value={form.firstName}
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border border-gray-300 text-black bg-white px-3 py-2 text-sm  focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="mt-1 block w-full rounded-md border text-black border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
                 <div>
@@ -110,7 +110,7 @@ export default function EnquirePage() {
                     required
                     value={form.lastName}
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border border-gray-300 text-black bg-white px-3 py-2 text-sm  focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="mt-1 block w-full rounded-md border text-black border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
               </div>
@@ -128,7 +128,7 @@ export default function EnquirePage() {
                     name="phoneCountryCode"
                     value={form.phoneCountryCode}
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   >
                     <option value="+421">🇸🇰 +421</option>
                     <option value="+420">🇨🇿 +420</option>
@@ -151,7 +151,7 @@ export default function EnquirePage() {
                     required
                     value={form.phoneNumber}
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="mt-1 block w-full rounded-md border text-black border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
               </div>
@@ -170,7 +170,7 @@ export default function EnquirePage() {
                   required
                   value={form.email}
                   onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="mt-1 block w-full rounded-md border text-black border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </div>
 
@@ -187,7 +187,7 @@ export default function EnquirePage() {
                   type="text"
                   value={form.organisation}
                   onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="mt-1 block w-full rounded-md border text-black border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </div>
 
@@ -206,7 +206,7 @@ export default function EnquirePage() {
                     min={1}
                     value={form.quantity}
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="mt-1 block w-full rounded-md border text-black border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
                 <div>
@@ -223,7 +223,7 @@ export default function EnquirePage() {
                     placeholder="e.g. By end of June"
                     value={form.leadTime}
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="mt-1 block w-full rounded-md border text-black border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
               </div>
@@ -241,7 +241,7 @@ export default function EnquirePage() {
                   rows={5}
                   value={form.message}
                   onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="mt-1 block w-full rounded-md border text-black border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   placeholder="Any extra info about sizes, colours, deadlines, etc."
                 />
               </div>
