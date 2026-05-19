@@ -4,9 +4,11 @@ import React from "react";
 import {StaticImageData} from "next/image";
 
 export type ColorOption = {
+  id: string;
   name: string;
   hex: string;
-  file?: string | StaticImageData;
+  file?: StaticImageData | string;
+  backFile?: StaticImageData | string;
 };
 
 type ColorSwatchPickerProps = {
