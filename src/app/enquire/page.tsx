@@ -70,15 +70,15 @@ export default function EnquirePage() {
   return (
     <main className="min-h-screen bg-slate-100 px-4 py-6 md:px-8 md:py-10">
       <div className="mx-auto max-w-6xl rounded-lg bg-white p-6 shadow-sm md:p-8">
-        <h1 className="text-2xl text-black font-semibold tracking-tight">
+        <h1 className="text-2xl text-black font-semibold tracking-tight text-center">
           Enquire about this jersey
         </h1>
 
-        <div className="mt-8 grid gap-8 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
+        <div className="mt-8 grid place-items-center">
           {/* Formulár */}
           <section>
             <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-4 md">
                 <div>
                   <label
                     htmlFor="firstName"
@@ -256,111 +256,6 @@ export default function EnquirePage() {
               </div>
             </form>
           </section>
-
-      {/*    /!* Sumár konfigurácie dresu *!/*/}
-      {/*    <aside className="rounded-md border border-gray-200 bg-gray-50 p-4 text-sm">*/}
-      {/*      <h2 className="text-base font-semibold text-black">*/}
-      {/*        Jersey configuration summary*/}
-      {/*      </h2>*/}
-      {/*      {config ? (*/}
-      {/*              <div className="mt-3 space-y-3">*/}
-      {/*          <div>*/}
-      {/*            <h3 className="font-medium text-black">Colours</h3>*/}
-      {/*            <ul className="mt-1 space-y-1">*/}
-      {/*              <li>*/}
-      {/*                <span className="text-gray-500">Main body: </span>*/}
-      {/*                <span className="text-black">{config.bgColor.name}</span>{" "}*/}
-      {/*                <span className="text-xs text-gray-400">*/}
-      {/*                  ({config.bgColor.hex})*/}
-      {/*                </span>*/}
-      {/*              </li>*/}
-      {/*              <li>*/}
-      {/*                <span className="text-gray-500">Stripes: </span>*/}
-      {/*                <span className="text-black">{config.stripeColor.name}</span>{" "}*/}
-      {/*                <span className="text-xs text-gray-400">*/}
-      {/*                  ({config.stripeColor.hex})*/}
-      {/*                </span>*/}
-      {/*              </li>*/}
-      {/*              <li>*/}
-      {/*                <span className="text-gray-500">Branding: </span>*/}
-      {/*                <span className="text-black">{config.brandingColor.name}</span>{" "}*/}
-      {/*                <span className="text-xs text-gray-400">*/}
-      {/*                  ({config.brandingColor.hex})*/}
-      {/*                </span>*/}
-      {/*              </li>*/}
-      {/*            </ul>*/}
-      {/*          </div>*/}
-
-      {/*          <div>*/}
-      {/*            <h3 className="font-medium text-gray-700">Logos</h3>*/}
-      {/*            <ul className="mt-1 space-y-1">*/}
-      {/*              <li>*/}
-      {/*                <span className="text-gray-500">Left chest logo: </span>*/}
-      {/*                <span className="text-black">*/}
-      {/*                  {config.leftChestLogoUrl ? "Custom upload" : "Not set"}*/}
-      {/*                </span>*/}
-      {/*              </li>*/}
-      {/*              <li>*/}
-      {/*                <span className="text-gray-500">Right chest logo: </span>*/}
-      {/*                <span className="text-black">{config.rightLogo?.name ?? "Not set"}</span>*/}
-      {/*              </li>*/}
-      {/*              <li>*/}
-      {/*                <span className="text-gray-500">Front sponsor logo: </span>*/}
-      {/*                <span className="text-black">*/}
-      {/*                  {config.sponsorLogoUrl ? "Custom upload" : "Not set"}*/}
-      {/*                </span>*/}
-      {/*              </li>*/}
-      {/*              <li>*/}
-      {/*                <span className="text-gray-500">Back sponsor logo: </span>*/}
-      {/*                <span className="text-black">*/}
-      {/*                  {config.backLogoUrl ? "Custom upload" : "Not set"}*/}
-      {/*                </span>*/}
-      {/*              </li>*/}
-      {/*            </ul>*/}
-      {/*          </div>*/}
-
-      {/*          <div>*/}
-      {/*            <h3 className="font-medium text-gray-700">Text</h3>*/}
-      {/*            <ul className="mt-1 space-y-1">*/}
-      {/*              <li>*/}
-      {/*                <span className="text-gray-500">Front sponsor text: </span>*/}
-      {/*                {config.frontTextConfig.enabled &&*/}
-      {/*                config.frontTextConfig.text ? (*/}
-      {/*                  <span className="text-black">*/}
-      {/*                    {config.frontTextConfig.text}{" "}*/}
-      {/*                    <span className="text-xs text-black">*/}
-      {/*                      ({config.frontTextConfig.color.name})*/}
-      {/*                    </span>*/}
-      {/*                  </span>*/}
-      {/*                ) : (*/}
-      {/*                  <span className="text-black">Not set</span>*/}
-      {/*                )}*/}
-      {/*              </li>*/}
-      {/*              <li>*/}
-      {/*                <span className="text-gray-500">Back sponsor text: </span>*/}
-      {/*                {config.backTextConfig.enabled &&*/}
-      {/*                config.backTextConfig.text ? (*/}
-      {/*                  <span className="text-black">*/}
-      {/*                    {config.backTextConfig.text}{" "}*/}
-      {/*                    <span className="text-xs text-gray-400">*/}
-      {/*                      ({config.backTextConfig.color.name})*/}
-      {/*                    </span>*/}
-      {/*                  </span>*/}
-      {/*                ) : (*/}
-      {/*                  <span className="text-black">Not set</span>*/}
-      {/*                )}*/}
-      {/*              </li>*/}
-      {/*            </ul>*/}
-      {/*          </div>*/}
-      {/*        </div>*/}
-      {/*      ) : (*/}
-      {/*        <p className="mt-3 text-sm text-gray-500">*/}
-      {/*          Konfigurácia dresu nebola načítaná. Prosím, vráť sa na hlavnú*/}
-      {/*          stránku, nakonfiguruj dres a klikni na{" "}*/}
-      {/*          <span className="font-medium">“Enquire about this jersey”</span>.*/}
-      {/*        </p>*/}
-      {/*      )}*/}
-      {/*    </aside>*/}
         </div>
       </div>
     </main>
