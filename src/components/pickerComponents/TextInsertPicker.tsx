@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback } from "react";
-import { ColorOption } from "./ColorSwatchPicker";
+import type { ColorOption } from "@/types/preview";
 
 export type BackLogoTextConfig = {
   enabled: boolean;
