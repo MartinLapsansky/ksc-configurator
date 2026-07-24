@@ -1,29 +1,29 @@
 "use client";
 
 import React, {useEffect, useRef, useState} from "react";
-import ColorSwatchPicker, { ColorOption } from './pickerComponents/ColorSwatchPicker'
-import StaticLogoPicker, { StaticLogoOption } from "./pickerComponents/StaticLogoPicker";
-import LogoUploadPicker from "./pickerComponents/LogoUploadPicker";
-import JerseyPreview from "./productPreviewComponent/JerseyPreview";
+import ColorSwatchPicker from '../../pickerComponents/ColorSwatchPicker'
+import {ColorOption} from "@/types/preview";
+import StaticLogoPicker, { StaticLogoOption } from "../../pickerComponents/StaticLogoPicker";
+import LogoUploadPicker from "../../pickerComponents/LogoUploadPicker";
+import JerseyPreview from "@/components/productPreviewComponents/jerseyView/view/JerseyPreview";
 import {BackLogoTextConfig} from "@/components/pickerComponents/TextInsertPicker";
 
-import {useJerseyConfig} from "@/app/contexts/JerseyConfigContext";
+import {useProductConfig} from "@/app/contexts/ProductConfigContext";
 
 // imports z src/app/assets
-import bgHotPink from "../app/assets/jerseys/jersey-hot-pink.png";
-import bgHotPurple from "../app/assets/jerseys/jersey-purple.png";
-import bgHotLavender from "../app/assets/jerseys/jersey-levender.png";
-import bgHotPastelgreen from "../app/assets/jerseys/jersey-lime-green.png";
+import bgHotPink from "../../../app/assets/jerseys/jersey-hot-pink.png";
+import bgHotPurple from "../../../app/assets/jerseys/jersey-purple.png";
+import bgHotLavender from "../../../app/assets/jerseys/jersey-levender.png";
+import bgHotPastelgreen from "../../../app/assets/jerseys/jersey-lime-green.png";
 
 // import for back jerseys
-
 import jerseyPurpleBack from "@/app/assets/jerseys/jersey-purple-back.png";
 import jerseyLavenderBack from "@/app/assets/jerseys/jersey-levender-back.png";
 import jerseyLimeGreenBack from "@/app/assets/jerseys/jersey-lime-green-back.png";
 
-import camogieLogo from "../app/assets/camogie-logo.png";
-import gaaLogo from "../app/assets/gaa-logo.png";
-import lgfaLogo from "../app/assets/lgfa-logo.png";
+import camogieLogo from "../../../app/assets/camogie_logo.svg";
+import gaaLogo from "../../../app/assets/gaa_logo.png";
+import lgfaLogo from "../../../app/assets/lgfa-logo.png";
 import TextInsertPicker from "@/components/pickerComponents/TextInsertPicker";
 import {useRouter} from "next/navigation";
 
@@ -88,9 +88,9 @@ const FRONT_TEXT_OPTIONS: ColorOption[] = [
     { id: "front-text-white", name: "White", hex: "#FFFFFF" },
 ];
 
-const ProductItem: React.FC = () => {
+const JerseyProductItem: React.FC = () => {
 
-  const {setConfig} = useJerseyConfig();
+  const {setConfig} = useProductConfig();
 
   const router = useRouter();
 
@@ -156,6 +156,7 @@ const ProductItem: React.FC = () => {
 
     const handleEnquireClick = () => {
         setConfig({
+            productType: "jersey",
             bgColor,
             stripeColor,
             brandingColor,
@@ -252,7 +253,7 @@ const ProductItem: React.FC = () => {
 
                 </aside>
 
-                {/* Pagination dots - len na mobile */}
+                {/* Pagination dots - only for mobile */}
                 <div className="mt-3 flex justify-center gap-2 md:hidden">
                     {Array.from({ length: totalDots }).map((_, i) => (
                         <span
@@ -295,4 +296,4 @@ const ProductItem: React.FC = () => {
   );
 };
 
-export default ProductItem;
+export default JerseyProductItem;

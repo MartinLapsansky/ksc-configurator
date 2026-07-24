@@ -22,7 +22,7 @@ async function main() {
     },
     update: {
       name: "Admin",
-      password: "adminpassword123",
+      password: hashedPassword,
     },
     create: {
       email: "mbaca130@gmail.com",

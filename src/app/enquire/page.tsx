@@ -1,11 +1,12 @@
 "use client";
 
 import React, {useState} from "react";
-import { useJerseyConfig } from "@/app/contexts/JerseyConfigContext";
+import { useProductConfig } from "@/app/contexts/ProductConfigContext";
 
 interface EnquiryFormState {
   firstName: string;
   lastName: string;
+  county: string;
   email: string;
   phoneCountryCode: string;
   phoneNumber: string;
@@ -16,11 +17,12 @@ interface EnquiryFormState {
 }
 
 export default function EnquirePage() {
-  const { config } = useJerseyConfig();
+  const { config } = useProductConfig();
 
   const [form, setForm] = useState<EnquiryFormState>({
     firstName: "",
     lastName: "",
+    county : "",
     email: "",
     phoneCountryCode: "+421",
     phoneNumber: "",
@@ -48,7 +50,7 @@ export default function EnquirePage() {
         },
         body: JSON.stringify({
           form,
-          jerseyConfig: config,
+          productConfig: config,
         }),
       });
   
@@ -69,9 +71,9 @@ export default function EnquirePage() {
 
   return (
     <main className="min-h-screen bg-slate-100 px-4 py-6 md:px-8 md:py-10">
-      <div className="mx-auto max-w-6xl rounded-lg bg-white p-6 shadow-sm md:p-8">
+      <div className="mx-auto max-w-2xl rounded-lg bg-white p-6 shadow-sm md:p-8">
         <h1 className="text-2xl text-black font-semibold tracking-tight text-center">
-          Enquire about this jersey
+          Please fill in the fields below
         </h1>
 
         <div className="mt-8 grid place-items-center">
@@ -113,6 +115,25 @@ export default function EnquirePage() {
                     className="mt-1 block w-full rounded-md border text-black border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
+                  <div>
+                      <label
+                          htmlFor="county"
+                          className="block text-sm font-medium text-black"
+                      >
+                          County
+                      </label>
+                      <input
+                          id="County"
+                          name="County"
+                          type="text"
+                          required
+                          value={form.county}
+                          onChange={handleChange}
+                          className="mt-1 block w-full rounded-md border text-black border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      />
+                  </div>
+                  <div>
+                  </div>
               </div>
 
               <div className="grid gap-4 md:grid-cols-[0.6fr_1.4fr]">

@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import type { ColorOption } from "@/types/preview";
+import type { ColorOption, DoubleColorOption } from "@/types/preview";
 
 type ColorChipProps = {
   label: string;
-  color?: ColorOption;
+  color?: ColorOption | DoubleColorOption;
 };
 
 export default function ColorChip({ label, color }: ColorChipProps) {
@@ -17,17 +17,47 @@ export default function ColorChip({ label, color }: ColorChipProps) {
     );
   }
 
+  // Check if it's a DoubleColorOption (has hex1/hex2)
+  const isDouble = "hex1" in color && "hex2" in color;
+
+  if (isDouble) {
+    const doubleColor = color as DoubleColorOption;
+    return (
+      <div className="flex items-center gap-3 rounded-md border border-gray-200 bg-white px-3 py-2">
+        <div className="flex -space-x-1">
+          <span
+            className="h-5 w-5 rounded-full border border-black/10 shadow-sm"
+            style={{ backgroundColor: doubleColor.hex1 }}
+            aria-hidden="true"
+          />
+          <span
+            className="h-5 w-5 rounded-full border border-black/10 shadow-sm"
+            style={{ backgroundColor: doubleColor.hex2 }}
+            aria-hidden="true"
+          />
+        </div>
+        <div className="min-w-0">
+          <div className="text-xs font-medium text-black">{label}</div>
+          <div className="text-xs text-gray-500">
+            {doubleColor.name} · <span className="font-mono">{doubleColor.hex1}</span> / <span className="font-mono">{doubleColor.hex2}</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const singleColor = color as ColorOption;
   return (
     <div className="flex items-center gap-3 rounded-md border border-gray-200 bg-white px-3 py-2">
       <span
         className="h-5 w-5 rounded-full border border-black/10 shadow-sm"
-        style={{ backgroundColor: color.hex }}
+        style={{ backgroundColor: singleColor.hex }}
         aria-hidden="true"
       />
       <div className="min-w-0">
         <div className="text-xs font-medium text-black">{label}</div>
         <div className="text-xs text-gray-500">
-          {color.name} · <span className="font-mono">{color.hex}</span>
+          {singleColor.name} · <span className="font-mono">{singleColor.hex}</span>
         </div>
       </div>
     </div>

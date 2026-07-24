@@ -4,29 +4,35 @@ import React from "react";
 import Image from "next/image";
 import topNavBanner from "@/app/assets/homepage/customize_it_banner.png";
 
-interface HomeCard {
+interface CategoryCard {
   id: string;
   title: string;
   buttonLabel: string;
   href: string;
 }
 
-const cards: HomeCard[] = [
+const categories: CategoryCard[] = [
   {
-    id: "sports",
-    title: "Category: Sports Kit",
-    buttonLabel: "Sports Kit",
-    href: "/categories/sportswear",
+    id: "hoodies",
+    title: "Zip Tops",
+    buttonLabel: "Explore",
+    href: "/categories/leisurewear/half-zip",
   },
   {
-    id: "leisure",
-    title: "Category: Leisurewear",
-    buttonLabel: "Leisurewear",
-    href: "/categories/leisurewear",
+    id: "tracksuits",
+    title: "Crew necks",
+    buttonLabel: "Explore",
+    href: "/enquire",
+  },
+  {
+    id: "caps",
+    title: "Shorts",
+    buttonLabel: "Explore",
+    href: "/enquire",
   },
 ];
 
-export default function HomePage() {
+export default function LeisurewearPage() {
   return (
     <main className="min-w-screen min-h-screen bg-slate-100">
       {/* Top Banner - 30% of viewport height */}
@@ -44,13 +50,13 @@ export default function HomePage() {
       {/* Cards Section - fills remaining height to 100vh */}
       <section className="w-full px-4 md:px-8" style={{ height: "70vh" }}>
         <div className="mx-auto flex h-full w-full max-w-none flex-col items-stretch justify-center gap-6 py-8 md:flex-row md:py-12">
-          {cards.map((card) => (
+          {categories.map((card) => (
             <div
               key={card.id}
-              className="group relative flex min-w-[200px] flex-1 items-start justify-start rounded-2xl bg-gray-300 p-8 cursor-pointer shadow-md transition-transform hover:scale-[1.02] hover:bg-gray-400"
+              className="group relative flex min-w-[200px] flex-1 items-center justify-center rounded-2xl bg-gray-300 p-8 cursor-pointer shadow-md transition-transform hover:scale-[1.02] hover:bg-gray-400"
             >
-              {/* Main heading top-left */}
-              <h2 className="text-left mt-20 ml-10 text-2xl font-bold text-gray-800 group-hover:text-lime-green md:text-3xl">
+              {/* Main heading centered */}
+              <h2 className="text-center text-2xl font-bold text-gray-800 group-hover:text-lime-green md:text-3xl">
                 {card.title}
               </h2>
 

@@ -1,17 +1,17 @@
 "use client";
 
 import React from "react";
-import type { ColorOption } from "@/types/preview";
+import type { DoubleColorOption } from "@/types/preview";
 
-type ColorSwatchPickerProps = {
+type DoubleColorSwatchPickerProps = {
   label: string;
   valueLabel: string;
-  options: ColorOption[];
-  selected: ColorOption;
-  onChange: (option: ColorOption) => void;
+  options: DoubleColorOption[];
+  selected: DoubleColorOption;
+  onChange: (option: DoubleColorOption) => void;
 };
 
-const ColorSwatchPicker: React.FC<ColorSwatchPickerProps> = ({
+const DoubleColorSwatchPicker: React.FC<DoubleColorSwatchPickerProps> = ({
   label,
   valueLabel,
   options,
@@ -19,7 +19,7 @@ const ColorSwatchPicker: React.FC<ColorSwatchPickerProps> = ({
   onChange,
 }) => {
   return (
-      <section className="mb-4 min-w-[50vw] md:min-w-0 md:w-full rounded-md border border-gray-200 bg-white p-3 shadow-sm">
+    <section className="mb-4 min-w-[50vw] md:min-w-0 md:w-full rounded-md border border-gray-200 bg-white p-3 shadow-sm">
       <div className="mb-2 flex items-baseline justify-between text-sm">
         <strong className="text-black">{label}</strong>
         <span className="text-xs text-black">{valueLabel}</span>
@@ -37,7 +37,9 @@ const ColorSwatchPicker: React.FC<ColorSwatchPickerProps> = ({
                   ? "scale-105 border-black ring-2 ring-black"
                   : "border-gray-300 hover:scale-105"
               }`}
-              style={{ backgroundColor: o.hex }}
+              style={{
+                background: `linear-gradient(135deg, ${o.hex1} 50%, ${o.hex2} 50%)`,
+              }}
               title={o.name}
             />
           );
@@ -47,4 +49,4 @@ const ColorSwatchPicker: React.FC<ColorSwatchPickerProps> = ({
   );
 };
 
-export default ColorSwatchPicker;
+export default DoubleColorSwatchPicker;

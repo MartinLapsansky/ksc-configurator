@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import type { Order } from "@/types/preview";
 import JerseyConfigSummary from "./JerseyConfigSummary";
 import JerseyPreviewOrder from "./jerseyPreviewOrder";
+import HalfZipPreviewOrder from "./halfZipPreviewOrder";
 
 type OrderCardProps = {
     order: Order;
@@ -11,6 +12,17 @@ type OrderCardProps = {
 
 export default function OrderCard({ order }: OrderCardProps) {
     const [open, setOpen] = useState(false);
+
+    const renderProductPreview = () => {
+        switch (order.productConfig.productType) {
+            case "jersey":
+                return <JerseyPreviewOrder productConfig={order.productConfig} />;
+            case "halfZip":
+                return <HalfZipPreviewOrder productConfig={order.productConfig} />;
+            default:
+                return null;
+        }
+    };
 
     return (
         <div className="rounded-xl border cursor-pointer border-gray-200 bg-white p-4 shadow-sm">
@@ -55,8 +67,8 @@ export default function OrderCard({ order }: OrderCardProps) {
 
             {open && (
                 <div className="mt-4 space-y-5 border-t border-gray-200 pt-4">
-                    <JerseyPreviewOrder jerseyConfig={order.jerseyConfig} />
-                    <JerseyConfigSummary jerseyConfig={order.jerseyConfig} />
+                    {renderProductPreview()}
+                    <JerseyConfigSummary productConfig={order.productConfig} />
                 </div>
             )}
         </div>

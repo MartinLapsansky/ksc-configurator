@@ -1,22 +1,20 @@
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
+import { useProductCanvasContext } from "../../../../app/contexts/ProductCanvasContext";
 
 const SPONSOR_TEXT_POS = { x: 0.49, y: 0.54 };
 
 type SponsorTextOverlayProps = {
   text: string;
   colorHex: string;
-  containerRef: React.RefObject<HTMLDivElement | null>;
-  bgImageRef: React.RefObject<HTMLImageElement | null>;
 };
 
 const SponsorTextOverlay: React.FC<SponsorTextOverlayProps> = ({
   text,
   colorHex,
-  containerRef,
-  bgImageRef,
 }) => {
+  const { containerRef, bgImageRef } = useProductCanvasContext();
   const [pos, setPos] = useState<{ left: number; top: number } | null>(null);
 
   const recalc = useCallback(() => {

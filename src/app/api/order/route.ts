@@ -9,6 +9,12 @@ interface ColorOption {
     hex: string;
 }
 
+interface DoubleColorOption {
+    name: string;
+    hex1: string;
+    hex2: string;
+}
+
 interface StaticLogoOption {
     name: string;
     src: string;
@@ -20,13 +26,15 @@ interface TextConfig {
     color: ColorOption;
 }
 
-interface JerseyConfig {
-    bgColor: ColorOption;
+interface ProductConfig {
+    productType: "jersey" | "halfZip";
+    bgColor?: ColorOption | DoubleColorOption;
     stripeColor?: ColorOption;
     brandingColor?: ColorOption;
     leftChestLogoUrl?: string;
     sponsorLogoUrl?: string;
     rightLogo?: StaticLogoOption;
+    rightChestLogoUrl?: string;
     backLogoUrl?: string;
     backTextConfig?: TextConfig;
     frontTextConfig?: TextConfig;
@@ -35,6 +43,7 @@ interface JerseyConfig {
 interface EnquiryFormState {
     firstName: string;
     lastName: string;
+    county: string;
     email: string;
     phoneCountryCode: string;
     phoneNumber: string;
@@ -46,7 +55,7 @@ interface EnquiryFormState {
 
 interface EnquiryRequestBody {
     form: EnquiryFormState;
-    jerseyConfig: JerseyConfig;
+    productConfig: ProductConfig;
 }
 
 export async function POST(req: NextRequest){
@@ -54,21 +63,14 @@ export async function POST(req: NextRequest){
    try{
        const body = (await req.json()) as EnquiryRequestBody;
 
-       const {form, jerseyConfig} = body;
+       const {form, productConfig} = body;
 
        const session = await getServerSession(authOptions);
-
-       // if (!session?.user?.id) {
-       //     return NextResponse.json(
-       //         { message: "Unauthorized" },
-       //         { status: 401 },
-       //     );
-       // }
-
 
        if (
            !form?.firstName ||
            !form?.lastName ||
+           !form?.county ||
            !form?.email ||
            !form?.phoneCountryCode ||
            !form?.phoneNumber ||
@@ -83,9 +85,9 @@ export async function POST(req: NextRequest){
            );
        }
 
-       if (!jerseyConfig) {
+       if (!productConfig) {
            return NextResponse.json(
-               { message: "Jersey config is required" },
+               { message: "Product config is required" },
                { status: 400 },
            );
        }
@@ -94,6 +96,7 @@ export async function POST(req: NextRequest){
            data: {
                firstName: form.firstName.trim(),
                lastName: form.lastName.trim(),
+               county: form.county.trim(),
                email: form.email.trim().toLowerCase(),
                phoneCountryCode: form.phoneCountryCode.trim(),
                phoneNumber: form.phoneNumber.trim(),
@@ -101,7 +104,7 @@ export async function POST(req: NextRequest){
                quantity: Number(form.quantity),
                leadTime: form.leadTime.trim(),
                message: form.message.trim(),
-               jerseyConfig: JSON.parse(JSON.stringify(jerseyConfig)) as Prisma.InputJsonValue,
+               jerseyConfig: JSON.parse(JSON.stringify(productConfig)) as Prisma.InputJsonValue,
                userId: session?.user?.id ?? null,
            },
        });
@@ -143,6 +146,5 @@ export async function GET() {
         );
     }
 }
-
 
 

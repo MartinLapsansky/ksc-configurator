@@ -24,13 +24,16 @@ export default function SignInForm() {
                 redirect: false,
                 callbackUrl,
             });
+            console.log("signIn result:", res);
 
             if (!res || res.error) {
-                setError("Nesprávny email alebo heslo.");
+                setError("Wrong credentials.");
                 return;
             }
-
-            router.push(callbackUrl);
+            if (res?.ok){
+                router.push(callbackUrl);
+                router.refresh();
+            }
         } catch {
             setError("Nesprávny email alebo heslo.");
         }
@@ -40,7 +43,7 @@ export default function SignInForm() {
         <div className="min-h-screen flex items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
             <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-md sm:p-8">
                 <h1 className="mb-6 text-center text-2xl font-bold text-black sm:text-3xl">
-                    Log in to your account
+                    Log in
                 </h1>
 
                 <form onSubmit={handleLogin} className="space-y-4">
@@ -89,10 +92,10 @@ export default function SignInForm() {
                         </a>
                     </div>
 
-                    <div className="pt-2">
+                    <div className="pt-2 text-center">
                         <button
                             type="submit"
-                            className="w-full rounded-md bg-green-800 px-4 py-2 font-semibold text-white transition-colors hover:bg-green-700"
+                            className="cursor-pointer rounded-md bg-green-800 px-4 py-2 font-semibold text-white transition-colors hover:bg-green-700"
                         >
                             Log in
                         </button>
