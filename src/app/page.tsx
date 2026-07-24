@@ -47,17 +47,17 @@ export default function HomePage() {
           {cards.map((card) => (
             <div
               key={card.id}
-              className="group relative flex min-w-[200px] flex-1 items-start justify-start rounded-2xl bg-gray-300 p-8 cursor-pointer shadow-md transition-transform hover:scale-[1.02] hover:bg-gray-400"
+              className="group relative flex min-w-[200px] flex-1 flex-col items-start justify-start rounded-2xl bg-gray-300 p-8 cursor-pointer shadow-md transition-transform hover:scale-[1.02] hover:bg-gray-400"
             >
               {/* Main heading top-left */}
               <h2 className="text-left mt-20 ml-10 text-2xl font-bold text-gray-800 group-hover:text-lime-green md:text-3xl">
                 {card.title}
               </h2>
 
-              {/* Button at bottom-left */}
+              {/* Button at bottom-left - absolute on desktop, relative on mobile */}
               <a
                 href={card.href}
-                className="absolute bottom-15 left-15 rounded-lg cursor-pointer bg-black px-5 py-2.5 text-lg font-semibold text-white transition hover:bg-gray-800"
+                className="md:absolute md:bottom-15 md:left-15 mt-6 ml-10 self-start rounded-lg cursor-pointer bg-black px-5 py-2.5 text-lg font-semibold text-white transition hover:bg-gray-800"
               >
                 {card.buttonLabel}
               </a>
