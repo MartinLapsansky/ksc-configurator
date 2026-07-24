@@ -22,13 +22,13 @@ const categories: CategoryCard[] = [
     id: "tracksuits",
     title: "Crew necks",
     buttonLabel: "Explore",
-    href: "/enquire",
+    href: "",
   },
   {
     id: "caps",
     title: "Shorts",
     buttonLabel: "Explore",
-    href: "/enquire",
+    href: "",
   },
 ];
 
