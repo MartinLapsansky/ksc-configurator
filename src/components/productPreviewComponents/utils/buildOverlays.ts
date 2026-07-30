@@ -17,6 +17,11 @@ import backSponsorLogoImg from "@/app/assets/jerseys/layers/back-sponsor-logo-la
 import halfZipLeftChestLayer from "@/app/assets/zip-tops/layers/left_chest_logo_layer.png";
 import halfZipRightChestLayer from "@/app/assets/zip-tops/layers/right_chest_logo_layer.png";
 
+// ── CrewNeck layer images ──
+import crewNeckLeftChestLayer from "@/app/assets/crewnecks/layers/left_logo_layer.png";
+import crewNeckRightChestLayer from "@/app/assets/crewnecks/layers/right_logo_layer.png";
+import crewNeckBackLayer from "@/app/assets/crewnecks/layers/back_logo_layer.png";
+
 export const RIGHT_LOGO_LAYER_MAP: Record<string, typeof rightLogoGaaImg> = {
   Gaa: rightLogoGaaImg,
   Camogie: rightLogoCamogieImg,
@@ -136,6 +141,57 @@ export const buildHalfZipOverlays = ({
     key: "rightChest",
     layerSrc: halfZipRightChestLayer.src,
     uploadSrc: rightChestLogoUrl,
+    active: true,
+  });
+
+  return list;
+};
+
+// ── CrewNeck front overlays ──
+
+type BuildCrewNeckFrontOverlaysParams = {
+  leftChestLogoUrl?: string;
+  rightChestLogoUrl?: string;
+};
+
+export const buildCrewNeckFrontOverlays = ({
+  leftChestLogoUrl,
+  rightChestLogoUrl,
+}: BuildCrewNeckFrontOverlaysParams): OverlayEntry[] => {
+  const list: OverlayEntry[] = [];
+
+  list.push({
+    key: "leftChest",
+    layerSrc: crewNeckLeftChestLayer.src,
+    uploadSrc: leftChestLogoUrl,
+    active: true,
+  });
+
+  list.push({
+    key: "rightChest",
+    layerSrc: crewNeckRightChestLayer.src,
+    uploadSrc: rightChestLogoUrl,
+    active: true,
+  });
+
+  return list;
+};
+
+// ── CrewNeck back overlays ──
+
+type BuildCrewNeckBackOverlaysParams = {
+  backLogoUrl?: string;
+};
+
+export const buildCrewNeckBackOverlays = ({
+  backLogoUrl,
+}: BuildCrewNeckBackOverlaysParams): OverlayEntry[] => {
+  const list: OverlayEntry[] = [];
+
+  list.push({
+    key: "backLogo",
+    layerSrc: crewNeckBackLayer.src,
+    uploadSrc: backLogoUrl,
     active: true,
   });
 

@@ -16,6 +16,15 @@ export type DoubleColorOption = {
   file?: StaticImageData | string;
 };
 
+export type TripleColorOption = {
+  id: string;
+  name: string;
+  hex1: string;
+  hex2: string;
+  hex3: string;
+  file?: StaticImageData | string;
+};
+
 export type OverlayEntry = {
   key: string;
   layerSrc: string;
@@ -53,7 +62,14 @@ export type HalfZipConfig = {
   rightChestLogoUrl?: string;
 };
 
-export type ProductType = "jersey" | "halfZip";
+export type CrewNeckConfig = {
+  bgColor?: TripleColorOption;
+  leftChestLogoUrl?: string;
+  rightChestLogoUrl?: string;
+  backLogoUrl?: string;
+};
+
+export type ProductType = "jersey" | "halfZip" | "crewNeck";
 
 /**
  * General product configuration that can hold config for any product type.
@@ -62,7 +78,7 @@ export type ProductType = "jersey" | "halfZip";
  */
 export type ProductConfig = {
   productType: ProductType;
-  bgColor?: ColorOption | DoubleColorOption;
+  bgColor?: ColorOption | DoubleColorOption | TripleColorOption;
   // Jersey-specific fields
   stripeColor?: ColorOption;
   brandingColor?: ColorOption;

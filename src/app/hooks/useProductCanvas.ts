@@ -4,7 +4,7 @@ import {
   drawFitted,
   drawUploadIntoLayerBounds,
   drawTintedLayer,
-} from "../../components/productPreviewComponents/utils/PreviewHelpers";
+} from "@/components/productPreviewComponents/utils/PreviewHelpers";
 
 type UseProductCanvasParams = {
   overlays: OverlayEntry[];

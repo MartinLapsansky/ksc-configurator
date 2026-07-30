@@ -5,6 +5,7 @@ import type { Order } from "@/types/preview";
 import JerseyConfigSummary from "./JerseyConfigSummary";
 import JerseyPreviewOrder from "./jerseyPreviewOrder";
 import HalfZipPreviewOrder from "./halfZipPreviewOrder";
+import CrewNeckPreviewOrder from "./crewNeckPreviewOrder";
 
 type OrderCardProps = {
     order: Order;
@@ -19,6 +20,8 @@ export default function OrderCard({ order }: OrderCardProps) {
                 return <JerseyPreviewOrder productConfig={order.productConfig} />;
             case "halfZip":
                 return <HalfZipPreviewOrder productConfig={order.productConfig} />;
+            case "crewNeck":
+                return <CrewNeckPreviewOrder productConfig={order.productConfig} />;
             default:
                 return null;
         }

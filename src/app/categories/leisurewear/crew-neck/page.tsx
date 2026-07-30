@@ -5,28 +5,28 @@ import Image from "next/image";
 import topNavBanner from "@/app/assets/homepage/customize_it_banner.png";
 import CategoryCard, { CategoryCardItem } from "@/components/CategoryCard";
 
-const halfZipDesigns: CategoryCardItem[] = [
+const crewNeckDesigns: CategoryCardItem[] = [
   {
-    id: "soul-half-zip",
-    title: "Soul Half Zip",
+    id: "helios-crew-neck",
+    title: "Helios Crew Neck",
     buttonLabel: "Customise",
-    href: "/categories/leisurewear/half-zip/soul-half-zip",
+    href: "/categories/leisurewear/crew-neck/helios-crew-neck",
   },
   {
-    id: "half-zip-design-2",
-    title: "Half Zip Design 2",
+    id: "soul-crew-neck",
+    title: "Soul Crew Neck",
     buttonLabel: "Customise",
     href: "",
   },
   {
-    id: "half-zip-design-3",
-    title: "Half Zip Design 3",
+    id: "nova-crew-neck",
+    title: "Nova Crew Neck",
     buttonLabel: "Customise",
     href: "",
   },
 ];
 
-export default function HalfZipPage() {
+export default function CrewNeckPage() {
   return (
     <main className="min-w-screen min-h-screen bg-slate-100">
       {/* Top Banner - 30% of viewport height */}
@@ -42,7 +42,7 @@ export default function HalfZipPage() {
       </div>
 
       <section className="w-full px-4 md:px-8 py-8">
-        <CategoryCard cards={halfZipDesigns} />
+        <CategoryCard cards={crewNeckDesigns} />
       </section>
     </main>
   );
