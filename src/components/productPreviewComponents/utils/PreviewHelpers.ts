@@ -19,6 +19,15 @@ export const drawFitted = ({
   targetCtx.drawImage(img, offsetX, offsetY, drawnW, drawnH);
 };
 
+/**
+ * Caps the effective pixel ratio used for offscreen work to avoid
+ * allocating huge canvases on high-DPR mobile devices (DPR 3+).
+ * This dramatically reduces memory usage and prevents "page crashed".
+ */
+const MAX_DPR = 2;
+
+const getEffectiveDpr = (dpr: number) => Math.min(dpr || 1, MAX_DPR);
+
 type DrawUploadIntoLayerBoundsParams = {
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
@@ -46,13 +55,18 @@ export const drawUploadIntoLayerBounds = async ({
   drawnW,
   drawnH,
 }: DrawUploadIntoLayerBoundsParams) => {
+  const effDpr = getEffectiveDpr(dpr);
+
+  // Work in a smaller offscreen canvas (capped DPR) to limit memory.
+  const offW = Math.max(1, Math.round(cw * effDpr));
+  const offH = Math.max(1, Math.round(ch * effDpr));
   const offscreen = document.createElement("canvas");
-  offscreen.width = canvas.width;
-  offscreen.height = canvas.height;
+  offscreen.width = offW;
+  offscreen.height = offH;
   const offCtx = offscreen.getContext("2d");
   if (!offCtx) return;
 
-  offCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  offCtx.setTransform(effDpr, 0, 0, effDpr, 0, 0);
 
   offCtx.clearRect(0, 0, cw, ch);
   offCtx.globalCompositeOperation = "source-over";
@@ -65,10 +79,12 @@ export const drawUploadIntoLayerBounds = async ({
     drawnH,
   });
 
-  const fx = Math.round(offsetX * dpr);
-  const fy = Math.round(offsetY * dpr);
-  const fw = Math.round(drawnW * dpr);
-  const fh = Math.round(drawnH * dpr);
+  // Only read the region that actually contains the layer (bounded by the
+  // drawn image area), not the whole canvas. This keeps getImageData small.
+  const fx = Math.max(0, Math.round(offsetX * effDpr));
+  const fy = Math.max(0, Math.round(offsetY * effDpr));
+  const fw = Math.max(1, Math.round(drawnW * effDpr));
+  const fh = Math.max(1, Math.round(drawnH * effDpr));
 
   const imageData = offCtx.getImageData(fx, fy, fw, fh);
   const pixels = imageData.data;
@@ -91,10 +107,10 @@ export const drawUploadIntoLayerBounds = async ({
 
   if (maxX <= minX || maxY <= minY) return;
 
-  const bx = offsetX + minX / dpr;
-  const by = offsetY + minY / dpr;
-  const bw = (maxX - minX + 1) / dpr;
-  const bh = (maxY - minY + 1) / dpr;
+  const bx = offsetX + minX / effDpr;
+  const by = offsetY + minY / effDpr;
+  const bw = (maxX - minX + 1) / effDpr;
+  const bh = (maxY - minY + 1) / effDpr;
 
   offCtx.clearRect(0, 0, cw, ch);
 
@@ -113,7 +129,7 @@ export const drawUploadIntoLayerBounds = async ({
   ctx.save();
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.globalCompositeOperation = "source-over";
-  ctx.drawImage(offscreen, 0, 0);
+  ctx.drawImage(offscreen, 0, 0, canvas.width, canvas.height);
   ctx.restore();
 };
 
@@ -144,13 +160,18 @@ export const drawTintedLayer = async ({
   drawnW,
   drawnH,
 }: DrawTintedLayerParams) => {
+  const effDpr = getEffectiveDpr(dpr);
+
+  // Work in a smaller offscreen canvas (capped DPR) to limit memory.
+  const offW = Math.max(1, Math.round(cw * effDpr));
+  const offH = Math.max(1, Math.round(ch * effDpr));
   const offscreen = document.createElement("canvas");
-  offscreen.width = canvas.width;
-  offscreen.height = canvas.height;
+  offscreen.width = offW;
+  offscreen.height = offH;
   const offCtx = offscreen.getContext("2d");
   if (!offCtx) return;
 
-  offCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  offCtx.setTransform(effDpr, 0, 0, effDpr, 0, 0);
 
   offCtx.globalCompositeOperation = "source-over";
   drawFitted({
@@ -189,6 +210,6 @@ export const drawTintedLayer = async ({
   ctx.save();
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.globalCompositeOperation = "source-over";
-  ctx.drawImage(offscreen, 0, 0);
+  ctx.drawImage(offscreen, 0, 0, canvas.width, canvas.height);
   ctx.restore();
 };

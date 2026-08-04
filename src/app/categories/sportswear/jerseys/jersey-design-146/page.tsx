@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import JerseyProductItem from "@/components/screens/jersey/JerseyProductItem";
 

@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import Image from "next/image";
 import topNavBanner from "@/app/assets/homepage/customize_it_banner.png";

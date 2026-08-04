@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import HalfZipProductItem from "@/components/screens/halfZip/HalfZipProductItem";
 

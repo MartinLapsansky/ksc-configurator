@@ -270,9 +270,9 @@ export default function EnquirePage() {
               <div className="flex justify-center pt-2">
                 <button
                   type="submit"
-                  className="inline-flex items-center rounded-md cursor-pointer bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                  className="inline-flex items-center rounded-md cursor-pointer bg-black px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                 >
-                  Submit enquiry
+                  Submit
                 </button>
               </div>
             </form>

@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import type { OverlayEntry } from "@/types/preview";
 import {
   drawFitted,
@@ -14,6 +14,13 @@ type UseProductCanvasParams = {
   bgImageRef: React.RefObject<HTMLImageElement | null>;
 };
 
+/**
+ * Caps the effective pixel ratio for the main canvas. On high-DPR mobile
+ * devices (DPR 3+) a full-resolution canvas can be enormous and quickly
+ * exhaust the browser's memory budget, causing "page crashed".
+ */
+const MAX_DPR = 2;
+
 export const useProductCanvas = ({
   overlays,
   loadImage,
@@ -21,6 +28,13 @@ export const useProductCanvas = ({
   previewContainerRef,
   bgImageRef,
 }: UseProductCanvasParams) => {
+  // Keep the latest overlays in a ref so the draw callback stays stable and
+  // we don't re-run the effect (and re-allocate canvases) on every render.
+  const overlaysRef = useRef(overlays);
+  useEffect(() => {
+    overlaysRef.current = overlays;
+  }, [overlays]);
+
 
   const draw = useCallback(async () => {
     const canvas = canvasRef.current;
@@ -29,7 +43,9 @@ export const useProductCanvas = ({
     if (!canvas || !container) return;
 
     const rect = container.getBoundingClientRect();
-    const dpr = window.devicePixelRatio || 1;
+    if (rect.width <= 0 || rect.height <= 0) return;
+
+    const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
 
     canvas.width = Math.round(rect.width * dpr);
     canvas.height = Math.round(rect.height * dpr);
@@ -54,7 +70,9 @@ export const useProductCanvas = ({
     const offsetX = (cw - drawnW) / 2;
     const offsetY = (ch - drawnH) / 2;
 
-    for (const overlay of overlays) {
+    const currentOverlays = overlaysRef.current;
+
+    for (const overlay of currentOverlays) {
       if (!overlay.active || !overlay.layerSrc) continue;
 
       let layerImg: HTMLImageElement;
@@ -121,7 +139,7 @@ export const useProductCanvas = ({
     }
 
     ctx.globalCompositeOperation = "source-over";
-  }, [overlays, loadImage, canvasRef, previewContainerRef, bgImageRef]);
+  }, [loadImage, canvasRef, previewContainerRef, bgImageRef]);
 
   useEffect(() => {
     draw();

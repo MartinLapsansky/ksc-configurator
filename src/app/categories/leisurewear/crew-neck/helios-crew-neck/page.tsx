@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import CrewNeckProductItem from "@/components/screens/crewNeck/CrewNeckProductItem";
 

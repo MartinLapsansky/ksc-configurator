@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useRef, createContext, useContext } from "react";
+import React, { useCallback, useRef, createContext, useContext, useEffect } from "react";
 import Image from "next/image";
 import type { OverlayEntry } from "@/types/preview";
 import { useProductCanvas } from "@/app/hooks/useProductCanvas";
@@ -30,6 +30,13 @@ type ProductCanvasProps = {
   children?: React.ReactNode;
 };
 
+/**
+ * Maximum number of decoded images kept in the in-memory cache. Bounding this
+ * prevents unbounded memory growth when navigating between categories/pages,
+ * which on mobile can trigger "page crashed".
+ */
+const MAX_CACHE_SIZE = 20;
+
 export const ProductCanvas: React.FC<ProductCanvasProps> = ({
   bgImageSrc,
   overlays,
@@ -53,6 +60,13 @@ export const ProductCanvas: React.FC<ProductCanvasProps> = ({
       const img = document.createElement("img");
       img.crossOrigin = "anonymous";
       img.onload = () => {
+        // Evict oldest entries if the cache grows too large.
+        if (imageCache.current.size >= MAX_CACHE_SIZE) {
+          const oldestKey = imageCache.current.keys().next().value;
+          if (oldestKey !== undefined) {
+            imageCache.current.delete(oldestKey);
+          }
+        }
         imageCache.current.set(src, img);
         resolve(img);
       };
@@ -60,6 +74,16 @@ export const ProductCanvas: React.FC<ProductCanvasProps> = ({
       img.src = src;
     });
   }, []);
+
+  // Clear the image cache when the component unmounts so decoded images are
+  // released when navigating away (prevents memory accumulation).
+  useEffect(() => {
+    const cache = imageCache.current;
+    return () => {
+      cache.clear();
+    };
+  }, []);
+
 
   const { draw } = useProductCanvas({
     overlays,
