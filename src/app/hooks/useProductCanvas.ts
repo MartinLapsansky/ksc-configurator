@@ -35,8 +35,7 @@ export const useProductCanvas = ({
     overlaysRef.current = overlays;
   }, [overlays]);
 
-
-  const draw = useCallback(async () => {
+  const performDraw = useCallback(async () => {
     const canvas = canvasRef.current;
     const container = previewContainerRef.current;
     const bgImg = bgImageRef.current;
@@ -140,6 +139,30 @@ export const useProductCanvas = ({
 
     ctx.globalCompositeOperation = "source-over";
   }, [loadImage, canvasRef, previewContainerRef, bgImageRef]);
+
+  // Guard against concurrent draw() calls. draw() is async and allocates
+  // offscreen canvases; if it runs several times at once (e.g. resize + image
+  // load + overlay change) it can spike memory and crash low-memory mobile
+  // browsers. We coalesce calls so only one draw runs at a time.
+  const drawInProgress = useRef(false);
+  const drawQueued = useRef(false);
+
+  const draw = useCallback(async () => {
+    if (drawInProgress.current) {
+      drawQueued.current = true;
+      return;
+    }
+    drawInProgress.current = true;
+
+    try {
+      do {
+        drawQueued.current = false;
+        await performDraw();
+      } while (drawQueued.current);
+    } finally {
+      drawInProgress.current = false;
+    }
+  }, [performDraw]);
 
   useEffect(() => {
     draw();
