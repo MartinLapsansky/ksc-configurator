@@ -23,7 +23,9 @@ export type TripleColorOption = {
   hex2: string;
   hex3: string;
   file?: StaticImageData | string;
+  backFile?: StaticImageData | string;
 };
+
 
 export type OverlayEntry = {
   key: string;

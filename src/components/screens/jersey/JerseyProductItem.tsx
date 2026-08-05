@@ -172,7 +172,7 @@ const JerseyProductItem: React.FC = () => {
     };
 
   return (
-      <div className="flex min-h-[600px] flex-col gap-6 rounded-lg border border-gray-200 bg-gray-50 p-4 md:flex-row md:h-[90vh] mx-auto">
+      <div className="flex min-h-150 flex-col gap-6 rounded-lg border border-gray-200 bg-gray-50 p-4 md:flex-row md:h-[90vh] mx-auto">
 
             <div className="flex flex-col">
 

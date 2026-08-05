@@ -28,7 +28,7 @@ const CrewNeckPreview: React.FC<CrewNeckPreviewProps> = ({
   }, [isBackView, leftChestLogoUrl, rightChestLogoUrl, backLogoUrl]);
 
   const bgImageSrc = useMemo(() => {
-    if (!bgColor.file) return "";
+    if (!bgColor.file && !bgColor.backFile) return "";
 
     const resolveSrc = (file?: string | { src: string }) => {
       if (!file) return "";
@@ -39,8 +39,9 @@ const CrewNeckPreview: React.FC<CrewNeckPreviewProps> = ({
       return resolveSrc(bgColor.file);
     }
 
-    return resolveSrc(bgColor.file);
+    return resolveSrc(bgColor.backFile ?? bgColor.file);
   }, [bgColor, isBackView]);
+
 
   return (
     <div className="flex flex-col w-full h-[70vh]">
