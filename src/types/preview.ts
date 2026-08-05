@@ -1,30 +1,37 @@
 import type { StaticImageData } from "next/image";
 
-export type ColorOption = {
+/**
+ * Base shape shared by all colour options. `hex` is used for single-colour
+ * products (e.g. jersey stripes/branding), while `hex1`/`hex2`/`hex3` are used
+ * for multi-tone products (double/triple colour). A `BaseColorOption` can
+ * therefore represent any of the three variants.
+ */
+export type BaseColorOption = {
   id: string;
   name: string;
-  hex: string;
+  hex?: string;
+  hex1?: string;
+  hex2?: string;
+  hex3?: string;
   file?: StaticImageData | string;
   backFile?: StaticImageData | string;
 };
 
-export type DoubleColorOption = {
-  id: string;
-  name: string;
-  hex1: string;
-  hex2: string;
-  file?: StaticImageData | string;
+export type ColorOption = BaseColorOption & {
+  hex: string;
 };
 
-export type TripleColorOption = {
-  id: string;
-  name: string;
+export type DoubleColorOption = BaseColorOption & {
+  hex1: string;
+  hex2: string;
+};
+
+export type TripleColorOption = BaseColorOption & {
   hex1: string;
   hex2: string;
   hex3: string;
-  file?: StaticImageData | string;
-  backFile?: StaticImageData | string;
 };
+
 
 
 export type OverlayEntry = {
@@ -76,11 +83,12 @@ export type ProductType = "jersey" | "halfZip" | "crewNeck";
 /**
  * General product configuration that can hold config for any product type.
  * The `productType` field discriminates which config is relevant.
- * `bgColor` accepts both ColorOption (single-color) and DoubleColorOption (two-tone).
+ * `bgColor` accepts any colour variant (single, double or triple tone).
  */
 export type ProductConfig = {
   productType: ProductType;
-  bgColor?: ColorOption | DoubleColorOption | TripleColorOption;
+  bgColor?: BaseColorOption;
+
   // Jersey-specific fields
   stripeColor?: ColorOption;
   brandingColor?: ColorOption;

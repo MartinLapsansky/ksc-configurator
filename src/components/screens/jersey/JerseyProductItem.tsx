@@ -1,11 +1,12 @@
 "use client";
 
-import React, {useEffect, useRef, useState} from "react";
+import React, { useState } from "react";
 import ColorSwatchPicker from '../../pickerComponents/ColorSwatchPicker'
 import {ColorOption} from "@/types/preview";
 import StaticLogoPicker, { StaticLogoOption } from "../../pickerComponents/StaticLogoPicker";
 import LogoUploadPicker from "../../pickerComponents/LogoUploadPicker";
 import JerseyPreview from "@/components/productPreviewComponents/jerseyView/view/JerseyPreview";
+import ProductItemLayout from "../ProductItemLayout";
 import {BackLogoTextConfig} from "@/components/pickerComponents/TextInsertPicker";
 
 import {useProductConfig} from "@/app/contexts/ProductConfigContext";
@@ -123,37 +124,6 @@ const JerseyProductItem: React.FC = () => {
       color: FRONT_TEXT_OPTIONS[0]
   });
 
-  const scrollRef = useRef<HTMLDivElement | null>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  const totalDots = 5;
-
-    useEffect(() => {
-        const el = scrollRef.current;
-        if (!el) return;
-
-        const handleScroll = () => {
-            const scrollLeft = el.scrollLeft;
-            const maxScroll = el.scrollWidth - el.clientWidth;
-
-            if (maxScroll <= 0) {
-                setActiveIndex(0);
-                return;
-            }
-
-            const progress = scrollLeft / maxScroll;
-            const index = Math.round(progress * (totalDots - 1));
-            setActiveIndex(index);
-        };
-
-        el.addEventListener("scroll", handleScroll, { passive: true });
-        handleScroll();
-
-        return () => el.removeEventListener("scroll", handleScroll);
-    }, []);
-
-
-
     const handleEnquireClick = () => {
         setConfig({
             productType: "jersey",
@@ -172,127 +142,91 @@ const JerseyProductItem: React.FC = () => {
     };
 
   return (
-      <div className="flex min-h-150 flex-col gap-6 rounded-lg border border-gray-200 bg-gray-50 p-4 md:flex-row md:h-[90vh] mx-auto">
+    <ProductItemLayout
+      title="Jersey Design 146"
+      totalDots={5}
+      onEnquire={handleEnquireClick}
+      pickers={
+        <>
+          <ColorSwatchPicker
+            label="Main Body Colour"
+            valueLabel={bgColor.name}
+            options={BG_OPTIONS}
+            selected={bgColor}
+            onChange={setBgColor}
+          />
 
-            <div className="flex flex-col">
+          <ColorSwatchPicker
+            label="Stripes Colour"
+            valueLabel={stripeColor.name}
+            options={STRIPE_OPTIONS}
+            selected={stripeColor}
+            onChange={setStripeColor}
+          />
 
-                <h1 className="flex mb-1 text-lg text-black font-semibold">Jersey Design 146</h1>
+          <ColorSwatchPicker
+            label='Branding "KCS" Colour'
+            valueLabel={brandingColor.name}
+            options={BRANDING_OPTIONS}
+            selected={brandingColor}
+            onChange={setBrandingColor}
+          />
 
+          <LogoUploadPicker
+            label="Left Chest Logo"
+            valueLabel="Custom logo"
+            imageUrl={leftChestLogoUrl}
+            onImageChange={setLeftChestLogoUrl}
+          />
 
-                <aside className="w-full max-w-full md:w-100 h-[30vh] md:h-[80vh] overflow-x-auto hide-scrollbar md:overflow-x-visible hide-scrollbar">
+          <StaticLogoPicker
+            label="Right Chest Logo"
+            options={RIGHT_LOGO_OPTIONS}
+            selected={rightLogo}
+            onChange={setRightLogo}
+          />
 
+          <LogoUploadPicker
+            label="Front Sponsor Logo"
+            valueLabel="Sponsor logo"
+            imageUrl={sponsorLogoUrl}
+            onImageChange={setSponsorLogoUrl}
+          />
 
-                    <div ref={scrollRef} className="h-full flex gap-4 pr-2 overflow-y-hidden md:block md:overflow-y-auto hide-scrollbar md:gap-0 hide-scrollbar">
+          <TextInsertPicker
+            label="Front Sponsor Text"
+            value={frontTextConfig}
+            colorOptions={FRONT_TEXT_OPTIONS}
+            onChange={setFrontTextConfig}/>
 
+          <LogoUploadPicker
+            label="Back Sponsor Logo"
+            valueLabel="Sponsor logo"
+            imageUrl={backLogoUrl}
+            onImageChange={setBackLogoUrl}
+          />
 
-                        <ColorSwatchPicker
-                            label="Main Body Colour"
-                            valueLabel={bgColor.name}
-                            options={BG_OPTIONS}
-                            selected={bgColor}
-                            onChange={setBgColor}
-                        />
-
-                        <ColorSwatchPicker
-                            label="Stripes Colour"
-                            valueLabel={stripeColor.name}
-                            options={STRIPE_OPTIONS}
-                            selected={stripeColor}
-                            onChange={setStripeColor}
-                        />
-
-                        <ColorSwatchPicker
-                            label='Branding "KCS" Colour'
-                            valueLabel={brandingColor.name}
-                            options={BRANDING_OPTIONS}
-                            selected={brandingColor}
-                            onChange={setBrandingColor}
-                        />
-
-                        <LogoUploadPicker
-                            label="Left Chest Logo"
-                            valueLabel="Custom logo"
-                            imageUrl={leftChestLogoUrl}
-                            onImageChange={setLeftChestLogoUrl}
-                        />
-
-                        <StaticLogoPicker
-                            label="Right Chest Logo"
-                            options={RIGHT_LOGO_OPTIONS}
-                            selected={rightLogo}
-                            onChange={setRightLogo}
-                        />
-
-                        <LogoUploadPicker
-                            label="Front Sponsor Logo"
-                            valueLabel="Sponsor logo"
-                            imageUrl={sponsorLogoUrl}
-                            onImageChange={setSponsorLogoUrl}
-                        />
-
-                        <TextInsertPicker
-                            label="Front Sponsor Text"
-                            value={frontTextConfig}
-                            colorOptions={FRONT_TEXT_OPTIONS}
-                            onChange={setFrontTextConfig}/>
-
-                        <LogoUploadPicker
-                            label="Back Sponsor Logo"
-                            valueLabel="Sponsor logo"
-                            imageUrl={backLogoUrl}
-                            onImageChange={setBackLogoUrl}
-                        />
-
-                        <TextInsertPicker
-                            label="Back Sponsor Text"
-                            value={backTextConfig}
-                            colorOptions={BACK_TEXT_OPTIONS}
-                            onChange={setBackTextConfig}/>
-                    </div>
-
-
-                </aside>
-
-                {/* Pagination dots - only for mobile */}
-                <div className="mt-3 flex justify-center gap-2 md:hidden">
-                    {Array.from({ length: totalDots }).map((_, i) => (
-                        <span
-                            key={i}
-                            className={`h-2 w-2 rounded-full transition-all ${
-                                i === activeIndex ? "bg-gray-800 scale-110" : "bg-gray-300"
-                            }`}
-                        />
-                    ))}
-                </div>
-            </div>
-
-
-        <div className="flex flex-col w-full">
-                <JerseyPreview
-                    bgColor={bgColor}
-                    stripeColor={stripeColor}
-                    brandingColor={brandingColor}
-                    leftChestLogoUrl={leftChestLogoUrl}
-                    rightLogo={rightLogo}
-                    sponsorLogoUrl={sponsorLogoUrl}
-                    sponsorText={frontTextConfig}
-                    backLogoUrl={backLogoUrl}
-                    backTextConfig={backTextConfig}
-                />
-            <div className="flex flex-1 justify-center items-center">
-                <div className="mt-3 h-15 flex md:justify-center items-center">
-                    <button
-                        type="button"
-                        onClick={handleEnquireClick}
-                        className="inline-flex items-center cursor-pointer rounded-md bg-black px-5 py-2.5 text-xl font-semibold text-white shadow-sm hover:bg-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                    >
-                        Enquire
-                    </button>
-                </div>
-            </div>
-
-        </div>
-    </div>
+          <TextInsertPicker
+            label="Back Sponsor Text"
+            value={backTextConfig}
+            colorOptions={BACK_TEXT_OPTIONS}
+            onChange={setBackTextConfig}/>
+        </>
+      }
+      preview={
+        <JerseyPreview
+          bgColor={bgColor}
+          stripeColor={stripeColor}
+          brandingColor={brandingColor}
+          leftChestLogoUrl={leftChestLogoUrl}
+          rightLogo={rightLogo}
+          sponsorLogoUrl={sponsorLogoUrl}
+          sponsorText={frontTextConfig}
+          backLogoUrl={backLogoUrl}
+          backTextConfig={backTextConfig}
+        />
+      }
+    />
   );
 };
 

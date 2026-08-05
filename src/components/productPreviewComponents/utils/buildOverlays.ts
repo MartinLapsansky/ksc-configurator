@@ -28,6 +28,8 @@ export const RIGHT_LOGO_LAYER_MAP: Record<string, typeof rightLogoGaaImg> = {
   Lgfa: rightLogoLgfaImg,
 };
 
+
+
 // ── Jersey front overlays ──
 
 type BuildFrontOverlaysParams = {

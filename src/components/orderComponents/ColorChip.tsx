@@ -1,12 +1,13 @@
 "use client";
 
 import React from "react";
-import type { ColorOption, DoubleColorOption } from "@/types/preview";
+import type { BaseColorOption, ColorOption, DoubleColorOption } from "@/types/preview";
 
 type ColorChipProps = {
   label: string;
-  color?: ColorOption | DoubleColorOption;
+  color?: BaseColorOption;
 };
+
 
 export default function ColorChip({ label, color }: ColorChipProps) {
   if (!color) {

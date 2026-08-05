@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useCallback } from "react";
 import type { JerseyPreviewProps } from "../types/jerseyPreview.types";
 import type { BackLogoTextConfig } from "../../../pickerComponents/TextInsertPicker";
 
 import SponsorTextOverlay from "@/components/productPreviewComponents/jerseyView/overlays/sponsorTextOverlay";
-import { ProductCanvas } from "@/app/contexts/ProductCanvasContext";
+import ProductPreview from "../../ProductPreview";
 import { buildFrontOverlays, buildBackOverlays } from "../../utils/buildOverlays";
 
 const JerseyPreview: React.FC<JerseyPreviewProps> = ({
@@ -19,10 +19,11 @@ const JerseyPreview: React.FC<JerseyPreviewProps> = ({
   backLogoUrl,
   backTextConfig,
 }) => {
-  const [isBackView, setIsBackView] = useState(false);
-
-  const overlays = useMemo(() => {
-    if (!isBackView) {
+  const buildOverlays = useCallback(
+    (isBackView: boolean) => {
+      if (isBackView) {
+        return buildBackOverlays({ stripeColor, backLogoUrl });
+      }
       return buildFrontOverlays({
         stripeColor,
         brandingColor,
@@ -30,77 +31,43 @@ const JerseyPreview: React.FC<JerseyPreviewProps> = ({
         rightLogo,
         sponsorLogoUrl,
       });
-    } else {
-      return buildBackOverlays({
-        stripeColor,
-        backLogoUrl,
-      });
-    }
-  }, [
-    isBackView,
-    stripeColor,
-    brandingColor,
-    leftChestLogoUrl,
-    rightLogo,
-    sponsorLogoUrl,
-    backLogoUrl,
-  ]);
+    },
+    [
+      stripeColor,
+      brandingColor,
+      leftChestLogoUrl,
+      rightLogo,
+      sponsorLogoUrl,
+      backLogoUrl,
+    ],
+  );
 
+  const renderChildren = useCallback(
+    (isBackView: boolean) => {
+      const activeSponsorText: BackLogoTextConfig | undefined = isBackView
+        ? backTextConfig ?? sponsorText
+        : sponsorText;
 
-  const bgImageSrc = useMemo(() => {
-    if (!bgColor.file && !bgColor.backFile) return "";
+      if (!activeSponsorText?.enabled) return null;
 
-    const resolveSrc = (file?: string | { src: string }) => {
-      if (!file) return "";
-      return typeof file === "string" ? file : file.src;
-    };
-
-    if (!isBackView) {
-      return resolveSrc(bgColor.file);
-    }
-
-    return resolveSrc(bgColor.backFile ?? bgColor.file);
-  }, [bgColor, isBackView]);
-
-  const activeSponsorText: BackLogoTextConfig | undefined = useMemo(() => {
-    if (!isBackView) {
-      return sponsorText;
-    }
-    return backTextConfig ?? sponsorText;
-  }, [isBackView, sponsorText, backTextConfig]);
+      return (
+        <SponsorTextOverlay
+          text={activeSponsorText.text}
+          colorHex={activeSponsorText.color.hex}
+        />
+      );
+    },
+    [sponsorText, backTextConfig],
+  );
 
   return (
-    <div className="flex flex-col w-full h-[70vh]">
-      <ProductCanvas
-        bgImageSrc={bgImageSrc}
-        overlays={overlays}
-        bgImageAlt={isBackView ? "Jersey back base" : "Jersey front base"}
-      >
-        {activeSponsorText?.enabled && (
-          <SponsorTextOverlay
-            text={activeSponsorText.text}
-            colorHex={activeSponsorText.color.hex}
-          />
-        )}
-      </ProductCanvas>
-
-      <div className="mt-3 flex justify-center">
-        <button
-          type="button"
-          onClick={() => setIsBackView((prev) => !prev)}
-          className="inline-flex items-center gap-2 rounded-md border border-gray-400 bg-gray-700 px-4 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-gray-600"
-        >
-          <span
-            className={`inline-block transition-transform ${
-              isBackView ? "rotate-180" : ""
-            }`}
-          >
-            ↺
-          </span>
-          <span>{isBackView ? "Show front" : "Show back"}</span>
-        </button>
-      </div>
-    </div>
+    <ProductPreview
+      bgColor={bgColor}
+      buildOverlays={buildOverlays}
+      bgImageAlt="Jersey"
+      hasBackView
+      renderChildren={renderChildren}
+    />
   );
 };
 
