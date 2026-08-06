@@ -7,14 +7,50 @@ interface EnquiryFormState {
   firstName: string;
   lastName: string;
   county: string;
+  country: string;
   email: string;
   phoneCountryCode: string;
   phoneNumber: string;
-  organisation: string; // club / school / company
+  organisation: string; // club / school / institution
   quantity: string;
-  leadTime: string;
   message: string;
 }
+
+const COUNTIES = [
+  "Antrim",
+  "Armagh",
+  "Carlow",
+  "Cavan",
+  "Clare",
+  "Cork",
+  "Derry",
+  "Donegal",
+  "Down",
+  "Dublin",
+  "Fermanagh",
+  "Galway",
+  "Kerry",
+  "Kildare",
+  "Kilkenny",
+  "Laois",
+  "Leitrim",
+  "Limerick",
+  "Longford",
+  "Louth",
+  "Mayo",
+  "Meath",
+  "Monaghan",
+  "Offaly",
+  "Roscommon",
+  "Sligo",
+  "Tipperary",
+  "Tyrone",
+  "Waterford",
+  "Westmeath",
+  "Wexford",
+  "Wicklow",
+  "Rest of the world",
+];
 
 export default function EnquirePage() {
   const { config } = useProductConfig();
@@ -22,13 +58,13 @@ export default function EnquirePage() {
   const [form, setForm] = useState<EnquiryFormState>({
     firstName: "",
     lastName: "",
-    county : "",
+    county: "",
+    country: "",
     email: "",
-    phoneCountryCode: "+421",
+    phoneCountryCode: "+353",
     phoneNumber: "",
     organisation: "",
     quantity: "",
-    leadTime: "",
     message: "",
   });
 
@@ -41,7 +77,7 @@ export default function EnquirePage() {
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
+
     try {
       const response = await fetch("/api/order", {
         method: "POST",
@@ -53,13 +89,13 @@ export default function EnquirePage() {
           productConfig: config,
         }),
       });
-  
+
       if (!response.ok) {
           console.error("API error:", response.status, response.statusText);
           alert("Failed to submit enquiry. Please try again.");
           return;
       }
-  
+
       const data = await response.json();
       alert("Enquiry submitted successfully!");
       console.log("Response:", data);
@@ -69,24 +105,29 @@ export default function EnquirePage() {
     }
   };
 
+  const inputClass =
+    "mt-1 block w-full rounded-md border text-black border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500";
+
+  const labelClass = "block text-sm font-medium text-black";
+
   return (
+
     <main className="min-h-screen bg-slate-100 px-4 py-6 md:px-8 md:py-10">
       <div className="mx-auto max-w-2xl rounded-lg bg-white p-6 shadow-sm md:p-8">
-        <h1 className="text-2xl text-black font-semibold tracking-tight text-center">
-          Please fill in the fields below
+        <h1 className="text-2xl text-black font-bold tracking-tight text-center">
+          Please complete the form for a successful enquiry
         </h1>
 
         <div className="mt-8 grid place-items-center">
-          {/* Formulár */}
-          <section>
+          <section className="w-full">
+
             <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="grid gap-4 md">
+              {/* First name + Last name */}
+              <div className="grid gap-4 md:grid-cols-2">
                 <div>
-                  <label
-                    htmlFor="firstName"
-                    className="block text-sm font-medium text-black"
-                  >
-                    First name
+                  <label htmlFor="firstName" className={labelClass}>
+                    First name<span className="text-red-500"> *</span>
+
                   </label>
                   <input
                     id="firstName"
@@ -95,15 +136,13 @@ export default function EnquirePage() {
                     required
                     value={form.firstName}
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border text-black border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className={inputClass}
                   />
                 </div>
                 <div>
-                  <label
-                    htmlFor="lastName"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Last name
+                  <label htmlFor="lastName" className={labelClass}>
+                    Last name<span className="text-red-500"> *</span>
+
                   </label>
                   <input
                     id="lastName"
@@ -112,58 +151,78 @@ export default function EnquirePage() {
                     required
                     value={form.lastName}
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border text-black border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className={inputClass}
                   />
                 </div>
-                  <div>
-                      <label
-                          htmlFor="county"
-                          className="block text-sm font-medium text-black"
-                      >
-                          County
-                      </label>
-                      <input
-                          id="County"
-                          name="County"
-                          type="text"
-                          required
-                          value={form.county}
-                          onChange={handleChange}
-                          className="mt-1 block w-full rounded-md border text-black border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                      />
-                  </div>
-                  <div>
-                  </div>
               </div>
 
+              {/* County + Country */}
+              <div className="flex flex-col gap-4 sm:flex-row">
+                <div className="flex-1">
+                  <label htmlFor="county" className={labelClass}>
+                    County<span className="text-red-500"> *</span>
+
+                  </label>
+                  <select
+                    id="county"
+                    name="county"
+                    required
+                    value={form.county}
+                    onChange={handleChange}
+                    className={inputClass}
+                  >
+                    <option value="" disabled>
+                      Please select from list...
+                    </option>
+                    {COUNTIES.map((county) => (
+                      <option key={county} value={county}>
+                        {county}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex-1">
+                  <label htmlFor="country" className={labelClass}>
+                    Country
+                  </label>
+                  <input
+                    id="country"
+                    name="country"
+                    type="text"
+                    placeholder="Optional"
+                    value={form.country}
+                    onChange={handleChange}
+                    className={inputClass}
+                  />
+                </div>
+              </div>
+
+              {/* Country code + Phone number */}
               <div className="grid gap-4 md:grid-cols-[0.6fr_1.4fr]">
                 <div>
-                  <label
-                    htmlFor="phoneCountryCode"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Country code
+                  <label htmlFor="phoneCountryCode" className={labelClass}>
+                    Country code<span className="text-red-500"> *</span>
+
                   </label>
                   <select
                     id="phoneCountryCode"
                     name="phoneCountryCode"
+                    required
                     value={form.phoneCountryCode}
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className={inputClass}
                   >
-                    <option value="+421">🇸🇰 +421</option>
-                    <option value="+420">🇨🇿 +420</option>
                     <option value="+353">🇮🇪 +353</option>
                     <option value="+44">🇬🇧 +44</option>
                     <option value="+1">🇺🇸 +1</option>
+                    <option value="+421">🇸🇰 +421</option>
+                    <option value="+420">🇨🇿 +420</option>
                   </select>
                 </div>
                 <div>
-                  <label
-                    htmlFor="phoneNumber"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Phone number
+                  <label htmlFor="phoneNumber" className={labelClass}>
+                    Phone number<span className="text-red-500"> *</span>
+
                   </label>
                   <input
                     id="phoneNumber"
@@ -172,17 +231,16 @@ export default function EnquirePage() {
                     required
                     value={form.phoneNumber}
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border text-black border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className={inputClass}
                   />
                 </div>
               </div>
 
+              {/* Email address */}
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Email address
+                <label htmlFor="email" className={labelClass}>
+                  Email address<span className="text-red-500"> *</span>
+
                 </label>
                 <input
                   id="email"
@@ -191,16 +249,14 @@ export default function EnquirePage() {
                   required
                   value={form.email}
                   onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border text-black border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className={inputClass}
                 />
               </div>
 
+              {/* Organisation (optional) */}
               <div>
-                <label
-                  htmlFor="organisation"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Your club, school or company
+                <label htmlFor="organisation" className={labelClass}>
+                  Your club, School or Institution name
                 </label>
                 <input
                   id="organisation"
@@ -208,53 +264,32 @@ export default function EnquirePage() {
                   type="text"
                   value={form.organisation}
                   onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border text-black border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className={inputClass}
                 />
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <div>
-                  <label
-                    htmlFor="quantity"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Quantity required
-                  </label>
-                  <input
-                    id="quantity"
-                    name="quantity"
-                    type="number"
-                    min={1}
-                    value={form.quantity}
-                    onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border text-black border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="leadTime"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Lead time (when would you like delivery?)
-                  </label>
-                  <input
-                    id="leadTime"
-                    name="leadTime"
-                    type="text"
-                    placeholder="e.g. By end of June"
-                    value={form.leadTime}
-                    onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border text-black border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  />
-                </div>
+              {/* Quantity required */}
+              <div>
+                <label htmlFor="quantity" className={labelClass}>
+                  Estimate quantity required<span className="text-red-500"> *</span>
+
+                </label>
+                <input
+                  id="quantity"
+                  name="quantity"
+                  type="number"
+                  min={12}
+                  required
+                  value={form.quantity}
+                  onChange={handleChange}
+                  className={inputClass}
+                />
               </div>
 
+              {/* Additional information (optional) */}
               <div>
-                <label
-                  htmlFor="message"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Your message
+                <label htmlFor="message" className={labelClass}>
+                  Additional information
                 </label>
                 <textarea
                   id="message"
@@ -262,8 +297,8 @@ export default function EnquirePage() {
                   rows={5}
                   value={form.message}
                   onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border text-black border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  placeholder="Any extra info about sizes, colours, deadlines, etc."
+                  className={inputClass}
+                  placeholder="Any extra information about sizes, colours, specific requirements, etc."
                 />
               </div>
 

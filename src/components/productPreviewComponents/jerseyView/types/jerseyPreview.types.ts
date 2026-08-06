@@ -10,6 +10,8 @@ export type JerseyPreviewProps = {
   rightLogo?: StaticLogoOption;
   sponsorLogoUrl?: string;
   sponsorText?: BackLogoTextConfig;
+  rightSleeveLogoUrl?: string;
+  leftSleeveLogoUrl?: string;
   backLogoUrl?: string;
   backTextConfig?: BackLogoTextConfig;
 };

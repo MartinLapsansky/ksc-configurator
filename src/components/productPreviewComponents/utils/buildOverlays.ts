@@ -12,6 +12,8 @@ import rightLogoCamogieImg from "@/app/assets/jerseys/layers/camogie-logo-layer.
 import rightLogoLgfaImg from "@/app/assets/jerseys/layers/lgfa-logo-layer.png";
 import sponsorLogoImg from "@/app/assets/jerseys/layers/sponsor-logo-layer.png";
 import backSponsorLogoImg from "@/app/assets/jerseys/layers/back-sponsor-logo-layer.png";
+import leftSleeveLogoImg from "@/app/assets/jerseys/layers/left_sleeve_logo.png";
+import rightSleeveLogoImg from "@/app/assets/jerseys/layers/right_sleeve_logo.png";
 
 // ── Half Zip layer images ──
 import halfZipLeftChestLayer from "@/app/assets/zip-tops/layers/left_chest_logo_layer.png";
@@ -28,16 +30,15 @@ export const RIGHT_LOGO_LAYER_MAP: Record<string, typeof rightLogoGaaImg> = {
   Lgfa: rightLogoLgfaImg,
 };
 
-
-
 // ── Jersey front overlays ──
-
 type BuildFrontOverlaysParams = {
   stripeColor: ColorOption;
   brandingColor: ColorOption;
   leftChestLogoUrl?: string;
   rightLogo?: StaticLogoOption;
   sponsorLogoUrl?: string;
+  leftSleeveLogoUrl?: string;
+  rightSleeveLogoUrl?: string;
 };
 
 export const buildFrontOverlays = ({
@@ -46,6 +47,8 @@ export const buildFrontOverlays = ({
   leftChestLogoUrl,
   rightLogo,
   sponsorLogoUrl,
+  leftSleeveLogoUrl,
+  rightSleeveLogoUrl,
 }: BuildFrontOverlaysParams): OverlayEntry[] => {
   const list: OverlayEntry[] = [];
 
@@ -70,6 +73,8 @@ export const buildFrontOverlays = ({
     active: true,
   });
 
+
+
   const rightLayerImg = rightLogo?.name
     ? RIGHT_LOGO_LAYER_MAP[rightLogo.name]
     : undefined;
@@ -83,8 +88,22 @@ export const buildFrontOverlays = ({
     key: "sponsorLogoFront",
     layerSrc: sponsorLogoImg.src,
     uploadSrc: sponsorLogoUrl,
-    active: true,
+    active: true
   });
+  list.push({
+    key: "leftSleeveLogo",
+    layerSrc: leftSleeveLogoImg.src,
+    uploadSrc: leftSleeveLogoUrl,
+    active: true
+  });
+  list.push({
+    key: "rightSleeveLogo",
+    layerSrc: rightSleeveLogoImg.src,
+    uploadSrc: rightSleeveLogoUrl,
+    active: true
+  })
+
+
 
   return list;
 };
@@ -115,6 +134,8 @@ export const buildBackOverlays = ({
     uploadSrc: backLogoUrl,
     active: true,
   });
+
+
 
   return list;
 };

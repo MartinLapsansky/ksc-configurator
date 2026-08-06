@@ -2,10 +2,11 @@
 
 import React, { useState } from "react";
 import type { Order } from "@/types/preview";
-import JerseyConfigSummary from "./JerseyConfigSummary";
-import JerseyPreviewOrder from "./jerseyPreviewOrder";
-import HalfZipPreviewOrder from "./halfZipPreviewOrder";
-import CrewNeckPreviewOrder from "./crewNeckPreviewOrder";
+import ProductConfigSummary from "./ProductConfigSummary";
+
+import JerseyPreviewOrder from "./productViews/jerseyPreviewOrder";
+import HalfZipPreviewOrder from "./productViews/halfZipPreviewOrder";
+import CrewNeckPreviewOrder from "./productViews/crewNeckPreviewOrder";
 
 type OrderCardProps = {
     order: Order;
@@ -56,7 +57,10 @@ export default function OrderCard({ order }: OrderCardProps) {
                     <span className="font-medium">Quantity:</span> {order.quantity}
                 </p>
                 <p>
-                    <span className="font-medium">Lead time:</span> {order.leadTime}
+                    <span className="font-medium">County:</span> {order.county}
+                </p>
+                <p>
+                    <span className="font-medium">Country:</span> {order.country || "—"}
                 </p>
                 <p>
                     <span className="font-medium">User ID:</span> {order.userId ?? "Guest"}
@@ -71,7 +75,7 @@ export default function OrderCard({ order }: OrderCardProps) {
             {open && (
                 <div className="mt-4 space-y-5 border-t border-gray-200 pt-4">
                     {renderProductPreview()}
-                    <JerseyConfigSummary productConfig={order.productConfig} />
+                    <ProductConfigSummary productConfig={order.productConfig} />
                 </div>
             )}
         </div>

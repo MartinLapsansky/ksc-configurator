@@ -53,31 +53,6 @@ export type TextConfig = {
   color: ColorOption;
 };
 
-export type JerseyConfig = {
-  bgColor?: ColorOption;
-  stripeColor?: ColorOption;
-  brandingColor?: ColorOption;
-  leftChestLogoUrl?: string;
-  sponsorLogoUrl?: string;
-  rightLogo?: StaticLogoOption;
-  backLogoUrl?: string;
-  backTextConfig?: TextConfig;
-  frontTextConfig?: TextConfig;
-};
-
-export type HalfZipConfig = {
-  bgColor?: DoubleColorOption;
-  leftChestLogoUrl?: string;
-  rightChestLogoUrl?: string;
-};
-
-export type CrewNeckConfig = {
-  bgColor?: TripleColorOption;
-  leftChestLogoUrl?: string;
-  rightChestLogoUrl?: string;
-  backLogoUrl?: string;
-};
-
 export type ProductType = "jersey" | "halfZip" | "crewNeck";
 
 /**
@@ -96,6 +71,8 @@ export type ProductConfig = {
   sponsorLogoUrl?: string;
   rightLogo?: StaticLogoOption;
   rightChestLogoUrl?: string;
+  leftSleeveLogoUrl?: string;
+  rightSleeveLogoUrl?: string;
   backLogoUrl?: string;
   backTextConfig?: TextConfig;
   frontTextConfig?: TextConfig;
@@ -106,12 +83,13 @@ export type Order = {
   status: string;
   firstName: string;
   lastName: string;
+  county: string;
+  country: string;
   email: string;
   phoneCountryCode: string;
   phoneNumber: string;
   organisation: string;
   quantity: number;
-  leadTime: string;
   message: string;
   productConfig: ProductConfig;
   userId: string | null;

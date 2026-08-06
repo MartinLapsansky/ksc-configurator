@@ -16,6 +16,8 @@ const JerseyPreview: React.FC<JerseyPreviewProps> = ({
   rightLogo,
   sponsorLogoUrl,
   sponsorText,
+  leftSleeveLogoUrl,
+  rightSleeveLogoUrl,
   backLogoUrl,
   backTextConfig,
 }) => {
@@ -30,6 +32,8 @@ const JerseyPreview: React.FC<JerseyPreviewProps> = ({
         leftChestLogoUrl,
         rightLogo,
         sponsorLogoUrl,
+        leftSleeveLogoUrl,
+        rightSleeveLogoUrl,
       });
     },
     [
@@ -38,9 +42,12 @@ const JerseyPreview: React.FC<JerseyPreviewProps> = ({
       leftChestLogoUrl,
       rightLogo,
       sponsorLogoUrl,
+      leftSleeveLogoUrl,
+      rightSleeveLogoUrl,
       backLogoUrl,
     ],
   );
+
 
   const renderChildren = useCallback(
     (isBackView: boolean) => {

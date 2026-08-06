@@ -3,53 +3,18 @@ import {prisma} from "@/lib/prisma";
 import {Prisma} from "@prisma/client";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/lib/auth";
-
-interface ColorOption {
-    name: string;
-    hex: string;
-}
-
-interface DoubleColorOption {
-    name: string;
-    hex1: string;
-    hex2: string;
-}
-
-interface StaticLogoOption {
-    name: string;
-    src: string;
-}
-
-interface TextConfig {
-    enabled: boolean;
-    text: string;
-    color: ColorOption;
-}
-
-interface ProductConfig {
-    productType: "jersey" | "halfZip";
-    bgColor?: ColorOption | DoubleColorOption;
-    stripeColor?: ColorOption;
-    brandingColor?: ColorOption;
-    leftChestLogoUrl?: string;
-    sponsorLogoUrl?: string;
-    rightLogo?: StaticLogoOption;
-    rightChestLogoUrl?: string;
-    backLogoUrl?: string;
-    backTextConfig?: TextConfig;
-    frontTextConfig?: TextConfig;
-}
+import type {ProductConfig} from "@/types/preview";
 
 interface EnquiryFormState {
     firstName: string;
     lastName: string;
     county: string;
+    country: string;
     email: string;
     phoneCountryCode: string;
     phoneNumber: string;
     organisation: string;
     quantity: string;
-    leadTime: string;
     message: string;
 }
 
@@ -57,6 +22,7 @@ interface EnquiryRequestBody {
     form: EnquiryFormState;
     productConfig: ProductConfig;
 }
+
 
 export async function POST(req: NextRequest){
 
@@ -74,11 +40,9 @@ export async function POST(req: NextRequest){
            !form?.email ||
            !form?.phoneCountryCode ||
            !form?.phoneNumber ||
-           !form?.organisation ||
-           !form?.quantity ||
-           !form?.leadTime ||
-           !form?.message
+           !form?.quantity
        ) {
+
            return NextResponse.json(
                { message: "Missing required fields" },
                { status: 400 },
@@ -97,12 +61,12 @@ export async function POST(req: NextRequest){
                firstName: form.firstName.trim(),
                lastName: form.lastName.trim(),
                county: form.county.trim(),
+               country: form.country?.trim() ?? "",
                email: form.email.trim().toLowerCase(),
                phoneCountryCode: form.phoneCountryCode.trim(),
                phoneNumber: form.phoneNumber.trim(),
                organisation: form.organisation.trim(),
                quantity: Number(form.quantity),
-               leadTime: form.leadTime.trim(),
                message: form.message.trim(),
                jerseyConfig: JSON.parse(JSON.stringify(productConfig)) as Prisma.InputJsonValue,
                userId: session?.user?.id ?? null,

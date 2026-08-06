@@ -112,11 +112,18 @@ const JerseyProductItem: React.FC = () => {
   const [backLogoUrl, setBackLogoUrl] = useState<string | undefined>(
     undefined,
   );
+  const [leftSleeveLogoUrl, setLeftSleeveLogoUrl] = useState<string | undefined>(
+    undefined,
+  );
+  const [rightSleeveLogoUrl, setRightSleeveLogoUrl] = useState<string | undefined>(
+    undefined,
+  );
   const [backTextConfig, setBackTextConfig] = useState<BackLogoTextConfig>({
     enabled: false,
     text: "",
     color: BACK_TEXT_OPTIONS[0],
   });
+
 
   const [frontTextConfig, setFrontTextConfig] = useState<BackLogoTextConfig>({
       enabled: false,
@@ -133,6 +140,8 @@ const JerseyProductItem: React.FC = () => {
             leftChestLogoUrl,
             sponsorLogoUrl,
             rightLogo,
+            leftSleeveLogoUrl,
+            rightSleeveLogoUrl,
             backLogoUrl,
             backTextConfig,
             frontTextConfig,
@@ -140,6 +149,7 @@ const JerseyProductItem: React.FC = () => {
 
         router.push("/enquire");
     };
+
 
   return (
     <ProductItemLayout
@@ -206,6 +216,20 @@ const JerseyProductItem: React.FC = () => {
             onImageChange={setBackLogoUrl}
           />
 
+          <LogoUploadPicker
+            label="Left Sleeve Logo"
+            valueLabel="Custom logo"
+            imageUrl={leftSleeveLogoUrl}
+            onImageChange={setLeftSleeveLogoUrl}
+          />
+
+          <LogoUploadPicker
+            label="Right Sleeve Logo"
+            valueLabel="Custom logo"
+            imageUrl={rightSleeveLogoUrl}
+            onImageChange={setRightSleeveLogoUrl}
+          />
+
           <TextInsertPicker
             label="Back Sponsor Text"
             value={backTextConfig}
@@ -222,10 +246,13 @@ const JerseyProductItem: React.FC = () => {
           rightLogo={rightLogo}
           sponsorLogoUrl={sponsorLogoUrl}
           sponsorText={frontTextConfig}
+          leftSleeveLogoUrl={leftSleeveLogoUrl}
+          rightSleeveLogoUrl={rightSleeveLogoUrl}
           backLogoUrl={backLogoUrl}
           backTextConfig={backTextConfig}
         />
       }
+
     />
   );
 };

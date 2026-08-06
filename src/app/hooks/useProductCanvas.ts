@@ -74,29 +74,26 @@ export const useProductCanvas = ({
     for (const overlay of currentOverlays) {
       if (!overlay.active || !overlay.layerSrc) continue;
 
-      let layerImg: HTMLImageElement;
-      try {
-        layerImg = await loadImage(overlay.layerSrc);
-      } catch {
-        continue;
-      }
+      // Upload placeholder: the layer image is only used as a position source.
+      // We draw the uploaded image directly and never fall back to drawing the
+      // placeholder layer. If there is no upload, we skip the overlay entirely.
+      if ("uploadSrc" in overlay) {
+        if (!overlay.uploadSrc) continue;
 
-      if (overlay.uploadSrc) {
         let uploadImg: HTMLImageElement;
         try {
           uploadImg = await loadImage(overlay.uploadSrc);
         } catch {
-          ctx.globalCompositeOperation = "source-over";
-          drawFitted({
-            targetCtx: ctx,
-            img: layerImg,
-            offsetX,
-            offsetY,
-            drawnW,
-            drawnH,
-          });
           continue;
         }
+
+        let layerImg: HTMLImageElement;
+        try {
+          layerImg = await loadImage(overlay.layerSrc);
+        } catch {
+          continue;
+        }
+
         await drawUploadIntoLayerBounds({
           canvas,
           ctx,
@@ -110,7 +107,18 @@ export const useProductCanvas = ({
           drawnW,
           drawnH,
         });
-      } else if (overlay.tintHex) {
+        continue;
+      }
+
+      // Tinted layers (stripes/branding) and static logos are drawn as-is.
+      let layerImg: HTMLImageElement;
+      try {
+        layerImg = await loadImage(overlay.layerSrc);
+      } catch {
+        continue;
+      }
+
+      if (overlay.tintHex) {
         await drawTintedLayer({
           canvas,
           ctx,
@@ -137,13 +145,10 @@ export const useProductCanvas = ({
       }
     }
 
+
     ctx.globalCompositeOperation = "source-over";
   }, [loadImage, canvasRef, previewContainerRef, bgImageRef]);
 
-  // Guard against concurrent draw() calls. draw() is async and allocates
-  // offscreen canvases; if it runs several times at once (e.g. resize + image
-  // load + overlay change) it can spike memory and crash low-memory mobile
-  // browsers. We coalesce calls so only one draw runs at a time.
   const drawInProgress = useRef(false);
   const drawQueued = useRef(false);
 
@@ -166,15 +171,14 @@ export const useProductCanvas = ({
 
   useEffect(() => {
     draw();
-  }, [draw]);
-
-  useEffect(() => {
     const handleResize = () => {
       draw();
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [draw]);
+  }, [draw, overlays]);
+
+
 
   return { draw };
 };

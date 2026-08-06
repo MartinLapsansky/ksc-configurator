@@ -1,10 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import type { ProductConfig } from "@/types/preview";
 import { ProductCanvas } from "@/app/contexts/ProductCanvasContext";
+import { buildHalfZipOverlays } from "../../productPreviewComponents/utils/buildOverlays";
 
 import zipBlackGraphite from "@/app/assets/zip-tops/zip_black_graphite.png";
+
 import zipBlackGreen from "@/app/assets/zip-tops/zip_black_green.png";
 import zipBlackRed from "@/app/assets/zip-tops/zip_black_red.png";
 import zipNavyGreen from "@/app/assets/zip-tops/zip_navy_green.png";
@@ -31,12 +33,22 @@ export default function HalfZipPreviewOrder({ productConfig }: HalfZipPreviewOrd
     ? BASE_ZIP_BY_NAME[productConfig.bgColor.name] ?? zipBlackGraphite.src
     : zipBlackGraphite.src;
 
+  const overlays = useMemo(
+    () =>
+      buildHalfZipOverlays({
+        leftChestLogoUrl: productConfig.leftChestLogoUrl,
+        rightChestLogoUrl: productConfig.rightChestLogoUrl,
+      }),
+    [productConfig.leftChestLogoUrl, productConfig.rightChestLogoUrl],
+  );
+
   return (
     <div className="w-full">
       <ProductCanvas
         bgImageSrc={baseZipSrc}
-        overlays={[]}
+        overlays={overlays}
         bgImageAlt="Half Zip preview"
+
         className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-xl bg-slate-50"
         canvasClassName="h-full w-full"
       />

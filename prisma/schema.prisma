@@ -24,12 +24,12 @@ model Order {
   firstName        String
   lastName         String
   county           String @default("")
+  country          String @default("")
   email            String
   phoneCountryCode String
   phoneNumber      String
   organisation     String
   quantity         Int
-  leadTime         String
   message          String
 
   jerseyConfig Json
