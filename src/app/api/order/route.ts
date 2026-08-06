@@ -100,7 +100,14 @@ export async function GET() {
             },
         });
 
-        return NextResponse.json({ data: orders }, { status: 200 });
+        // Map the stored `jerseyConfig` JSON field to the `productConfig`
+        // shape expected by the frontend (OrderCard / ProductConfigSummary).
+        const data = orders.map((order) => ({
+            ...order,
+            productConfig: order.jerseyConfig,
+        }));
+
+        return NextResponse.json({ data }, { status: 200 });
 
     } catch (error) {
         console.error("Error fetching orders:", error);
@@ -110,5 +117,6 @@ export async function GET() {
         );
     }
 }
+
 
 

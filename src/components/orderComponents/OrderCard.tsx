@@ -16,17 +16,28 @@ export default function OrderCard({ order }: OrderCardProps) {
     const [open, setOpen] = useState(false);
 
     const renderProductPreview = () => {
-        switch (order.productConfig.productType) {
+        const productConfig = order.productConfig;
+
+        if (!productConfig) {
+            return (
+                <p className="text-sm text-gray-500">
+                    No product configuration available for this order.
+                </p>
+            );
+        }
+
+        switch (productConfig.productType) {
             case "jersey":
-                return <JerseyPreviewOrder productConfig={order.productConfig} />;
+                return <JerseyPreviewOrder productConfig={productConfig} />;
             case "halfZip":
-                return <HalfZipPreviewOrder productConfig={order.productConfig} />;
+                return <HalfZipPreviewOrder productConfig={productConfig} />;
             case "crewNeck":
-                return <CrewNeckPreviewOrder productConfig={order.productConfig} />;
+                return <CrewNeckPreviewOrder productConfig={productConfig} />;
             default:
                 return null;
         }
     };
+
 
     return (
         <div className="rounded-xl border cursor-pointer border-gray-200 bg-white p-4 shadow-sm">
@@ -75,9 +86,12 @@ export default function OrderCard({ order }: OrderCardProps) {
             {open && (
                 <div className="mt-4 space-y-5 border-t border-gray-200 pt-4">
                     {renderProductPreview()}
-                    <ProductConfigSummary productConfig={order.productConfig} />
+                    {order.productConfig && (
+                        <ProductConfigSummary productConfig={order.productConfig} />
+                    )}
                 </div>
             )}
+
         </div>
     );
 }
