@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 type LogoUploadPickerProps = {
   label: string;
@@ -15,6 +15,9 @@ const LogoUploadPicker: React.FC<LogoUploadPickerProps> = ({
   imageUrl,
   onImageChange,
 }) => {
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   // Track blob URLs created by this component so we can revoke them when they
   // are no longer needed. Without revoking, every upload leaks the full image
   // into memory, which on mobile quickly causes "page crashed".
@@ -38,17 +41,44 @@ const LogoUploadPicker: React.FC<LogoUploadPickerProps> = ({
     };
   }, []);
 
-
   const handleFileChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (!file) {
         onImageChange(undefined);
         return;
       }
-      const url = URL.createObjectURL(file);
-      createdBlobUrls.current.add(url);
-      onImageChange(url);
+
+      setError(null);
+      setUploading(true);
+
+      try {
+        // Upload the file to the server (Vercel Blob) so we get a persistent
+        // URL that works across sessions/reloads. A local blob: URL would only
+        // be valid in the current browser session and would break on /orders.
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!res.ok) {
+          const data = await res.json().catch(() => null);
+          throw new Error(data?.message || "Upload failed");
+        }
+
+        const data = await res.json();
+        onImageChange(data.url);
+      } catch (err) {
+        console.error("Upload failed:", err);
+        setError(err instanceof Error ? err.message : "Upload failed");
+      } finally {
+        setUploading(false);
+        // Reset the input so selecting the same file again re-triggers change.
+        e.target.value = "";
+      }
     },
     [onImageChange],
   );
@@ -64,7 +94,7 @@ const LogoUploadPicker: React.FC<LogoUploadPickerProps> = ({
       <div className="mb-2 flex items-baseline justify-between text-sm">
         <strong className="text-black">{label}</strong>
         <span className="text-xs text-gray-500">
-          {imageUrl ? valueLabel : "No logo"}
+          {uploading ? "Uploading…" : imageUrl ? valueLabel : "No logo"}
         </span>
       </div>
       <div className="flex items-center gap-3">
@@ -75,6 +105,7 @@ const LogoUploadPicker: React.FC<LogoUploadPickerProps> = ({
             accept="image/*"
             className="hidden"
             onChange={handleFileChange}
+            disabled={uploading}
           />
         </label>
         {imageUrl && (
@@ -96,6 +127,7 @@ const LogoUploadPicker: React.FC<LogoUploadPickerProps> = ({
           </>
         )}
       </div>
+      {error && <p className="mt-2 text-xs text-red-600">{error}</p>}
     </section>
   );
 };
