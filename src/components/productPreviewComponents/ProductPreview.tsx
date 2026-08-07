@@ -13,7 +13,7 @@ type ProductPreviewProps = {
   /** When true, renders a front/back toggle button and uses `backFile` for the back view. */
   hasBackView?: boolean;
   /** Optional content rendered inside the canvas. Receives `isBackView` so it can
-   *  react to the current view (e.g. switching sponsor text). */
+   *  react to the current view (e.g., switching sponsor text). */
   renderChildren?: (isBackView: boolean) => React.ReactNode;
 };
 
@@ -25,7 +25,7 @@ const resolveSrc = (file?: string | { src: string }) => {
 
 /**
  * Shared preview shell used by all product types. It owns the front/back view
- * state, resolves the background image source and renders the ProductCanvas
+ * state, resolves the background image source, and renders the ProductCanvas
  * plus the optional flip button. Product-specific overlays are built via the
  * `buildOverlays` callback.
  */
@@ -39,6 +39,7 @@ const ProductPreview: React.FC<ProductPreviewProps> = ({
 
   const [isBackView, setIsBackView] = useState(false);
 
+  //build all overlays at once
   const overlays = useMemo(
     () => buildOverlays(isBackView),
     [buildOverlays, isBackView],

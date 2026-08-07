@@ -50,7 +50,7 @@ export default function HalfZipPreviewOrder({ productConfig }: HalfZipPreviewOrd
         bgImageAlt="Half Zip preview"
 
         className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-xl bg-slate-50"
-        canvasClassName="h-full w-full"
+        canvasClassName="pointer-events-none absolute inset-0 h-full w-full"
       />
     </div>
   );

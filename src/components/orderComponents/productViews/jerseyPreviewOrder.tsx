@@ -73,7 +73,7 @@ export default function JerseyPreviewOrder({ productConfig }: JerseyPreviewOrder
         overlays={overlays}
         bgImageAlt={isBackView ? "Jersey back preview" : "Jersey preview"}
         className="relative mx-auto aspect-4/5 w-full max-w-sm overflow-hidden rounded-xl bg-slate-50"
-        canvasClassName="h-full w-full"
+        canvasClassName="pointer-events-none absolute inset-0 h-full w-full"
       />
       <div className="mt-3 flex justify-center">
         <button
