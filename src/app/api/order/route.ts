@@ -68,7 +68,7 @@ export async function POST(req: NextRequest){
                organisation: form.organisation.trim(),
                quantity: Number(form.quantity),
                message: form.message.trim(),
-               jerseyConfig: JSON.parse(JSON.stringify(productConfig)) as Prisma.InputJsonValue,
+               productConfig: JSON.parse(JSON.stringify(productConfig)) as Prisma.InputJsonValue,
                userId: session?.user?.id ?? null,
            },
        });
@@ -100,14 +100,7 @@ export async function GET() {
             },
         });
 
-        // Map the stored `jerseyConfig` JSON field to the `productConfig`
-        // shape expected by the frontend (OrderCard / ProductConfigSummary).
-        const data = orders.map((order) => ({
-            ...order,
-            productConfig: order.jerseyConfig,
-        }));
-
-        return NextResponse.json({ data }, { status: 200 });
+        return NextResponse.json({ data: orders }, { status: 200 });
 
     } catch (error) {
         console.error("Error fetching orders:", error);
