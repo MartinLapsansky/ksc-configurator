@@ -48,7 +48,7 @@ const JerseyPreview: React.FC<JerseyPreviewProps> = ({
     ],
   );
 
-
+  //only for jersey actual
   const renderChildren = useCallback(
     (isBackView: boolean) => {
       const activeSponsorText: BackLogoTextConfig | undefined = isBackView

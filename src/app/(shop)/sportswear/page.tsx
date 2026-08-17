@@ -1,13 +1,14 @@
 import React from "react";
 import CategoryCard, { CategoryCardItem } from "@/components/commons/CategoryCard";
 import TopBanner from "@/components/commons/TopBanner";
+import Breadcrumbs from "@/components/commons/Breadcrumbs";
 
 const categories: CategoryCardItem[] = [
   {
     id: "jerseys",
-    title: "GAA",
+    title: "Jerseys",
     buttonLabel: "Customise",
-    href: "/categories/sportswear/jerseys",
+    href: "/sportswear/jerseys",
   },
   {
     id: "shorts",
@@ -17,7 +18,13 @@ const categories: CategoryCardItem[] = [
   },
   {
     id: "socks",
-    title: "ETC.",
+    title: "Gym vests",
+    buttonLabel: "Explore",
+    href: "",
+  },
+  {
+    id: "socks",
+    title: "Athletic singlets",
     buttonLabel: "Explore",
     href: "",
   },
@@ -25,9 +32,9 @@ const categories: CategoryCardItem[] = [
 
 export default function SportswearPage() {
   return (
-    <main className="min-w-screen min-h-screen bg-slate-100">
-      {/* Top Banner - navigates to home page */}
+    <main className="w-full min-h-screen bg-white">
       <TopBanner />
+      <Breadcrumbs />
 
       <section className="w-full px-4 md:px-8 min-h-[70vh]">
         <CategoryCard cards={categories} />

@@ -9,25 +9,24 @@ const cards: CategoryCardItem[] = [
     id: "sports",
     title: "Category: Sports Kit",
     buttonLabel: "Sports Kit",
-    href: "/categories/sportswear",
+    href: "/sportswear",
   },
   {
     id: "leisure",
     title: "Category: Leisurewear",
     buttonLabel: "Leisurewear",
-    href: "/categories/leisurewear",
+    href: "/leisurewear",
   },
 ];
 
 export default function HomePage() {
   return (
-    <main className="min-w-screen min-h-screen bg-slate-100">
+    <main className="w-full min-h-screen bg-slate-100">
       {/* Top Banner - navigates to home page */}
       <TopBanner />
-
       {/* Cards Section */}
-      <section className="w-full px-4 md:px-8 min-h-[70vh]">
-        <CategoryCard cards={cards} />
+      <section className="w-full p-4 md:px-8 min-h-[70vh]">
+        <CategoryCard cards={cards} mobileTwoColumns={false} />
       </section>
     </main>
   );

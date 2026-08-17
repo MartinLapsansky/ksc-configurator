@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import {useRouter} from "next/navigation";
 import ColorSwatchPicker from '../../pickerComponents/ColorSwatchPicker'
 import {ColorOption} from "@/types/preview";
 import StaticLogoPicker, { StaticLogoOption } from "../../pickerComponents/StaticLogoPicker";
@@ -26,7 +27,6 @@ import camogieLogo from "../../../app/assets/camogie_logo.svg";
 import gaaLogo from "../../../app/assets/gaa_logo.png";
 import lgfaLogo from "../../../app/assets/lgfa-logo.png";
 import TextInsertPicker from "@/components/pickerComponents/TextInsertPicker";
-import {useRouter} from "next/navigation";
 
 const BG_OPTIONS: ColorOption[] = [
     {

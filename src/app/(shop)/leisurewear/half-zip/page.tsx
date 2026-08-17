@@ -1,13 +1,14 @@
 import React from "react";
 import CategoryCard, { CategoryCardItem } from "@/components/commons/CategoryCard";
 import TopBanner from "@/components/commons/TopBanner";
+import Breadcrumbs from "@/components/commons/Breadcrumbs";
 
 const halfZipDesigns: CategoryCardItem[] = [
   {
     id: "soul-half-zip",
     title: "Soul Half Zip",
     buttonLabel: "Customise",
-    href: "/categories/leisurewear/half-zip/soul-half-zip",
+    href: "/leisurewear/half-zip/soul-half-zip",
   },
   {
     id: "half-zip-design-2",
@@ -25,9 +26,9 @@ const halfZipDesigns: CategoryCardItem[] = [
 
 export default function HalfZipPage() {
   return (
-    <main className="min-w-screen min-h-screen bg-slate-100">
-      {/* Top Banner - navigates to home page */}
+    <main className="w-full min-h-screen bg-white">
       <TopBanner />
+      <Breadcrumbs />
 
       <section className="w-full px-4 md:px-8 py-8">
         <CategoryCard cards={halfZipDesigns} />

@@ -1,33 +1,53 @@
 import React from "react";
 import CategoryCard, { CategoryCardItem } from "@/components/commons/CategoryCard";
 import TopBanner from "@/components/commons/TopBanner";
+import Breadcrumbs from "@/components/commons/Breadcrumbs";
 
 const categories: CategoryCardItem[] = [
   {
     id: "hoodies",
     title: "Zip Tops",
     buttonLabel: "Explore",
-    href: "/categories/leisurewear/half-zip",
+    href: "/leisurewear/half-zip",
   },
   {
     id: "tracksuits",
     title: "Crew necks",
     buttonLabel: "Explore",
-    href: "/categories/leisurewear/crew-neck",
+    href: "/leisurewear/crew-neck",
   },
   {
-    id: "caps",
-    title: "Shorts",
+    id: "example",
+    title: "Example",
     buttonLabel: "Explore",
     href: "",
   },
+  {
+    id: "example 2",
+    title: "Example 2",
+    buttonLabel: "Explore",
+    href: "",
+  },
+  {
+    id: "example 3",
+    title: "Example 3",
+    buttonLabel: "Explore",
+    href: "",
+  },
+  {
+    id: "example 4",
+    title: "Example 4",
+    buttonLabel: "Explore",
+    href: "",
+  },
+
 ];
 
 export default function LeisurewearPage() {
   return (
-    <main className="min-w-screen min-h-screen bg-slate-100">
-      {/* Top Banner - navigates to home page */}
+    <main className="w-full min-h-screen bg-white">
       <TopBanner />
+      <Breadcrumbs />
 
       {/* Cards Section */}
       <section className="w-full px-4 md:px-8 min-h-[70vh]">

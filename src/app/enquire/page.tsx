@@ -278,6 +278,7 @@ export default function EnquirePage() {
                   id="quantity"
                   name="quantity"
                   type="number"
+                  placeholder="Minimum 12 quantity or €250 worth of order value"
                   min={12}
                   required
                   value={form.quantity}
