@@ -26,12 +26,12 @@ function titleCase(segment: string): string {
 }
 
 /**
- * Builds the breadcrumb trail from a pathname. Returns an empty array for the
- * home page (or an empty path), where no breadcrumbs should be shown.
+ * Builds the breadcrumb trail from a pathname. Returns a single "Home" crumb
+ * for the home page (or an empty path).
  */
 export function getBreadcrumbItems(pathname: string): BreadcrumbEntry[] {
   if (!pathname || pathname === "/") {
-    return [];
+    return [{ label: "Home", href: "/" }];
   }
 
   const segments = pathname.split("/").filter(Boolean);

@@ -149,13 +149,20 @@ export default function CheckoutPage() {
               })}
             </ul>
 
-            <div className="mt-8 flex flex-col items-end gap-4 border-t border-gray-200 pt-6">
+            <div className="mt-8 flex flex-row justify-between items-end gap-4 border-t border-gray-200 pt-6">
+              <Link
+                  href="/"
+                  className="inline-flex items-center justify-center rounded-md bg-black px-8 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-gray-600"
+              >
+              Continue shopping
+              </Link>
               <Link
                 href="/enquire"
                 className="inline-flex items-center justify-center rounded-md bg-black px-8 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-gray-600"
               >
                 Enquiry
               </Link>
+
             </div>
           </>
         )}
