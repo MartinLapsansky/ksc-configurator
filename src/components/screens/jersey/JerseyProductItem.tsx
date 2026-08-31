@@ -10,7 +10,7 @@ import JerseyPreview from "@/components/productPreviewComponents/jerseyView/view
 import ProductItemLayout from "../ProductItemLayout";
 import {BackLogoTextConfig} from "@/components/pickerComponents/TextInsertPicker";
 
-import {useProductConfig} from "@/app/contexts/ProductConfigContext";
+import {useCart} from "@/app/contexts/CartContext";
 
 // imports z src/app/assets
 import bgHotPink from "../../../app/assets/jerseys/jersey-hot-pink.png";
@@ -89,9 +89,10 @@ const FRONT_TEXT_OPTIONS: ColorOption[] = [
     { id: "front-text-white", name: "White", hex: "#FFFFFF" },
 ];
 
-const JerseyProductItem: React.FC = () => {
-
-  const {setConfig} = useProductConfig();
+const JerseyProductItem: React.FC<{ productName?: string }> = ({
+  productName = "Jersey Design 146",
+}) => {
+  const {addItem} = useCart();
 
   const router = useRouter();
 
@@ -131,9 +132,10 @@ const JerseyProductItem: React.FC = () => {
       color: FRONT_TEXT_OPTIONS[0]
   });
 
-    const handleEnquireClick = () => {
-        setConfig({
+    const handleAddToBagClick = () => {
+        addItem({
             productType: "jersey",
+            productName,
             bgColor,
             stripeColor,
             brandingColor,
@@ -147,7 +149,7 @@ const JerseyProductItem: React.FC = () => {
             frontTextConfig,
         });
 
-        router.push("/enquire");
+        router.push("/checkout");
     };
 
 
@@ -155,7 +157,7 @@ const JerseyProductItem: React.FC = () => {
     <ProductItemLayout
       title="Jersey Design 146"
       totalDots={5}
-      onEnquire={handleEnquireClick}
+      onAddToBag={handleAddToBagClick}
       pickers={
         <>
           <ColorSwatchPicker

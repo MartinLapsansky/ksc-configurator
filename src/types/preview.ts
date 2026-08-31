@@ -62,6 +62,8 @@ export type ProductType = "jersey" | "halfZip" | "crewNeck";
  */
 export type ProductConfig = {
   productType: ProductType;
+  /** Human-readable product name shown in the checkout summary (e.g. "Jersey Design 146"). */
+  productName: string;
   bgColor?: BaseColorOption;
 
   // Jersey-specific fields
@@ -78,6 +80,21 @@ export type ProductConfig = {
   frontTextConfig?: TextConfig;
 };
 
+export type CartItem = {
+  /** Unique identifier for a single cart line item. */
+  id: string;
+  quantity: number;
+  config: ProductConfig;
+};
+
+export type OrderItem = {
+  id: string;
+  quantity: number;
+  config: ProductConfig;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
 export type Order = {
   id: string;
   status: string;
@@ -91,7 +108,8 @@ export type Order = {
   organisation: string;
   quantity: number;
   message: string;
-  productConfig: ProductConfig;
+  productConfig?: ProductConfig;
+  items?: OrderItem[];
   userId: string | null;
   createdAt: string;
   updatedAt: string;

@@ -46,7 +46,7 @@ const ProductPreview: React.FC<ProductPreviewProps> = ({
   );
 
   const bgImageSrc = useMemo(() => {
-    if (!bgColor.file && !bgColor.backFile) return "";
+    if (!bgColor.file && !bgColor.backFile) return ""; // no product file either front or back
 
     if (!hasBackView || !isBackView) {
       return resolveSrc(bgColor.file);

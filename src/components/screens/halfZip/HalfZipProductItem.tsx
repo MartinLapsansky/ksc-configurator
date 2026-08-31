@@ -6,7 +6,7 @@ import {DoubleColorOption} from "@/types/preview";
 import LogoUploadPicker from "../../pickerComponents/LogoUploadPicker";
 import HalfZipPreview from "@/components/productPreviewComponents/halfZipView/view/HalfZipPreview";
 import ProductItemLayout from "../ProductItemLayout";
-import {useProductConfig} from "@/app/contexts/ProductConfigContext";
+import {useCart} from "@/app/contexts/CartContext";
 import {useRouter} from "next/navigation";
 
 // imports z src/app/assets/zip-tops
@@ -70,9 +70,10 @@ const BG_OPTIONS: DoubleColorOption[] = [
     },
 ];
 
-const HalfZipProductItem: React.FC = () => {
-
-  const {setConfig} = useProductConfig();
+const HalfZipProductItem: React.FC<{ productName?: string }> = ({
+  productName = "Soul Half Zip",
+}) => {
+  const {addItem} = useCart();
   const router = useRouter();
 
   const [bgColor, setBgColor] = useState<DoubleColorOption>(BG_OPTIONS[0]);
@@ -84,22 +85,23 @@ const HalfZipProductItem: React.FC = () => {
     undefined,
   );
 
-    const handleEnquireClick = () => {
-        setConfig({
+    const handleAddToBagClick = () => {
+        addItem({
             productType: "halfZip",
+            productName,
             bgColor,
             leftChestLogoUrl,
             rightChestLogoUrl,
         });
 
-        router.push("/enquire");
+        router.push("/checkout");
     };
 
   return (
     <ProductItemLayout
-      title="Half Zip Hoodie"
+      title="Half Zip"
       totalDots={3}
-      onEnquire={handleEnquireClick}
+      onAddToBag={handleAddToBagClick}
       pickers={
         <>
           <DoubleColorSwatchPicker

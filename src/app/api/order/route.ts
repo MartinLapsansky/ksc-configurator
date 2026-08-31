@@ -20,16 +20,20 @@ interface EnquiryFormState {
 
 interface EnquiryRequestBody {
     form: EnquiryFormState;
-    productConfig: ProductConfig;
+    productConfig?: ProductConfig;
+    items?: Array<{
+        quantity: number;
+        productConfig: ProductConfig;
+    }>;
 }
 
 
 export async function POST(req: NextRequest){
 
    try{
-       const body = (await req.json()) as EnquiryRequestBody;
+        const body = (await req.json()) as EnquiryRequestBody;
 
-       const {form, productConfig} = body;
+        const {form, productConfig, items} = body;
 
        const session = await getServerSession(authOptions);
 
@@ -49,29 +53,45 @@ export async function POST(req: NextRequest){
            );
        }
 
-       if (!productConfig) {
-           return NextResponse.json(
-               { message: "Product config is required" },
-               { status: 400 },
-           );
-       }
+        const normalizedItems = items?.length
+            ? items
+            : productConfig
+              ? [{ quantity: Number(form.quantity) || 1, productConfig }]
+              : [];
 
-       const createdOrder = await prisma.order.create({
-           data: {
-               firstName: form.firstName.trim(),
-               lastName: form.lastName.trim(),
-               county: form.county.trim(),
-               country: form.country?.trim() ?? "",
-               email: form.email.trim().toLowerCase(),
-               phoneCountryCode: form.phoneCountryCode.trim(),
-               phoneNumber: form.phoneNumber.trim(),
-               organisation: form.organisation.trim(),
-               quantity: Number(form.quantity),
-               message: form.message.trim(),
-               productConfig: JSON.parse(JSON.stringify(productConfig)) as Prisma.InputJsonValue,
-               userId: session?.user?.id ?? null,
-           },
-       });
+        if (normalizedItems.length === 0) {
+            return NextResponse.json(
+                { message: "At least one product config is required" },
+                { status: 400 },
+            );
+        }
+
+        const createdOrder = await prisma.order.create({
+            data: {
+                firstName: form.firstName.trim(),
+                lastName: form.lastName.trim(),
+                county: form.county.trim(),
+                country: form.country?.trim() ?? "",
+                email: form.email.trim().toLowerCase(),
+                phoneCountryCode: form.phoneCountryCode.trim(),
+                phoneNumber: form.phoneNumber.trim(),
+                organisation: form.organisation.trim(),
+                quantity: Number(form.quantity) || normalizedItems.reduce(
+                    (sum, item) => sum + item.quantity,
+                    0,
+                ),
+                message: form.message.trim(),
+                items: {
+                    create: normalizedItems.map((item) => ({
+                        quantity: item.quantity,
+                        config: JSON.parse(
+                            JSON.stringify(item.productConfig),
+                        ) as Prisma.InputJsonValue,
+                    })),
+                },
+                userId: session?.user?.id ?? null,
+            },
+        });
 
        return NextResponse.json(
            {
@@ -97,6 +117,9 @@ export async function GET() {
         const orders = await prisma.order.findMany({
             orderBy: {
                 createdAt: "desc",
+            },
+            include: {
+                items: true,
             },
         });
 

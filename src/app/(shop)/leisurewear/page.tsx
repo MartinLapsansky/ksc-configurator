@@ -5,13 +5,13 @@ import Breadcrumbs from "@/components/commons/Breadcrumbs";
 
 const categories: CategoryCardItem[] = [
   {
-    id: "hoodies",
+    id: "zip-tops",
     title: "Zip Tops",
     buttonLabel: "Explore",
     href: "/leisurewear/half-zip",
   },
   {
-    id: "tracksuits",
+    id: "crew-necks",
     title: "Crew necks",
     buttonLabel: "Explore",
     href: "/leisurewear/crew-neck",

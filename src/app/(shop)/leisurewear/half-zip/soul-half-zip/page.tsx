@@ -8,7 +8,7 @@ export default function HalfZipBlackGraphitePage() {
       <Breadcrumbs />
 
       <div className="p-4 md:p-8">
-        <HalfZipProductItem />
+        <HalfZipProductItem productName="Soul Half Zip" />
       </div>
     </main>
   );

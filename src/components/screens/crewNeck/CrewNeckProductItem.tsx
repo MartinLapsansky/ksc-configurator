@@ -6,7 +6,7 @@ import {TripleColorOption} from "@/types/preview";
 import LogoUploadPicker from "../../pickerComponents/LogoUploadPicker";
 import CrewNeckPreview from "@/components/productPreviewComponents/crewNeckView/view/CrewNeckPreview";
 import ProductItemLayout from "../ProductItemLayout";
-import {useProductConfig} from "@/app/contexts/ProductConfigContext";
+import {useCart} from "@/app/contexts/CartContext";
 import {useRouter} from "next/navigation";
 
 // imports z src/app/assets/crewnecks/front
@@ -161,9 +161,10 @@ const BG_OPTIONS: TripleColorOption[] = [
 ];
 
 
-const CrewNeckProductItem: React.FC = () => {
-
-  const {setConfig} = useProductConfig();
+const CrewNeckProductItem: React.FC<{ productName?: string }> = ({
+  productName = "Helios Crew Neck",
+}) => {
+  const {addItem} = useCart();
   const router = useRouter();
 
   const [bgColor, setBgColor] = useState<TripleColorOption>(BG_OPTIONS[0]);
@@ -178,23 +179,24 @@ const CrewNeckProductItem: React.FC = () => {
     undefined,
   );
 
-    const handleEnquireClick = () => {
-        setConfig({
+    const handleAddToBagClick = () => {
+        addItem({
             productType: "crewNeck",
+            productName,
             bgColor,
             leftChestLogoUrl,
             rightChestLogoUrl,
             backLogoUrl,
         });
 
-        router.push("/enquire");
+        router.push("/checkout");
     };
 
   return (
     <ProductItemLayout
-      title="Helios Crew Neck"
+      title="Crew Neck"
       totalDots={4}
-      onEnquire={handleEnquireClick}
+      onAddToBag={handleAddToBagClick}
       pickers={
         <>
           <TripleColorSwatchPicker

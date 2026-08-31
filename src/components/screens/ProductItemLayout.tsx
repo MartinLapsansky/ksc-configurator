@@ -9,8 +9,8 @@ type ProductItemLayoutProps = {
   pickers: React.ReactNode;
   /** The product preview rendered on the right side. */
   preview: React.ReactNode;
-  /** Called when the "Enquire" button is clicked. */
-  onEnquire: () => void;
+  /** Called when the "Add to bag" button is clicked. */
+  onAddToBag: () => void;
 };
 
 /**
@@ -24,7 +24,7 @@ const ProductItemLayout: React.FC<ProductItemLayoutProps> = ({
   totalDots,
   pickers,
   preview,
-  onEnquire,
+  onAddToBag,
 }) => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -86,10 +86,10 @@ const ProductItemLayout: React.FC<ProductItemLayoutProps> = ({
           <div className="mt-3 h-15 flex md:justify-center items-center">
             <button
               type="button"
-              onClick={onEnquire}
+              onClick={onAddToBag}
               className="inline-flex items-center cursor-pointer rounded-md bg-black px-5 py-2.5 text-xl font-semibold text-white shadow-sm hover:bg-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
             >
-              Enquire
+              Add to bag
             </button>
           </div>
         </div>

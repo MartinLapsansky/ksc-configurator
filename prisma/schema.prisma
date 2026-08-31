@@ -32,10 +32,22 @@ model Order {
   quantity         Int
   message          String
 
-  productConfig Json
+  items OrderItem[]
 
   userId String?
   user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderItem {
+  id       String @id @default(cuid())
+  quantity Int
+  config   Json
+
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

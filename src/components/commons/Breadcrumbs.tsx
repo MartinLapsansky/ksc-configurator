@@ -3,7 +3,10 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBagShopping } from "@fortawesome/free-solid-svg-icons";
 import { getBreadcrumbItems } from "@/lib/breadcrumbs";
+import { useCart } from "@/app/contexts/CartContext";
 
 /**
  * Breadcrumb navigation shared across the shop section.
@@ -16,6 +19,7 @@ import { getBreadcrumbItems } from "@/lib/breadcrumbs";
 export default function Breadcrumbs() {
   const pathname = usePathname();
   const items = getBreadcrumbItems(pathname ?? "/");
+  const { totalItems } = useCart();
 
   if (items.length === 0) {
     return null;
@@ -23,6 +27,7 @@ export default function Breadcrumbs() {
 
   return (
     <div className="w-full bg-gray-700 p-6 md:px-8">
+      <div className="flex items-center justify-between gap-4">
       <nav aria-label="Breadcrumb">
         <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
           {items.map((item, index) => {
@@ -65,6 +70,20 @@ export default function Breadcrumbs() {
           })}
         </ol>
       </nav>
+
+      <Link
+        href="/checkout"
+        aria-label="View checkout"
+        className="relative flex items-center justify-center text-white transition-colors hover:text-lime-green"
+      >
+        <FontAwesomeIcon icon={faBagShopping} className="h-6 w-6" />
+        {totalItems > 0 && (
+          <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-lime-green px-1 text-xs font-bold text-gray-900">
+            {totalItems}
+          </span>
+        )}
+      </Link>
+      </div>
     </div>
   );
 }

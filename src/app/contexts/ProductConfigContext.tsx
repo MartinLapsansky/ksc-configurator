@@ -15,6 +15,7 @@ const ProductConfigContext = createContext<ProductConfigContextValue | undefined
 export const ProductConfigProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
+
   const [config, setConfig] = useState<ProductConfig | null>(null);
 
   return (

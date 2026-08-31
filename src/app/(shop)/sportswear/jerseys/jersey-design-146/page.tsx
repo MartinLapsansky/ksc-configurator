@@ -8,7 +8,7 @@ export default function JerseyDesign146Page() {
       <Breadcrumbs />
 
       <div className="p-4 md:p-8">
-        <JerseyProductItem />
+        <JerseyProductItem productName="Jersey Design 146" />
       </div>
     </main>
   );

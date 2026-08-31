@@ -8,7 +8,7 @@ export default function HeliosCrewNeckPage() {
       <Breadcrumbs />
 
       <div className="p-4 md:p-8">
-        <CrewNeckProductItem />
+        <CrewNeckProductItem productName="Helios Crew Neck" />
       </div>
     </main>
   );

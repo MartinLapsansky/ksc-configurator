@@ -1,7 +1,7 @@
 "use client";
 
 import React, {useState} from "react";
-import { useProductConfig } from "@/app/contexts/ProductConfigContext";
+import { useCart } from "@/app/contexts/CartContext";
 
 interface EnquiryFormState {
   firstName: string;
@@ -53,7 +53,7 @@ const COUNTIES = [
 ];
 
 export default function EnquirePage() {
-  const { config } = useProductConfig();
+  const { items, totalQuantity } = useCart();
 
   const [form, setForm] = useState<EnquiryFormState>({
     firstName: "",
@@ -64,7 +64,7 @@ export default function EnquirePage() {
     phoneCountryCode: "+353",
     phoneNumber: "",
     organisation: "",
-    quantity: "",
+    quantity: totalQuantity > 0 ? String(totalQuantity) : "",
     message: "",
   });
 
@@ -86,7 +86,10 @@ export default function EnquirePage() {
         },
         body: JSON.stringify({
           form,
-          productConfig: config,
+          items: items.map((item) => ({
+            quantity: item.quantity,
+            productConfig: item.config,
+          })),
         }),
       });
 

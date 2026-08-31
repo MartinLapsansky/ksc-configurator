@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import type { Order } from "@/types/preview";
+import type { Order, ProductConfig } from "@/types/preview";
 import ProductConfigSummary from "./ProductConfigSummary";
 
 import JerseyPreviewOrder from "./productViews/jerseyPreviewOrder";
@@ -15,17 +15,7 @@ type OrderCardProps = {
 export default function OrderCard({ order }: OrderCardProps) {
     const [open, setOpen] = useState(false);
 
-    const renderProductPreview = () => {
-        const productConfig = order.productConfig;
-
-        if (!productConfig) {
-            return (
-                <p className="text-sm text-gray-500">
-                    No product configuration available for this order.
-                </p>
-            );
-        }
-
+    const renderProductPreview = (productConfig: ProductConfig) => {
         switch (productConfig.productType) {
             case "jersey":
                 return <JerseyPreviewOrder productConfig={productConfig} />;
@@ -37,6 +27,12 @@ export default function OrderCard({ order }: OrderCardProps) {
                 return null;
         }
     };
+
+    const configs = order.items?.length
+        ? order.items
+        : order.productConfig
+          ? [{ id: order.id, quantity: order.quantity, config: order.productConfig }]
+          : [];
 
 
     return (
@@ -84,10 +80,26 @@ export default function OrderCard({ order }: OrderCardProps) {
             </div>
 
             {open && (
-                <div className="mt-4 space-y-5 border-t border-gray-200 pt-4">
-                    {renderProductPreview()}
-                    {order.productConfig && (
-                        <ProductConfigSummary productConfig={order.productConfig} />
+                <div className="mt-4 space-y-6 border-t border-gray-200 pt-4">
+                    {configs.length === 0 ? (
+                        <p className="text-sm text-gray-500">
+                            No product configuration available for this order.
+                        </p>
+                    ) : (
+                        configs.map((item) => (
+                            <div
+                                key={item.id}
+                                className="rounded-lg border border-gray-100 p-3"
+                            >
+                                <p className="mb-2 text-sm font-medium text-black">
+                                    {item.config.productName ?? item.config.productType} · Qty {item.quantity}
+                                </p>
+                                {renderProductPreview(item.config)}
+                                <div className="mt-2">
+                                    <ProductConfigSummary productConfig={item.config} />
+                                </div>
+                            </div>
+                        ))
                     )}
                 </div>
             )}
