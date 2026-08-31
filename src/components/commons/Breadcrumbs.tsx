@@ -76,7 +76,7 @@ export default function Breadcrumbs() {
         aria-label="View checkout"
         className="relative flex items-center justify-center text-white transition-colors hover:text-lime-green"
       >
-        <FontAwesomeIcon icon={faBagShopping} className="h-6 w-6" />
+        <FontAwesomeIcon icon={faBagShopping} style={{ height: "2rem", width: "2rem" }} />
         {totalItems > 0 && (
           <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-lime-green px-1 text-xs font-bold text-gray-900">
             {totalItems}
