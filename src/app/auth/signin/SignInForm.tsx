@@ -8,6 +8,7 @@ export default function SignInForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     const searchParams = useSearchParams();
     const callbackUrl = searchParams.get("callbackUrl") ?? "/";
@@ -16,6 +17,7 @@ export default function SignInForm() {
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError("");
+        setIsLoading(true);
 
         try {
             const res = await signIn("credentials", {
@@ -36,6 +38,8 @@ export default function SignInForm() {
             }
         } catch {
             setError("Nesprávny email alebo heslo.");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -95,9 +99,16 @@ export default function SignInForm() {
                     <div className="pt-2 text-center">
                         <button
                             type="submit"
-                            className="cursor-pointer rounded-md bg-green-800 px-4 py-2 font-semibold text-white transition-colors hover:bg-green-700"
+                            disabled={isLoading}
+                            className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-md bg-green-800 px-4 py-2 font-semibold text-white transition-colors hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-60"
                         >
-                            Log in
+                            {isLoading && (
+                                <span
+                                    aria-hidden="true"
+                                    className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"
+                                />
+                            )}
+                            {isLoading ? "Logging in..." : "Log in"}
                         </button>
                     </div>
                 </form>
