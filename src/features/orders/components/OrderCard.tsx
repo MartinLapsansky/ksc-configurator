@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import type { Order, ProductConfig } from "@/types/preview";
 import ProductConfigSummary from "./ProductConfigSummary";
 
+import GenericOrderPreview from "./productViews/GenericOrderPreview";
 import JerseyPreviewOrder from "./productViews/jerseyPreviewOrder";
 import HalfZipPreviewOrder from "./productViews/halfZipPreviewOrder";
 import CrewNeckPreviewOrder from "./productViews/crewNeckPreviewOrder";
@@ -16,6 +17,10 @@ export default function OrderCard({ order }: OrderCardProps) {
     const [open, setOpen] = useState(false);
 
     const renderProductPreview = (productConfig: ProductConfig) => {
+        if (productConfig.definitionSnapshot) {
+            return <GenericOrderPreview productConfig={productConfig} />;
+        }
+
         switch (productConfig.productType) {
             case "jersey":
                 return <JerseyPreviewOrder productConfig={productConfig} />;

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { productDefinitionSchema } from "@/features/configurator/schemas/productDefinitionSchema";
 
 /**
  * Runtime validation for order/enquiry input received from the client.
@@ -31,25 +32,44 @@ const staticLogoOptionSchema = z.object({
 const textConfigSchema = z.object({
   enabled: z.boolean(),
   text: z.string(),
-  color: colorOptionSchema,
+  color: z.object({ name: z.string(), hex: z.string() }),
 });
 
-const productConfigSchema = z.object({
-  productType: z.enum(["jersey", "halfZip", "crewNeck"]),
-  productName: z.string(),
-  bgColor: baseColorOptionSchema.optional(),
-  stripeColor: colorOptionSchema.optional(),
-  brandingColor: colorOptionSchema.optional(),
-  leftChestLogoUrl: z.string().optional(),
-  sponsorLogoUrl: z.string().optional(),
-  rightLogo: staticLogoOptionSchema.optional(),
-  rightChestLogoUrl: z.string().optional(),
-  leftSleeveLogoUrl: z.string().optional(),
-  rightSleeveLogoUrl: z.string().optional(),
-  backLogoUrl: z.string().optional(),
-  backTextConfig: textConfigSchema.optional(),
-  frontTextConfig: textConfigSchema.optional(),
-});
+const LEGACY_PRODUCT_TYPES = z.enum(["jersey", "halfZip", "crewNeck"]);
+
+const productConfigSchema = z
+  .object({
+    productId: z.string().optional(),
+    productType: z.string().min(1),
+    productName: z.string(),
+    values: z.record(z.string(), z.unknown()).optional(),
+    definitionSnapshot: productDefinitionSchema.optional(),
+    bgColor: baseColorOptionSchema.optional(),
+    stripeColor: colorOptionSchema.optional(),
+    brandingColor: colorOptionSchema.optional(),
+    leftChestLogoUrl: z.string().optional(),
+    sponsorLogoUrl: z.string().optional(),
+    rightLogo: staticLogoOptionSchema.optional(),
+    rightChestLogoUrl: z.string().optional(),
+    leftSleeveLogoUrl: z.string().optional(),
+    rightSleeveLogoUrl: z.string().optional(),
+    backLogoUrl: z.string().optional(),
+    backTextConfig: textConfigSchema.optional(),
+    frontTextConfig: textConfigSchema.optional(),
+  })
+  .superRefine((config, ctx) => {
+    // Legacy products (no definition snapshot) must use a known product type.
+    if (!config.definitionSnapshot) {
+      const parsed = LEGACY_PRODUCT_TYPES.safeParse(config.productType);
+      if (!parsed.success) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["productType"],
+          message: "Unknown product type for legacy configuration",
+        });
+      }
+    }
+  });
 
 const enquiryFormSchema = z.object({
   firstName: z.string().trim().min(1),

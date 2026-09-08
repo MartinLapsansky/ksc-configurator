@@ -6,7 +6,7 @@ import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBagShopping, faMinus, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useCart } from "@/contexts/CartContext";
-import { PRODUCT_TYPE_LABELS, getThumbnail } from "@/lib/cart";
+import { getProductTypeLabel, getSelectedColorName, getThumbnail } from "@/lib/cart";
 
 export default function CheckoutPage() {
   const { items, totalItems, setQuantity, removeItem } = useCart();
@@ -78,11 +78,11 @@ export default function CheckoutPage() {
 
                       <div>
                         <p className="font-medium text-black">
-                          {PRODUCT_TYPE_LABELS[item.config.productType]}
+                          {getProductTypeLabel(item.config)}
                         </p>
-                        {item.config.bgColor?.name && (
+                        {getSelectedColorName(item.config) && (
                           <p className="text-sm text-gray-500">
-                            {item.config.bgColor.name}
+                            {getSelectedColorName(item.config)}
                           </p>
                         )}
                       </div>

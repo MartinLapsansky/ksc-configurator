@@ -11,7 +11,7 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { useCart } from "@/contexts/CartContext";
-import { PRODUCT_TYPE_LABELS, getThumbnail } from "@/lib/cart";
+import { getProductTypeLabel, getSelectedColorName, getThumbnail } from "@/lib/cart";
 
 export default function BagDrawer() {
   const { items, totalItems, isBagOpen, closeBag, setQuantity, removeItem } =
@@ -88,11 +88,11 @@ export default function BagDrawer() {
 
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium text-black">
-                      {PRODUCT_TYPE_LABELS[item.config.productType]}
+                      {getProductTypeLabel(item.config)}
                     </p>
-                    {item.config.bgColor?.name && (
+                    {getSelectedColorName(item.config) && (
                       <p className="truncate text-xs text-gray-500">
-                        {item.config.bgColor.name}
+                        {getSelectedColorName(item.config)}
                       </p>
                     )}
                     <div className="mt-1 flex items-center gap-2">

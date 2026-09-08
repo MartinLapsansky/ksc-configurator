@@ -1,4 +1,5 @@
 import type { StaticImageData } from "next/image";
+import type { ProductDefinition } from "@/features/configurator/schemas/productDefinitionSchema";
 
 /**
  * Base shape shared by all colour options. `hex` is used for single-colour
@@ -32,8 +33,6 @@ export type TripleColorOption = BaseColorOption & {
   hex3: string;
 };
 
-
-
 export type OverlayEntry = {
   key: string;
   layerSrc: string;
@@ -50,23 +49,32 @@ export type StaticLogoOption = {
 export type TextConfig = {
   enabled: boolean;
   text: string;
-  color: ColorOption;
+  color: { name: string; hex: string };
 };
 
-export type ProductType = "jersey" | "halfZip" | "crewNeck";
-
 /**
- * General product configuration that can hold config for any product type.
- * The `productType` field discriminates which config is relevant.
- * `bgColor` accepts any colour variant (single, double or triple tone).
+ * Product configuration stored in the cart and persisted in `OrderItem.config`.
+ *
+ * New data-driven products populate `productId`, `values` and
+ * `definitionSnapshot`. Legacy products (created before the catalogue was
+ * database-driven) keep the explicitly typed fields below. Both shapes remain
+ * supported so old orders/carts continue to render.
  */
 export type ProductConfig = {
-  productType: ProductType;
-  /** Human-readable product name shown in the checkout summary (e.g. "Jersey Design 146"). */
+  /** Product database id (new data-driven products). */
+  productId?: string;
+  /** Product slug for new products, or legacy type ("jersey", "halfZip", "crewNeck"). */
+  productType: string;
+  /** Human-readable product name (e.g. "Jersey Design 146"). */
   productName: string;
-  bgColor?: BaseColorOption;
 
-  // Jersey-specific fields
+  /** Picker values keyed by picker `key` (new data-driven products). */
+  values?: Record<string, unknown>;
+  /** Snapshot of the product definition used to render the preview/summary. */
+  definitionSnapshot?: ProductDefinition;
+
+  // ── Legacy fields (kept for backward compatibility) ──
+  bgColor?: BaseColorOption;
   stripeColor?: ColorOption;
   brandingColor?: ColorOption;
   leftChestLogoUrl?: string;

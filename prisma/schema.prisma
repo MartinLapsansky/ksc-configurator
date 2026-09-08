@@ -11,6 +11,7 @@ model User {
   email     String   @unique
   password  String
   name      String?
+  role      Role     @default(user)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -58,4 +59,42 @@ enum OrderStatus {
   processing
   sent
   cancelled
+}
+
+enum Role {
+  user
+  admin
+}
+
+model Category {
+  id        String     @id @default(cuid())
+  name      String
+  slug      String     @unique
+  parentId  String?
+  parent    Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children  Category[] @relation("CategoryTree")
+  sortOrder Int        @default(0)
+  active    Boolean    @default(true)
+
+  products Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Product {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  name          String
+  categoryId    String
+  category      Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  active        Boolean  @default(true)
+  sortOrder     Int      @default(0)
+  hasBackView   Boolean  @default(false)
+  frontImageUrl String?
+  backImageUrl  String?
+  definition    Json
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

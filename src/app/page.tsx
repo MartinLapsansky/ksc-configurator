@@ -1,24 +1,12 @@
 import React from "react";
-import CategoryCard, { CategoryCardItem } from "@/components/shared/CategoryCard";
+import CategoryCard from "@/components/shared/CategoryCard";
 import TopBanner from "@/components/layout/TopBanner";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
+import { getTopLevelCategories } from "@/lib/catalog";
 
-const cards: CategoryCardItem[] = [
-  {
-    id: "sports",
-    title: "Category: Sports Kit",
-    buttonLabel: "Sports Kit",
-    href: "/sportswear",
-  },
-  {
-    id: "leisure",
-    title: "Category: Leisurewear",
-    buttonLabel: "Leisurewear",
-    href: "/leisurewear",
-  },
-];
+export default async function HomePage() {
+  const cards = await getTopLevelCategories();
 
-export default function HomePage() {
   return (
     <main className="w-full min-h-screen bg-slate-100">
       {/* Top Banner - navigates to home page */}

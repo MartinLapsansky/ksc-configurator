@@ -9,6 +9,10 @@ type TextInsertPickerProps = {
   value: TextConfig;
   colorOptions: ColorOption[];
   onChange: (config: TextConfig) => void;
+  /** Label shown next to the enable checkbox. */
+  toggleLabel?: string;
+  /** Placeholder for the text input. */
+  placeholder?: string;
 };
 
 const TextInsertPicker: React.FC<TextInsertPickerProps> = ({
@@ -16,6 +20,8 @@ const TextInsertPicker: React.FC<TextInsertPickerProps> = ({
   value,
   colorOptions,
   onChange,
+  toggleLabel = "Enable text",
+  placeholder = "Enter text",
 }) => {
   const handleToggleChange = useCallback(
     (enabled: boolean) => {
@@ -66,7 +72,7 @@ const TextInsertPicker: React.FC<TextInsertPickerProps> = ({
               onChange={(e) => handleToggleChange(e.target.checked)}
               className="h-4 w-4 rounded border-gray-300 text-black focus:ring-black"
             />
-            <span className="text-sm font-medium text-black">Enable back logo text</span>
+            <span className="text-sm font-medium text-black">{toggleLabel}</span>
           </label>
         </div>
 
@@ -77,7 +83,7 @@ const TextInsertPicker: React.FC<TextInsertPickerProps> = ({
                 type="text"
                 value={value.text}
                 onChange={(e) => handleTextChange(e.target.value)}
-                placeholder="Enter text for back logo"
+                placeholder={placeholder}
                 className="flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm  focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
                 maxLength={50}
               />
