@@ -1,64 +1,60 @@
-"use client";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import OrderCard from "@/features/orders/components/OrderCard";
+import type { Order, ProductConfig } from "@/types/preview";
 
-import React, { useEffect, useState } from "react";
-import OrderCard from "../../components/orderComponents/OrderCard";
-import type { Order } from "@/types/preview";
+export default async function OrdersPage() {
+  const session = await getServerSession(authOptions);
 
-export default function OrdersPage() {
-    const [orders, setOrders] = useState<Order[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+  if (!session?.user?.id) {
+    redirect("/auth/signin");
+  }
 
-    useEffect(() => {
-        const fetchOrders = async () => {
-            try {
-                const res = await fetch("/api/order");
-                if (!res.ok) {
-                    throw new Error("Failed to load orders");
-                }
+  const orders = await prisma.order.findMany({
+    orderBy: { createdAt: "desc" },
+    include: { items: true },
+  });
 
-                const data = await res.json();
-                setOrders(data.data ?? []);
-            } catch (err) {
-                console.error(err);
-                setError("Nepodarilo sa načítať objednávky.");
-            } finally {
-                setLoading(false);
-            }
-        };
+  const orderList: Order[] = orders.map((order) => ({
+    id: order.id,
+    status: order.status,
+    firstName: order.firstName,
+    lastName: order.lastName,
+    county: order.county,
+    country: order.country,
+    email: order.email,
+    phoneCountryCode: order.phoneCountryCode,
+    phoneNumber: order.phoneNumber,
+    organisation: order.organisation,
+    quantity: order.quantity,
+    message: order.message,
+    userId: order.userId,
+    createdAt: order.createdAt.toISOString(),
+    updatedAt: order.updatedAt.toISOString(),
+    items: order.items.map((item) => ({
+      id: item.id,
+      quantity: item.quantity,
+      // The config JSON originates from a validated ProductConfig written via
+      // the order route, so this boundary is safe.
+      config: item.config as ProductConfig,
+    })),
+  }));
 
-        fetchOrders();
-    }, []);
+  return (
+    <main className="min-h-screen bg-slate-100 p-6">
+      <div className="mx-auto max-w-6xl rounded-lg bg-white p-6 shadow-sm">
+        <h1 className="text-2xl font-semibold text-black">Orders</h1>
 
-    if (loading) {
-        return (
-            <main className="min-h-screen p-6">
-                <p className="text-black">Loading orders...</p>
-            </main>
-        );
-    }
-
-    if (error) {
-        return (
-            <main className="min-h-screen p-6">
-                <p className="text-red-600">{error}</p>
-            </main>
-        );
-    }
-
-    return (
-        <main className="min-h-screen bg-slate-100 p-6">
-            <div className="mx-auto max-w-6xl rounded-lg bg-white p-6 shadow-sm">
-                <h1 className="text-2xl font-semibold text-black">Orders</h1>
-
-                <div className="mt-6 space-y-4">
-                    {orders.length === 0 ? (
-                        <p className="text-gray-600">No orders found.</p>
-                    ) : (
-                        orders.map((order) => <OrderCard key={order.id} order={order} />)
-                    )}
-                </div>
-            </div>
-        </main>
-    );
+        <div className="mt-6 space-y-4">
+          {orderList.length === 0 ? (
+            <p className="text-gray-600">No orders found.</p>
+          ) : (
+            orderList.map((order) => <OrderCard key={order.id} order={order} />)
+          )}
+        </div>
+      </div>
+    </main>
+  );
 }

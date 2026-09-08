@@ -5,21 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBagShopping, faMinus, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
-import { useCart } from "@/app/contexts/CartContext";
-import type { ProductConfig } from "@/types/preview";
-
-const PRODUCT_TYPE_LABELS: Record<ProductConfig["productType"], string> = {
-  jersey: "Jersey",
-  halfZip: "Half Zip",
-  crewNeck: "Crew Neck",
-};
-
-function getThumbnail(config: ProductConfig): string | null {
-  const file = config.bgColor?.file;
-  if (!file) return null;
-  if (typeof file === "string") return file;
-  return file.src ?? null;
-}
+import { useCart } from "@/contexts/CartContext";
+import { PRODUCT_TYPE_LABELS, getThumbnail } from "@/lib/cart";
 
 export default function CheckoutPage() {
   const { items, totalItems, setQuantity, removeItem } = useCart();
@@ -46,7 +33,7 @@ export default function CheckoutPage() {
             />
             <p className="text-lg text-gray-600">Your bag is empty.</p>
             <Link
-              href="/sportswear/jerseys"
+              href="/"
               className="inline-flex items-center rounded-md bg-black px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-600"
             >
               Continue browsing

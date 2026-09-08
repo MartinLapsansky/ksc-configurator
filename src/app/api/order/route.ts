@@ -1,138 +1,105 @@
-import {NextRequest, NextResponse} from "next/server";
-import {prisma} from "@/lib/prisma";
-import {Prisma} from "@prisma/client";
-import {getServerSession} from "next-auth";
-import {authOptions} from "@/lib/auth";
-import type {ProductConfig} from "@/types/preview";
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { orderRequestSchema } from "@/lib/validation/orderSchema";
 
-interface EnquiryFormState {
-    firstName: string;
-    lastName: string;
-    county: string;
-    country: string;
-    email: string;
-    phoneCountryCode: string;
-    phoneNumber: string;
-    organisation: string;
-    quantity: string;
-    message: string;
+export async function POST(req: NextRequest) {
+  try {
+    const body: unknown = await req.json();
+
+    const parsed = orderRequestSchema.safeParse(body);
+
+    if (!parsed.success) {
+      return NextResponse.json(
+        { message: "Invalid request data", issues: parsed.error.flatten() },
+        { status: 400 },
+      );
+    }
+
+    const { form, productConfig, items } = parsed.data;
+
+    const session = await getServerSession(authOptions);
+
+    const normalizedItems = items?.length
+      ? items
+      : productConfig
+        ? [{ quantity: Number(form.quantity) || 1, productConfig }]
+        : [];
+
+    if (normalizedItems.length === 0) {
+      return NextResponse.json(
+        { message: "At least one product config is required" },
+        { status: 400 },
+      );
+    }
+
+    const createdOrder = await prisma.order.create({
+      data: {
+        firstName: form.firstName,
+        lastName: form.lastName,
+        county: form.county,
+        country: form.country,
+        email: form.email,
+        phoneCountryCode: form.phoneCountryCode,
+        phoneNumber: form.phoneNumber,
+        organisation: form.organisation,
+        quantity:
+          Number(form.quantity) ||
+          normalizedItems.reduce((sum, item) => sum + item.quantity, 0),
+        message: form.message,
+        items: {
+          create: normalizedItems.map((item) => ({
+            quantity: item.quantity,
+            config: JSON.parse(
+              JSON.stringify(item.productConfig),
+            ) as Prisma.InputJsonValue,
+          })),
+        },
+        userId: session?.user?.id ?? null,
+      },
+    });
+
+    return NextResponse.json(
+      {
+        message: "Order submitted successfully.",
+        data: createdOrder,
+      },
+      { status: 201 },
+    );
+  } catch (error) {
+    console.error("Error processing order:", error);
+    return NextResponse.json(
+      { message: "Internal server error" },
+      { status: 500 },
+    );
+  }
 }
-
-interface EnquiryRequestBody {
-    form: EnquiryFormState;
-    productConfig?: ProductConfig;
-    items?: Array<{
-        quantity: number;
-        productConfig: ProductConfig;
-    }>;
-}
-
-
-export async function POST(req: NextRequest){
-
-   try{
-        const body = (await req.json()) as EnquiryRequestBody;
-
-        const {form, productConfig, items} = body;
-
-       const session = await getServerSession(authOptions);
-
-       if (
-           !form?.firstName ||
-           !form?.lastName ||
-           !form?.county ||
-           !form?.email ||
-           !form?.phoneCountryCode ||
-           !form?.phoneNumber ||
-           !form?.quantity
-       ) {
-
-           return NextResponse.json(
-               { message: "Missing required fields" },
-               { status: 400 },
-           );
-       }
-
-        const normalizedItems = items?.length
-            ? items
-            : productConfig
-              ? [{ quantity: Number(form.quantity) || 1, productConfig }]
-              : [];
-
-        if (normalizedItems.length === 0) {
-            return NextResponse.json(
-                { message: "At least one product config is required" },
-                { status: 400 },
-            );
-        }
-
-        const createdOrder = await prisma.order.create({
-            data: {
-                firstName: form.firstName.trim(),
-                lastName: form.lastName.trim(),
-                county: form.county.trim(),
-                country: form.country?.trim() ?? "",
-                email: form.email.trim().toLowerCase(),
-                phoneCountryCode: form.phoneCountryCode.trim(),
-                phoneNumber: form.phoneNumber.trim(),
-                organisation: form.organisation.trim(),
-                quantity: Number(form.quantity) || normalizedItems.reduce(
-                    (sum, item) => sum + item.quantity,
-                    0,
-                ),
-                message: form.message.trim(),
-                items: {
-                    create: normalizedItems.map((item) => ({
-                        quantity: item.quantity,
-                        config: JSON.parse(
-                            JSON.stringify(item.productConfig),
-                        ) as Prisma.InputJsonValue,
-                    })),
-                },
-                userId: session?.user?.id ?? null,
-            },
-        });
-
-       return NextResponse.json(
-           {
-               message: "Order submitted successfully.",
-               data: createdOrder,
-           },
-           { status: 201 },
-       );
-
-
-   } catch (error){
-       console.error("Error processing order:", error);
-       return NextResponse.json(
-           { message: "Internal server error" },
-           { status: 500 },
-       );
-   }
-}
-
 
 export async function GET() {
-    try {
-        const orders = await prisma.order.findMany({
-            orderBy: {
-                createdAt: "desc",
-            },
-            include: {
-                items: true,
-            },
-        });
+  try {
+    const session = await getServerSession(authOptions);
 
-        return NextResponse.json({ data: orders }, { status: 200 });
-
-    } catch (error) {
-        console.error("Error fetching orders:", error);
-        return NextResponse.json(
-            { message: "Internal server error" },
-            { status: 500 },
-        );
+    if (!session?.user?.id) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
+
+    const orders = await prisma.order.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        items: true,
+      },
+    });
+
+    return NextResponse.json({ data: orders }, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    return NextResponse.json(
+      { message: "Internal server error" },
+      { status: 500 },
+    );
+  }
 }
-
-
-

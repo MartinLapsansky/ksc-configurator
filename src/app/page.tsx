@@ -1,9 +1,7 @@
-"use client";
-
 import React from "react";
-import CategoryCard, { CategoryCardItem } from "@/components/commons/CategoryCard";
-import TopBanner from "@/components/commons/TopBanner";
-import Breadcrumbs from "@/components/commons/Breadcrumbs";
+import CategoryCard, { CategoryCardItem } from "@/components/shared/CategoryCard";
+import TopBanner from "@/components/layout/TopBanner";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 
 const cards: CategoryCardItem[] = [
   {

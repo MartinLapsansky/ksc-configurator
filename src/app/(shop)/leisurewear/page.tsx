@@ -1,20 +1,20 @@
 import React from "react";
-import CategoryCard, { CategoryCardItem } from "@/components/commons/CategoryCard";
-import TopBanner from "@/components/commons/TopBanner";
-import Breadcrumbs from "@/components/commons/Breadcrumbs";
+import CategoryCard, { CategoryCardItem } from "@/components/shared/CategoryCard";
+import TopBanner from "@/components/layout/TopBanner";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 
 const categories: CategoryCardItem[] = [
   {
     id: "zip-tops",
     title: "Zip Tops",
     buttonLabel: "Explore",
-    href: "/leisurewear/half-zip",
+    href: "/leisurewear/zip-tops",
   },
   {
     id: "crew-necks",
     title: "Crew necks",
     buttonLabel: "Explore",
-    href: "/leisurewear/crew-neck",
+    href: "/leisurewear/crew-necks",
   },
   {
     id: "example",

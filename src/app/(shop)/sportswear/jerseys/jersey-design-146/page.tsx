@@ -1,6 +1,6 @@
 import React from "react";
-import JerseyProductItem from "@/components/screens/jersey/JerseyProductItem";
-import Breadcrumbs from "@/components/commons/Breadcrumbs";
+import JerseyProductItem from "@/features/configurator/components/productItems/JerseyProductItem";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 
 export default function JerseyDesign146Page() {
   return (

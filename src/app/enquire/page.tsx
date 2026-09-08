@@ -1,20 +1,8 @@
 "use client";
 
 import React, {useState} from "react";
-import { useCart } from "@/app/contexts/CartContext";
-
-interface EnquiryFormState {
-  firstName: string;
-  lastName: string;
-  county: string;
-  country: string;
-  email: string;
-  phoneCountryCode: string;
-  phoneNumber: string;
-  organisation: string; // club / school / institution
-  quantity: string;
-  message: string;
-}
+import { useCart } from "@/contexts/CartContext";
+import type { EnquiryFormInput } from "@/lib/validation/orderSchema";
 
 const COUNTIES = [
   "Antrim",
@@ -55,7 +43,7 @@ const COUNTIES = [
 export default function EnquirePage() {
   const { items, totalQuantity } = useCart();
 
-  const [form, setForm] = useState<EnquiryFormState>({
+  const [form, setForm] = useState<EnquiryFormInput>({
     firstName: "",
     lastName: "",
     county: "",
