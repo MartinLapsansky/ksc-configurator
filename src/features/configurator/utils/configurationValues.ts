@@ -6,7 +6,7 @@ import type {
 type ConfigValues = Record<string, unknown>;
 
 /**
- * Creates the initial configuration values from the product definition so every
+ * Creates the initial configuration values from the product definition, so every
  * picker starts on its first option (or an empty value for uploads/text).
  */
 export function buildDefaultValues(

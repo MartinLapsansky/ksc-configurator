@@ -21,16 +21,18 @@ export default async function EditCategoryPage({
   if (!category) notFound();
 
   return (
-    <CategoryForm
-      categories={categories}
-      initial={{
-        id: category.id,
-        name: category.name,
-        slug: category.slug,
-        parentId: category.parentId,
-        sortOrder: category.sortOrder,
-        active: category.active,
-      }}
-    />
+    <div className="flex min-h-[70vh] items-center justify-center">
+      <CategoryForm
+        categories={categories}
+        initial={{
+          id: category.id,
+          name: category.name,
+          slug: category.slug,
+          parentId: category.parentId,
+          sortOrder: category.sortOrder,
+          active: category.active,
+        }}
+      />
+    </div>
   );
 }
