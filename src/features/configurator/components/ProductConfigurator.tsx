@@ -7,7 +7,10 @@ import type { CatalogProduct } from "@/features/configurator/types";
 import ProductItemLayout from "@/features/configurator/components/ProductItemLayout";
 import ProductConfiguratorPickers from "@/features/configurator/components/ProductConfiguratorPickers";
 import GenericProductPreview from "@/features/configurator/components/previews/GenericProductPreview";
-import { buildDefaultValues } from "@/features/configurator/utils/configurationValues";
+import {
+  buildDefaultValues,
+  reconcileValues,
+} from "@/features/configurator/utils/configurationValues";
 
 type ProductConfiguratorProps = {
   product: CatalogProduct;
@@ -23,9 +26,20 @@ const ProductConfigurator: React.FC<ProductConfiguratorProps> = ({
 }) => {
   const { addItem, openBag } = useCart();
 
+  const [prevDefinition, setPrevDefinition] = useState(product.definition);
   const [values, setValues] = useState<Record<string, unknown>>(() =>
     buildDefaultValues(product.definition),
   );
+
+  // Adjust state during render when the definition changes (e.g. while
+  // editing the product JSON in the admin form). Preserves the current
+  // selection while refreshing option data such as image URLs. This is the
+  // React-recommended pattern for deriving state from changed props without
+  // using an effect.
+  if (prevDefinition !== product.definition) {
+    setPrevDefinition(product.definition);
+    setValues((prev) => reconcileValues(product.definition, prev));
+  }
 
   const handlePickerChange = useCallback((key: string, value: unknown) => {
     setValues((prev) => ({ ...prev, [key]: value }));

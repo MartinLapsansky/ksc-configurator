@@ -28,6 +28,3 @@ export const productInputSchema = z.object({
   backImageUrl: z.string().nullable().optional(),
   definition: productDefinitionSchema,
 });
-
-export type CategoryInput = z.infer<typeof categoryInputSchema>;
-export type ProductInput = z.infer<typeof productInputSchema>;

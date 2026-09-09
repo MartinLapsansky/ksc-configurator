@@ -70,7 +70,7 @@ export default function CategoryForm({ categories, initial }: CategoryFormProps)
 
   return (
     <form onSubmit={handleSubmit} className="max-w-xl space-y-4 rounded-lg border border-gray-200 bg-white p-6">
-      <h2 className="text-lg font-bold text-black">
+      <h2 className="text-lg font-bold text-black text-center">
         {initial ? "Edit category" : "New category"}
       </h2>
 
@@ -114,7 +114,7 @@ export default function CategoryForm({ categories, initial }: CategoryFormProps)
         </select>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid pb-3 gap-4 sm:grid-cols-2">
         <div>
           <label className="block text-sm font-medium text-black">Sort order</label>
           <input
@@ -139,13 +139,15 @@ export default function CategoryForm({ categories, initial }: CategoryFormProps)
 
       {error && <p className="text-sm text-red-600">{error}</p>}
 
+      <div className="flex justify-center">
       <button
         type="submit"
         disabled={saving}
-        className="rounded-md bg-black px-5 py-2.5 text-sm font-semibold text-white hover:bg-gray-600 disabled:opacity-50"
+        className="rounded-md cursor-pointer bg-black px-5 py-2.5 text-sm font-semibold text-white hover:bg-gray-600 disabled:opacity-50"
       >
         {saving ? "Saving…" : "Save category"}
       </button>
+      </div>
     </form>
   );
 }

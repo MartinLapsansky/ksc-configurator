@@ -8,5 +8,9 @@ export default async function NewCategoryPage() {
     select: { id: true, name: true, slug: true },
   });
 
-  return <CategoryForm categories={categories} />;
+  return (
+    <div className="flex min-h-[70vh] items-center justify-center">
+      <CategoryForm categories={categories} />
+    </div>
+  );
 }

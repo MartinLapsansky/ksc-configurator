@@ -1,9 +1,9 @@
 import React from "react";
-import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
+import AdminNav from "@/features/admin/components/AdminNav";
 
 export default async function AdminLayout({
   children,
@@ -25,28 +25,11 @@ export default async function AdminLayout({
   return (
     <div className="min-h-screen bg-slate-100">
       <header className="border-b border-gray-200 bg-white px-4 py-3 md:px-8">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h1 className="text-lg font-bold text-black">Admin</h1>
-          <nav className="flex flex-wrap gap-3 text-sm">
-            <Link href="/admin" className="font-medium text-black hover:underline">
-              Dashboard
-            </Link>
-            <Link
-              href="/admin/categories/new"
-              className="font-medium text-black hover:underline"
-            >
-              New category
-            </Link>
-            <Link
-              href="/admin/products/new"
-              className="font-medium text-black hover:underline"
-            >
-              New product
-            </Link>
-          </nav>
+        <div className="flex w-full justify-center">
+          <AdminNav />
         </div>
       </header>
-      <main className="p-4 md:p-8">{children}</main>
+      <main className="w-full p-4 md:p-8">{children}</main>
     </div>
   );
 }

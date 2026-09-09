@@ -138,12 +138,6 @@ export const productDefinitionSchema = z.object({
   }),
 });
 
-export type ColorPickerOption = z.infer<typeof colorOptionSchema>;
-export type DoubleColorPickerOption = z.infer<typeof doubleColorOptionSchema>;
-export type TripleColorPickerOption = z.infer<typeof tripleColorOptionSchema>;
-export type StaticLogoPickerOption = z.infer<typeof staticLogoOptionSchema>;
-export type TextColorPickerOption = z.infer<typeof textColorOptionSchema>;
-
 export type PickerDef = z.infer<typeof pickerDefSchema>;
 export type OverlayLayerDef = z.infer<typeof overlayLayerDefSchema>;
 export type ProductDefinition = z.infer<typeof productDefinitionSchema>;

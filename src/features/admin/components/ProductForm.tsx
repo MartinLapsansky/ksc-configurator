@@ -6,6 +6,7 @@ import type { ProductDefinition } from "@/features/configurator/schemas/productD
 import type { CatalogProduct } from "@/features/configurator/types";
 import ProductConfigurator from "@/features/configurator/components/ProductConfigurator";
 import ImageUploadField from "@/features/admin/components/ImageUploadField";
+import ImageAssetUploader from "@/features/admin/components/ImageAssetUploader";
 
 type CategoryOption = { id: string; name: string; slug: string };
 
@@ -114,7 +115,7 @@ export default function ProductForm({ categories, initial }: ProductFormProps) {
   return (
     <form onSubmit={handleSubmit} className="grid gap-6 lg:grid-cols-2">
       <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-6">
-        <h2 className="text-lg font-bold text-black">
+        <h2 className="text-lg font-bold text-black text-center">
           {initial ? "Edit product" : "New product"}
         </h2>
 
@@ -192,16 +193,18 @@ export default function ProductForm({ categories, initial }: ProductFormProps) {
           </div>
         </div>
 
-        <ImageUploadField
-          label="Front image (fallback)"
-          value={frontImageUrl}
-          onChangeAction={setFrontImageUrl}
-        />
-        <ImageUploadField
-          label="Back image (fallback)"
-          value={backImageUrl}
-          onChangeAction={setBackImageUrl}
-        />
+        {/*<ImageUploadField*/}
+        {/*  label="Front image (fallback)"*/}
+        {/*  value={frontImageUrl}*/}
+        {/*  onChangeAction={setFrontImageUrl}*/}
+        {/*/>*/}
+        {/*<ImageUploadField*/}
+        {/*  label="Back image (fallback)"*/}
+        {/*  value={backImageUrl}*/}
+        {/*  onChangeAction={setBackImageUrl}*/}
+        {/*/>*/}
+
+        <ImageAssetUploader label="Upload product images (paste URL into JSON)" />
 
         <div>
           <label className="block text-sm font-medium text-black">
@@ -220,17 +223,20 @@ export default function ProductForm({ categories, initial }: ProductFormProps) {
         </div>
 
         {error && <p className="text-sm text-red-600">{error}</p>}
+        <div className="flex justify-center">
+          <button
+              type="submit"
+              disabled={saving}
+              className="rounded-md cursor-pointer bg-black px-5 py-2.5 text-sm font-semibold text-white hover:bg-gray-600 disabled:opacity-50"
+          >
+            {saving ? "Saving…" : "Save product"}
+          </button>
+        </div>
 
-        <button
-          type="submit"
-          disabled={saving}
-          className="rounded-md bg-black px-5 py-2.5 text-sm font-semibold text-white hover:bg-gray-600 disabled:opacity-50"
-        >
-          {saving ? "Saving…" : "Save product"}
-        </button>
       </div>
 
       <div>
+        <div className="mb-3 flex items-center justify-between"></div>
         <h2 className="mb-3 text-lg font-bold text-black">Live preview</h2>
         {previewProduct ? (
           <ProductConfigurator product={previewProduct} />
