@@ -8,8 +8,28 @@ type UploadedAsset = {
   fileName: string;
 };
 
+function fileNameFromUrl(url: string): string {
+  try {
+    const lastSegment = url.split("/").filter(Boolean).pop();
+    return lastSegment ? decodeURIComponent(lastSegment) : url;
+  } catch {
+    return url;
+  }
+}
+
 type ImageAssetUploaderProps = {
   label?: string;
+  /**
+   * Existing public Vercel Blob URLs already referenced by the product
+   * definition. They are rendered like newly uploaded assets so an admin can
+   * review and delete them while editing an existing product.
+   */
+  initialUrls?: string[];
+  /**
+   * Called after an asset has been successfully deleted from storage. Lets the
+   * parent (ProductForm) remove the URL references from the definition JSON.
+   */
+  onDeleteUrlAction?: (url: string) => void;
 };
 
 /**
@@ -22,11 +42,18 @@ type ImageAssetUploaderProps = {
  */
 export default function ImageAssetUploader({
   label = "Upload product images",
+  initialUrls = [],
+  onDeleteUrlAction,
 }: ImageAssetUploaderProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [assets, setAssets] = useState<UploadedAsset[]>([]);
+  const [assets, setAssets] = useState<UploadedAsset[]>(() =>
+    initialUrls.map((url) => ({
+      url,
+      fileName: fileNameFromUrl(url),
+    })),
+  );
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
   const [deletingUrl, setDeletingUrl] = useState<string | null>(null);
 
@@ -93,6 +120,7 @@ export default function ImageAssetUploader({
       }
 
       setAssets((prev) => prev.filter((asset) => asset.url !== url));
+      onDeleteUrlAction?.(url);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Delete failed");
     } finally {

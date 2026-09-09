@@ -7,6 +7,7 @@ import type { CatalogProduct } from "@/features/configurator/types";
 import ProductConfigurator from "@/features/configurator/components/ProductConfigurator";
 import ImageUploadField from "@/features/admin/components/ImageUploadField";
 import ImageAssetUploader from "@/features/admin/components/ImageAssetUploader";
+import { extractAssetUrls } from "@/features/admin/utils/extractAssetUrls";
 
 type CategoryOption = { id: string; name: string; slug: string };
 
@@ -50,6 +51,42 @@ export default function ProductForm({ categories, initial }: ProductFormProps) {
       return null;
     }
   }, [definitionText]);
+
+  const existingAssetUrls = useMemo<string[]>(
+    () => (parsedDefinition ? extractAssetUrls(parsedDefinition) : []),
+    [parsedDefinition],
+  );
+
+  const handleDeleteUrlFromDefinition = (url: string) => {
+    let definition: ProductDefinition;
+    try {
+      definition = JSON.parse(definitionText) as ProductDefinition;
+    } catch {
+      return;
+    }
+
+    for (const picker of definition.pickers) {
+      if (
+        picker.type === "color" ||
+        picker.type === "doubleColor" ||
+        picker.type === "tripleColor"
+      ) {
+        for (const option of picker.options) {
+          if (option.imageUrl === url) option.imageUrl = "";
+          if (option.backImageUrl === url) option.backImageUrl = "";
+        }
+      }
+    }
+
+    for (const overlays of [definition.overlays.front, definition.overlays.back]) {
+      if (!overlays) continue;
+      for (const layer of overlays) {
+        if (layer.layerUrl === url) layer.layerUrl = "";
+      }
+    }
+
+    setDefinitionText(JSON.stringify(definition, null, 2));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -204,7 +241,11 @@ export default function ProductForm({ categories, initial }: ProductFormProps) {
         {/*  onChangeAction={setBackImageUrl}*/}
         {/*/>*/}
 
-        <ImageAssetUploader label="Upload product images (paste URL into JSON)" />
+        <ImageAssetUploader
+          label="Upload product images (paste URL into JSON)"
+          initialUrls={existingAssetUrls}
+          onDeleteUrl={handleDeleteUrlFromDefinition}
+        />
 
         <div>
           <label className="block text-sm font-medium text-black">
