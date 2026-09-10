@@ -244,7 +244,7 @@ export default function ProductForm({ categories, initial }: ProductFormProps) {
         <ImageAssetUploader
           label="Upload product images (paste URL into JSON)"
           initialUrls={existingAssetUrls}
-          onDeleteUrl={handleDeleteUrlFromDefinition}
+          onDeleteUrlAction={handleDeleteUrlFromDefinition}
         />
 
         <div>
