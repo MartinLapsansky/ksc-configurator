@@ -42,6 +42,7 @@ export default function ProductForm({ categories, initial }: ProductFormProps) {
     JSON.stringify(initial?.definition ?? emptyDefinition(), null, 2),
   );
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const parsedDefinition = useMemo<ProductDefinition | null>(() => {
@@ -86,6 +87,32 @@ export default function ProductForm({ categories, initial }: ProductFormProps) {
     }
 
     setDefinitionText(JSON.stringify(definition, null, 2));
+  };
+
+  const handleDelete = async () => {
+    if (!initial) return;
+
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${name}"? This action cannot be undone.`,
+    );
+    if (!confirmed) return;
+
+    setDeleting(true);
+    setError(null);
+
+    const res = await fetch(`/api/admin/products/${initial.id}`, {
+      method: "DELETE",
+    });
+
+    if (!res.ok) {
+      const data = await res.json().catch(() => null);
+      setError(data?.message || "Failed to delete product");
+      setDeleting(false);
+      return;
+    }
+
+    router.push("/admin");
+    router.refresh();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -264,14 +291,24 @@ export default function ProductForm({ categories, initial }: ProductFormProps) {
         </div>
 
         {error && <p className="text-sm text-red-600">{error}</p>}
-        <div className="flex justify-center">
+        <div className="flex justify-center gap-3">
           <button
-              type="submit"
-              disabled={saving}
-              className="rounded-md cursor-pointer bg-black px-5 py-2.5 text-sm font-semibold text-white hover:bg-gray-600 disabled:opacity-50"
+            type="submit"
+            disabled={saving || deleting}
+            className="rounded-md cursor-pointer bg-black px-5 py-2.5 text-sm font-semibold text-white hover:bg-gray-600 disabled:opacity-50"
           >
             {saving ? "Saving…" : "Save product"}
           </button>
+          {initial && (
+            <button
+              type="button"
+              onClick={handleDelete}
+              disabled={deleting || saving}
+              className="rounded-md cursor-pointer bg-red-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-50"
+            >
+              {deleting ? "Deleting…" : "Delete product"}
+            </button>
+          )}
         </div>
 
       </div>
