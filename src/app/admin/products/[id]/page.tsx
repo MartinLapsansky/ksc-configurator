@@ -36,6 +36,7 @@ export default async function EditProductPage({
         hasBackView: product.hasBackView,
         frontImageUrl: product.frontImageUrl,
         backImageUrl: product.backImageUrl,
+        coverImageUrl: product.coverImageUrl,
         definition: parsed.success
           ? parsed.data
           : { version: 1, pickers: [], overlays: { front: [] } },

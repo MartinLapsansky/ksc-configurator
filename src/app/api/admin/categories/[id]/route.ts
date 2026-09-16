@@ -31,6 +31,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
         parentId: parsed.data.parentId ?? null,
         sortOrder: parsed.data.sortOrder,
         active: parsed.data.active,
+        coverImageUrl: parsed.data.coverImageUrl ?? null,
       },
     });
 

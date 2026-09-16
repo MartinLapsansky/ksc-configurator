@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import ImageUploadField from "@/features/admin/components/ImageUploadField";
 
 type CategoryOption = {
   id: string;
@@ -18,6 +19,7 @@ type CategoryFormProps = {
     parentId: string | null;
     sortOrder: number;
     active: boolean;
+    coverImageUrl: string | null;
   };
 };
 
@@ -29,6 +31,9 @@ export default function CategoryForm({ categories, initial }: CategoryFormProps)
   const [parentId, setParentId] = useState<string>(initial?.parentId ?? "");
   const [sortOrder, setSortOrder] = useState(initial?.sortOrder ?? 0);
   const [active, setActive] = useState(initial?.active ?? true);
+  const [coverImageUrl, setCoverImageUrl] = useState(
+    initial?.coverImageUrl ?? "",
+  );
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -70,6 +75,7 @@ export default function CategoryForm({ categories, initial }: CategoryFormProps)
       parentId: parentId || null,
       sortOrder: Number(sortOrder) || 0,
       active,
+      coverImageUrl: coverImageUrl || null,
     };
 
     const res = await fetch(
@@ -140,6 +146,12 @@ export default function CategoryForm({ categories, initial }: CategoryFormProps)
             ))}
         </select>
       </div>
+
+      <ImageUploadField
+        label="Cover image"
+        value={coverImageUrl}
+        onChangeAction={setCoverImageUrl}
+      />
 
       <div className="grid pb-3 gap-4 sm:grid-cols-2">
         <div>

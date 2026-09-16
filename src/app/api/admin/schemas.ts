@@ -11,6 +11,7 @@ export const categoryInputSchema = z.object({
   parentId: z.string().nullable().optional(),
   sortOrder: z.number().int().default(0),
   active: z.boolean().default(true),
+  coverImageUrl: z.string().nullable().optional(),
 });
 
 export const productInputSchema = z.object({
@@ -26,5 +27,6 @@ export const productInputSchema = z.object({
   hasBackView: z.boolean().default(false),
   frontImageUrl: z.string().nullable().optional(),
   backImageUrl: z.string().nullable().optional(),
+  coverImageUrl: z.string().nullable().optional(),
   definition: productDefinitionSchema,
 });

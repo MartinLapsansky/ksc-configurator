@@ -23,6 +23,7 @@ type ProductFormProps = {
     hasBackView: boolean;
     frontImageUrl: string | null;
     backImageUrl: string | null;
+    coverImageUrl: string | null;
     definition: ProductDefinition;
   };
 };
@@ -38,6 +39,9 @@ export default function ProductForm({ categories, initial }: ProductFormProps) {
   const [hasBackView, setHasBackView] = useState(initial?.hasBackView ?? false);
   const [frontImageUrl, setFrontImageUrl] = useState(initial?.frontImageUrl ?? "");
   const [backImageUrl, setBackImageUrl] = useState(initial?.backImageUrl ?? "");
+  const [coverImageUrl, setCoverImageUrl] = useState(
+    initial?.coverImageUrl ?? "",
+  );
   const [definitionText, setDefinitionText] = useState(() =>
     JSON.stringify(initial?.definition ?? emptyDefinition(), null, 2),
   );
@@ -138,6 +142,7 @@ export default function ProductForm({ categories, initial }: ProductFormProps) {
       hasBackView,
       frontImageUrl: frontImageUrl || null,
       backImageUrl: backImageUrl || null,
+      coverImageUrl: coverImageUrl || null,
       definition,
     };
 
@@ -257,16 +262,22 @@ export default function ProductForm({ categories, initial }: ProductFormProps) {
           </div>
         </div>
 
-        {/*<ImageUploadField*/}
-        {/*  label="Front image (fallback)"*/}
-        {/*  value={frontImageUrl}*/}
-        {/*  onChangeAction={setFrontImageUrl}*/}
-        {/*/>*/}
-        {/*<ImageUploadField*/}
-        {/*  label="Back image (fallback)"*/}
-        {/*  value={backImageUrl}*/}
-        {/*  onChangeAction={setBackImageUrl}*/}
-        {/*/>*/}
+          {/*<ImageUploadField*/}
+          {/*  label="Front image (fallback)"*/}
+          {/*  value={frontImageUrl}*/}
+          {/*  onChangeAction={setFrontImageUrl}*/}
+          {/*/>*/}
+          {/*<ImageUploadField*/}
+          {/*  label="Back image (fallback)"*/}
+          {/*  value={backImageUrl}*/}
+          {/*  onChangeAction={setBackImageUrl}*/}
+          {/*/>*/}
+
+        <ImageUploadField
+          label="Cover image"
+          value={coverImageUrl}
+          onChangeAction={setCoverImageUrl}
+        />
 
         <ImageAssetUploader
           label="Upload product images (paste URL into JSON)"

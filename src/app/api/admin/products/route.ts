@@ -47,6 +47,7 @@ export async function POST(req: NextRequest) {
         hasBackView: parsed.data.hasBackView,
         frontImageUrl: parsed.data.frontImageUrl ?? null,
         backImageUrl: parsed.data.backImageUrl ?? null,
+        coverImageUrl: parsed.data.coverImageUrl ?? null,
         definition: parsed.data.definition as Prisma.InputJsonValue,
       },
     });

@@ -67,14 +67,15 @@ enum Role {
 }
 
 model Category {
-  id        String     @id @default(cuid())
-  name      String
-  slug      String     @unique
-  parentId  String?
-  parent    Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
-  children  Category[] @relation("CategoryTree")
-  sortOrder Int        @default(0)
-  active    Boolean    @default(true)
+  id            String     @id @default(cuid())
+  name          String
+  slug          String     @unique
+  parentId      String?
+  parent        Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children      Category[] @relation("CategoryTree")
+  sortOrder     Int        @default(0)
+  active        Boolean    @default(true)
+  coverImageUrl String?
 
   products Product[]
 
@@ -93,6 +94,7 @@ model Product {
   hasBackView   Boolean  @default(false)
   frontImageUrl String?
   backImageUrl  String?
+  coverImageUrl String?
   definition    Json
 
   createdAt DateTime @default(now())

@@ -31,6 +31,7 @@ export default async function EditCategoryPage({
           parentId: category.parentId,
           sortOrder: category.sortOrder,
           active: category.active,
+          coverImageUrl: category.coverImageUrl,
         }}
       />
     </div>

@@ -44,6 +44,7 @@ export async function POST(req: NextRequest) {
         parentId: parsed.data.parentId ?? null,
         sortOrder: parsed.data.sortOrder,
         active: parsed.data.active,
+        coverImageUrl: parsed.data.coverImageUrl ?? null,
       },
     });
 
