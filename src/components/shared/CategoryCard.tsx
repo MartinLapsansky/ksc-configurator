@@ -30,7 +30,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
           <div key={card.id} className="flex min-w-0 flex-col items-center">
             <Link
                 href={card.href || "#"}
-                className="group relative flex h-72 w-full min-w-0 flex-col items-center overflow-hidden rounded-2xl p-4 transition-transform hover:scale-[1.02] md:h-80 md:w-80 md:p-8"
+                className="group relative flex h-72 w-full min-w-0 flex-col items-center bg-gray-100 overflow-hidden rounded-2xl p-4 transition-transform hover:scale-[1.02] md:h-80 md:w-80 md:p-8"
             >
               {card.coverImageUrl && (
                   <Image
