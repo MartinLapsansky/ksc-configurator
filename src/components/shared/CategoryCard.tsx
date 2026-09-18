@@ -27,36 +27,36 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
       }`}
     >
       {cards.map((card) => (
-        <Link
-          key={card.id}
-          href={card.href || "#"}
-          className="group relative flex h-72 w-full min-w-0 flex-col items-center overflow-hidden rounded-2xl bg-gray-300 p-4 transition-transform hover:scale-[1.02] md:h-80 md:w-80 md:p-8"
-        >
-          {card.coverImageUrl && (
-            <Image
-              src={card.coverImageUrl}
-              alt={card.title}
-              fill
-              sizes="(max-width: 768px) 50vw, 320px"
-              className="object-contain p-6 transition-transform group-hover:scale-105"
-            />
-          )}
+          <div key={card.id} className="flex min-w-0 flex-col items-center">
+            <Link
+                href={card.href || "#"}
+                className="group relative flex h-72 w-full min-w-0 flex-col items-center overflow-hidden rounded-2xl p-4 transition-transform hover:scale-[1.02] md:h-80 md:w-80 md:p-8"
+            >
+              {card.coverImageUrl && (
+                  <Image
+                      src={card.coverImageUrl}
+                      alt={card.title}
+                      fill
+                      sizes="(max-width: 768px) 50vw, 320px"
+                      className="object-contain p-6 transition-transform group-hover:scale-105"
+                  />
+              )}
 
-          {card.coverImageUrl && (
-            <div className="absolute inset-0 bg-black/40" />
-          )}
+              {card.coverImageUrl && (
+                  <div className="absolute inset-0 bg-black/10" />
+              )}
 
-          {card.kind === "product" && (
-              <span
-                  className="
-                    pointer-events-none absolute left-4 top-4 z-20
-                    flex h-10 w-10 items-center overflow-hidden
-                    rounded-full bg-white
-                    transition-all duration-300
-                    group-hover:w-32
-                    md:left-8 md:top-8
-                  "
-              >
+              {card.kind === "product" && (
+                  <span
+                      className="
+                  pointer-events-none absolute left-4 top-4 z-20
+                  flex h-10 w-10 items-center overflow-hidden
+                  rounded-full bg-white
+                  transition-all duration-300
+                  group-hover:w-32
+                  md:left-8 md:top-8
+                "
+                  >
                 <span className="relative h-10 w-10 shrink-0 p-1">
                   <Image
                       src={customiserIconMain}
@@ -65,7 +65,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
                       height={70}
                       className="h-full w-full object-contain"
                   />
-                 </span>
+                </span>
 
                 <span
                     className="
@@ -75,22 +75,18 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
                     group-hover:opacity-100
                   "
                 >
-                Customise
+                  Customise
                 </span>
               </span>
-          )}
+              )}
+            </Link>
 
-          <div className="relative z-10 flex flex-1 items-center justify-center">
-            <h2
-              className={`text-center text-lg font-bold group-hover:text-lime-green md:text-3xl ${
-                card.coverImageUrl ? "text-white" : "text-gray-800"
-              }`}
-            >
+            <h2 className="mt-3 text-center text-lg font-bold text-gray-800 transition-colors md:text-3xl">
               {card.title}
             </h2>
           </div>
-        </Link>
       ))}
+
     </div>
   );
 };
