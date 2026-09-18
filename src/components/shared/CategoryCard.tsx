@@ -1,13 +1,14 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import customiserIconMain from "@/assets/customiser-icon-main.png";
 
 export interface CategoryCardItem {
   id: string;
   title: string;
-  buttonLabel: string;
   href: string;
   coverImageUrl: string | null;
+  kind: "category" | "product";
 }
 
 interface CategoryCardProps {
@@ -29,22 +30,54 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
         <Link
           key={card.id}
           href={card.href || "#"}
-          className={`group relative flex min-h-70 w-full min-w-0 flex-col items-center overflow-hidden rounded-2xl bg-gray-300 p-4 transition-transform hover:scale-[1.02] md:min-h-96 md:min-w-70 md:p-8 ${
-            mobileTwoColumns ? "flex-1" : "md:flex-1"
-          }`}
+          className="group relative flex h-72 w-full min-w-0 flex-col items-center overflow-hidden rounded-2xl bg-gray-300 p-4 transition-transform hover:scale-[1.02] md:h-80 md:w-80 md:p-8"
         >
           {card.coverImageUrl && (
             <Image
               src={card.coverImageUrl}
               alt={card.title}
               fill
-              sizes="(max-width: 768px) 50vw, 33vw"
-              className="object-cover transition-transform group-hover:scale-105"
+              sizes="(max-width: 768px) 50vw, 320px"
+              className="object-contain p-6 transition-transform group-hover:scale-105"
             />
           )}
 
           {card.coverImageUrl && (
             <div className="absolute inset-0 bg-black/40" />
+          )}
+
+          {card.kind === "product" && (
+              <span
+                  className="
+                    pointer-events-none absolute left-4 top-4 z-20
+                    flex h-10 w-10 items-center overflow-hidden
+                    rounded-full bg-white
+                    transition-all duration-300
+                    group-hover:w-32
+                    md:left-8 md:top-8
+                  "
+              >
+                <span className="relative h-10 w-10 shrink-0 p-1">
+                  <Image
+                      src={customiserIconMain}
+                      alt=""
+                      width={70}
+                      height={70}
+                      className="h-full w-full object-contain"
+                  />
+                 </span>
+
+                <span
+                    className="
+                    whitespace-nowrap pl-1 pr-4
+                    text-sm font-semibold text-gray-900
+                    opacity-0 transition-opacity duration-200
+                    group-hover:opacity-100
+                  "
+                >
+                Customise
+                </span>
+              </span>
           )}
 
           <div className="relative z-10 flex flex-1 items-center justify-center">
@@ -56,10 +89,6 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
               {card.title}
             </h2>
           </div>
-
-          <span className="relative z-10 rounded-lg bg-black px-4 py-2 text-sm font-semibold text-white transition hover:bg-gray-800 md:px-5 md:py-2.5 md:text-lg">
-            {card.buttonLabel}
-          </span>
         </Link>
       ))}
     </div>

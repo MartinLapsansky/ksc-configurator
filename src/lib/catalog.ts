@@ -13,6 +13,7 @@ export type CatalogCardItem = {
   buttonLabel: string;
   href: string;
   coverImageUrl: string | null;
+  kind: "category" | "product";
 };
 
 export async function getTopLevelCategories(): Promise<CatalogCardItem[]> {
@@ -27,6 +28,7 @@ export async function getTopLevelCategories(): Promise<CatalogCardItem[]> {
     buttonLabel: "Explore",
     href: `/${category.slug}`,
     coverImageUrl: category.coverImageUrl,
+    kind: "category",
   }));
 }
 

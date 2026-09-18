@@ -459,32 +459,93 @@ async function main() {
   // ── Categories ──
   const sportswear = await prisma.category.upsert({
     where: { slug: "sportswear" },
-    update: { name: "Sports Kit", sortOrder: 0, active: true },
-    create: { name: "Sports Kit", slug: "sportswear", sortOrder: 0, active: true },
+    update: {
+      name: "Sports Kit",
+      sortOrder: 0,
+      active: true,
+      coverImageUrl: jerseyBase("jersey-purple.png"),
+    },
+    create: {
+      name: "Sports Kit",
+      slug: "sportswear",
+      sortOrder: 0,
+      active: true,
+      coverImageUrl: jerseyBase("jersey-purple.png"),
+    },
   });
 
   const leisurewear = await prisma.category.upsert({
     where: { slug: "leisurewear" },
-    update: { name: "Leisurewear", sortOrder: 1, active: true },
-    create: { name: "Leisurewear", slug: "leisurewear", sortOrder: 1, active: true },
+    update: {
+      name: "Leisurewear",
+      sortOrder: 1,
+      active: true,
+      coverImageUrl: zipBase("zip_navy_royal.png"),
+    },
+    create: {
+      name: "Leisurewear",
+      slug: "leisurewear",
+      sortOrder: 1,
+      active: true,
+      coverImageUrl: zipBase("zip_navy_royal.png"),
+    },
   });
 
   const jerseys = await prisma.category.upsert({
     where: { slug: "jerseys" },
-    update: { name: "Jerseys", parentId: sportswear.id, sortOrder: 0, active: true },
-    create: { name: "Jerseys", slug: "jerseys", parentId: sportswear.id, sortOrder: 0, active: true },
+    update: {
+      name: "Jerseys",
+      parentId: sportswear.id,
+      sortOrder: 0,
+      active: true,
+      coverImageUrl: jerseyBase("jersey-purple.png"),
+    },
+    create: {
+      name: "Jerseys",
+      slug: "jerseys",
+      parentId: sportswear.id,
+      sortOrder: 0,
+      active: true,
+      coverImageUrl: jerseyBase("jersey-purple.png"),
+    },
   });
 
   const zipTops = await prisma.category.upsert({
     where: { slug: "zip-tops" },
-    update: { name: "Zip Tops", parentId: leisurewear.id, sortOrder: 0, active: true },
-    create: { name: "Zip Tops", slug: "zip-tops", parentId: leisurewear.id, sortOrder: 0, active: true },
+    update: {
+      name: "Zip Tops",
+      parentId: leisurewear.id,
+      sortOrder: 0,
+      active: true,
+      coverImageUrl: zipBase("zip_navy_royal.png"),
+    },
+    create: {
+      name: "Zip Tops",
+      slug: "zip-tops",
+      parentId: leisurewear.id,
+      sortOrder: 0,
+      active: true,
+      coverImageUrl: zipBase("zip_navy_royal.png"),
+    },
   });
 
   const crewNecks = await prisma.category.upsert({
     where: { slug: "crew-necks" },
-    update: { name: "Crew necks", parentId: leisurewear.id, sortOrder: 1, active: true },
-    create: { name: "Crew necks", slug: "crew-necks", parentId: leisurewear.id, sortOrder: 1, active: true },
+    update: {
+      name: "Crew necks",
+      parentId: leisurewear.id,
+      sortOrder: 1,
+      active: true,
+      coverImageUrl: crewFront("helios_crewneck_navy_royal_white.png"),
+    },
+    create: {
+      name: "Crew necks",
+      slug: "crew-necks",
+      parentId: leisurewear.id,
+      sortOrder: 1,
+      active: true,
+      coverImageUrl: crewFront("helios_crewneck_navy_royal_white.png"),
+    },
   });
 
   // ── Products ──
@@ -494,6 +555,7 @@ async function main() {
       name: "Jersey Design 146",
       categoryId: jerseys.id,
       hasBackView: true,
+      coverImageUrl: jerseyBase("jersey-purple.png"),
       definition: jerseyDefinition as Prisma.InputJsonValue,
     },
     create: {
@@ -501,6 +563,7 @@ async function main() {
       name: "Jersey Design 146",
       categoryId: jerseys.id,
       hasBackView: true,
+      coverImageUrl: jerseyBase("jersey-purple.png"),
       definition: jerseyDefinition as Prisma.InputJsonValue,
     },
   });
@@ -511,6 +574,7 @@ async function main() {
       name: "Soul Half Zip",
       categoryId: zipTops.id,
       hasBackView: false,
+      coverImageUrl: zipBase("zip_navy_royal.png"),
       definition: halfZipDefinition as Prisma.InputJsonValue,
     },
     create: {
@@ -518,6 +582,7 @@ async function main() {
       name: "Soul Half Zip",
       categoryId: zipTops.id,
       hasBackView: false,
+      coverImageUrl: zipBase("zip_navy_royal.png"),
       definition: halfZipDefinition as Prisma.InputJsonValue,
     },
   });
@@ -528,6 +593,7 @@ async function main() {
       name: "Helios Crew Neck",
       categoryId: crewNecks.id,
       hasBackView: true,
+      coverImageUrl: crewFront("helios_crewneck_navy_royal_white.png"),
       definition: crewNeckDefinition as Prisma.InputJsonValue,
     },
     create: {
@@ -535,6 +601,7 @@ async function main() {
       name: "Helios Crew Neck",
       categoryId: crewNecks.id,
       hasBackView: true,
+      coverImageUrl: crewFront("helios_crewneck_navy_royal_white.png"),
       definition: crewNeckDefinition as Prisma.InputJsonValue,
     },
   });

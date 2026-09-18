@@ -40,16 +40,16 @@ export default async function CatchAllPage({ params }: CatchAllPageProps) {
       ...category.children.map((child) => ({
         id: child.id,
         title: child.name,
-        buttonLabel: "Explore",
         href: `/${slug.join("/")}/${child.slug}`,
         coverImageUrl: child.coverImageUrl,
+        kind: "category" as const,
       })),
       ...category.products.map((item) => ({
         id: item.id,
         title: item.name,
-        buttonLabel: "Customise",
         href: `/${slug.join("/")}/${item.slug}`,
         coverImageUrl: item.coverImageUrl,
+        kind: "product" as const,
       })),
     ];
 
