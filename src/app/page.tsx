@@ -14,7 +14,7 @@ export default async function HomePage() {
       <Breadcrumbs />
       {/* Cards Section */}
       <section className="w-full p-4 md:px-8 min-h-[70vh]">
-        <CategoryCard cards={cards} mobileTwoColumns={false} />
+        <CategoryCard cards={cards} />
       </section>
     </main>
   );
