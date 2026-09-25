@@ -9,10 +9,6 @@ export interface CategoryCardItem {
   href: string;
   coverImageUrl: string | null;
   kind: "category" | "product";
-  /**
-   * Marks a top-level category card (e.g. Leisurewear, Sports Kit) which uses a
-   * landscape cover. Sub-category cards use a portrait cover instead.
-   */
   isTopLevel?: boolean;
 }
 
@@ -35,9 +31,6 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
         const isCategory = card.kind === "category";
         const isTopLevelCategory = isCategory && card.isTopLevel === true;
 
-        // Product cards keep their original look; category covers fill the whole
-        // card without padding, using the aspect ratio of their cover asset
-        // (top-level categories are landscape, sub-categories are portrait).
         const sizeClass = !isCategory
           ? "h-72 w-full min-w-0 p-4 md:h-170 md:w-150 md:p-8"
           : isTopLevelCategory
@@ -48,12 +41,16 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
           ? "object-cover transition-transform group-hover:scale-105"
           : "object-contain p-6 transition-transform group-hover:scale-105";
 
+        const imageSizes = isCategory
+          ? "(max-width: 768px) 50vw, 600px"
+          : "(max-width: 768px) 100vw, 600px";
+
         return (
           <div key={card.id} className="flex min-w-0 flex-col items-center">
             <Link
                 href={card.href || "#"}
                 className={`group relative flex flex-col items-center justify-center overflow-hidden border border-gray-200 shadow-sm transition-transform hover:scale-[1.02] ${sizeClass} ${
-                    card.coverImageUrl ? "bg-gray-100" : "bg-gray-300"
+                    card.coverImageUrl ? "bg-none" : "bg-gray-300"
                 }`}
             >
               {card.coverImageUrl && (
@@ -61,7 +58,8 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
                       src={card.coverImageUrl}
                       alt={card.title}
                       fill
-                      sizes="(max-width: 768px) 50vw, 320px"
+                      sizes={imageSizes}
+                      quality={90}
                       className={imageClass}
                   />
               )}
