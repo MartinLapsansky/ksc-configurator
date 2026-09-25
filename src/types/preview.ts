@@ -33,6 +33,24 @@ export type TripleColorOption = BaseColorOption & {
   hex3: string;
 };
 
+/**
+ * Option for the `melange` picker. Unlike the solid/multi-tone options it may
+ * carry a `pattern` image (a fabric/texture swatch) instead of a flat colour,
+ * while still supporting the same `hex`/`hex1`/`hex2`/`hex3` values so a single
+ * picker can mix solid, double, triple and pattern (melange) options.
+ */
+export type MelangeColorOption = Omit<
+  BaseColorOption,
+  "hex1" | "hex2" | "hex3"
+> & {
+  hex?: string;
+  hex1?: string;
+  hex2?: string;
+  hex3?: string;
+  /** Public path to the melange swatch image (e.g. `/products/melange/...`). */
+  pattern?: string;
+};
+
 export type OverlayEntry = {
   key: string;
   layerSrc: string;

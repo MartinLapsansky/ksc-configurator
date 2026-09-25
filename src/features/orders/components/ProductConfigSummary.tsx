@@ -63,6 +63,7 @@ function PickerValue({
     case "color":
     case "doubleColor":
     case "tripleColor":
+    case "melange":
       return <ColorChip label={picker.label} color={value as never} />;
 
     case "imageUpload":

@@ -26,6 +26,7 @@ function defaultForPicker(picker: PickerDef): unknown {
     case "color":
     case "doubleColor":
     case "tripleColor":
+    case "melange":
     case "staticLogo":
       return picker.options[0];
 
@@ -70,7 +71,8 @@ function reconcileForPicker(picker: PickerDef, current: unknown): unknown {
   switch (picker.type) {
     case "color":
     case "doubleColor":
-    case "tripleColor": {
+    case "tripleColor":
+    case "melange": {
       const selectedId = readStringProp(current, "id");
       const match =
         selectedId !== undefined

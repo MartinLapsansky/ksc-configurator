@@ -81,6 +81,14 @@ export default function ProductForm({ categories, initial }: ProductFormProps) {
           if (option.backImageUrl === url) option.backImageUrl = "";
         }
       }
+
+      if (picker.type === "melange") {
+        for (const option of picker.options) {
+          if (option.imageUrl === url) option.imageUrl = "";
+          if (option.backImageUrl === url) option.backImageUrl = "";
+          if (option.pattern === url) option.pattern = "";
+        }
+      }
     }
 
     for (const overlays of [definition.overlays.front, definition.overlays.back]) {

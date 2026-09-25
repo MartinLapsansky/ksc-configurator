@@ -8,7 +8,8 @@ import type { ProductDefinition } from "@/features/configurator/schemas/productD
  * intentionally ignored because they cannot be deleted from Vercel Blob.
  *
  * Sources covered:
- * - color / doubleColor / tripleColor picker options → `imageUrl`, `backImageUrl`
+ * - color / doubleColor / tripleColor / melange picker options → `imageUrl`,
+ *   `backImageUrl` and (for melange) `pattern`
  * - overlay layers (front + back) → `layerUrl`
  */
 export function extractAssetUrls(definition: ProductDefinition): string[] {
@@ -23,6 +24,14 @@ export function extractAssetUrls(definition: ProductDefinition): string[] {
       for (const option of picker.options) {
         collectUrl(urls, option.imageUrl);
         collectUrl(urls, option.backImageUrl);
+      }
+    }
+
+    if (picker.type === "melange") {
+      for (const option of picker.options) {
+        collectUrl(urls, option.imageUrl);
+        collectUrl(urls, option.backImageUrl);
+        collectUrl(urls, option.pattern);
       }
     }
   }

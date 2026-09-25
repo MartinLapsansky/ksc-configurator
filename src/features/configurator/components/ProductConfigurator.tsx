@@ -72,7 +72,7 @@ const ProductConfigurator: React.FC<ProductConfiguratorProps> = ({
         <ProductConfiguratorPickers
           definition={product.definition}
           values={values}
-          onChange={handlePickerChange}
+          onChangeAction={handlePickerChange}
         />
       }
       preview={

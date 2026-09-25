@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import type {
   BaseColorOption,
   ColorOption,
@@ -12,6 +13,8 @@ type ColorChipProps = {
   label: string;
   color?: BaseColorOption;
 };
+
+type ColorChipSwatch = BaseColorOption & { pattern?: string };
 
 function isTripleColorOption(
   color: BaseColorOption,
@@ -34,6 +37,28 @@ export default function ColorChip({ label, color }: ColorChipProps) {
     return (
       <div className="rounded-md border border-dashed border-gray-200 bg-gray-50 px-3 py-2 text-xs text-gray-400">
         {label}: Not set
+      </div>
+    );
+  }
+
+  const pattern = (color as ColorChipSwatch).pattern;
+
+  if (pattern) {
+    return (
+      <div className="flex items-center gap-3 rounded-md border border-gray-200 bg-white px-3 py-2">
+        <span className="relative h-5 w-5 overflow-hidden rounded-full border border-black/10 shadow-sm">
+          <Image
+            src={pattern}
+            alt={color.name}
+            fill
+            sizes="20px"
+            className="object-cover"
+          />
+        </span>
+        <div className="min-w-0">
+          <div className="text-xs font-medium text-black">{label}</div>
+          <div className="text-xs text-gray-500">{color.name}</div>
+        </div>
       </div>
     );
   }

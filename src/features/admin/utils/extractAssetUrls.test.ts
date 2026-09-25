@@ -92,4 +92,58 @@ describe("extractAssetUrls", () => {
       extractAssetUrls({ version: 1, pickers: [], overlays: { front: [] } }),
     ).toEqual([]);
   });
+
+  it("collects https URLs from melange options including the pattern", () => {
+    const patternBlob = "https://example.blob.vercel-storage.com/pattern.png";
+    const definition: ProductDefinition = {
+      version: 1,
+      pickers: [
+        {
+          key: "body",
+          type: "melange",
+          label: "Main Body Colour",
+          options: [
+            {
+              id: "melange-royal",
+              name: "Royal Melange",
+              pattern: patternBlob,
+              imageUrl: blobA,
+              backImageUrl: blobB,
+            },
+            {
+              id: "solid",
+              name: "Solid",
+              hex: "#0C4A9F",
+            },
+          ],
+        },
+      ],
+      overlays: { front: [] },
+    };
+
+    expect(extractAssetUrls(definition)).toEqual([blobA, blobB, patternBlob]);
+  });
+
+  it("ignores static melange patterns under /products/...", () => {
+    const definition: ProductDefinition = {
+      version: 1,
+      pickers: [
+        {
+          key: "body",
+          type: "melange",
+          label: "Main Body Colour",
+          options: [
+            {
+              id: "melange-royal",
+              name: "Royal Melange",
+              pattern: "/products/melange/royal_melange_picker.png",
+            },
+          ],
+        },
+      ],
+      overlays: { front: [] },
+    };
+
+    expect(extractAssetUrls(definition)).toEqual([]);
+  });
 });

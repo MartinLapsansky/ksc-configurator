@@ -9,6 +9,7 @@ import type {
 import ColorSwatchPicker from "@/features/configurator/components/pickers/ColorSwatchPicker";
 import DoubleColorSwatchPicker from "@/features/configurator/components/pickers/DoubleColorSwatchPicker";
 import TripleColorSwatchPicker from "@/features/configurator/components/pickers/TripleColorSwatchPicker";
+import MelangeColorPicker from "@/features/configurator/components/pickers/MelangeColorPicker";
 import LogoUploadPicker from "@/features/configurator/components/pickers/LogoUploadPicker";
 import StaticLogoPicker from "@/features/configurator/components/pickers/StaticLogoPicker";
 import TextInsertPicker from "@/features/configurator/components/pickers/TextInsertPicker";
@@ -18,18 +19,18 @@ import type { ColorOption, TextConfig } from "@/types/preview";
 type ProductConfiguratorPickersProps = {
   definition: ProductDefinition;
   values: Record<string, unknown>;
-  onChange: (key: string, value: unknown) => void;
+  onChangeAction: (key: string, value: unknown) => void;
 };
 
 /**
  * Renders the configured pickers for a product from its definition. Maps each
  * `PickerDef` to the appropriate picker primitive.
  */
-const ProductConfiguratorPickers: React.FC<ProductConfiguratorPickersProps> = ({
+export default function ProductConfiguratorPickers ({
   definition,
   values,
-  onChange,
-}) => {
+  onChangeAction,
+} : ProductConfiguratorPickersProps) {
   return (
     <>
       {definition.pickers.map((picker) => (
@@ -37,7 +38,7 @@ const ProductConfiguratorPickers: React.FC<ProductConfiguratorPickersProps> = ({
           key={picker.key}
           picker={picker}
           value={values[picker.key]}
-          onChange={(value) => onChange(picker.key, value)}
+          onChange={(value) => onChangeAction(picker.key, value)}
         />
       ))}
     </>
@@ -77,6 +78,17 @@ function PickerRenderer({ picker, value, onChange }: PickerRendererProps) {
     case "tripleColor":
       return (
         <TripleColorSwatchPicker
+          label={picker.label}
+          valueLabel={readName(value) ?? ""}
+          options={picker.options}
+          selected={(value ?? picker.options[0]) as never}
+          onChange={onChange}
+        />
+      );
+
+    case "melange":
+      return (
+        <MelangeColorPicker
           label={picker.label}
           valueLabel={readName(value) ?? ""}
           options={picker.options}
@@ -148,5 +160,3 @@ function toTextConfig(
     color: colorOptions[0],
   };
 }
-
-export default ProductConfiguratorPickers;
