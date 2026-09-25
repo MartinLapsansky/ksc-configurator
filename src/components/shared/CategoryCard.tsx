@@ -24,7 +24,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
   return (
     <div
       className={`mx-auto h-full w-full max-w-none items-stretch justify-center gap-6 pb-6 pt-2 md:flex md:flex-wrap md:pb-12 md:pt-2 ${
-        mobileTwoColumns ? "grid grid-cols-2 gap-3 md:gap-6" : "flex flex-wrap"
+        mobileTwoColumns ? "gap-3 md:gap-6" : "flex flex-wrap"
       }`}
     >
       {cards.map((card) => {
