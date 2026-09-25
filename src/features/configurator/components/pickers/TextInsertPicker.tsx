@@ -102,7 +102,7 @@ const TextInsertPicker: React.FC<TextInsertPickerProps> = ({
                       key={color.name}
                       type="button"
                       onClick={() => handleColorChange(color)}
-                      className={`h-6 w-6 rounded-full border transition-transform ${
+                      className={`h-9 w-9 sm:h-10 sm:w-10 rounded-md border transition-transform ${
                         isSelected
                           ? "scale-105 border-black ring-2 ring-black"
                           : "border-gray-300 hover:scale-105"

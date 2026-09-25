@@ -33,7 +33,7 @@ const DoubleColorSwatchPicker: React.FC<DoubleColorSwatchPickerProps> = ({
               key={o.name}
               type="button"
               onClick={() => onChange(o)}
-              className={`h-7 w-7 rounded-full cursor-pointer border transition-transform ${
+              className={`h-10 w-10 sm:h-12 sm:w-12 rounded-md cursor-pointer border transition-transform ${
                 isSelected
                   ? "scale-105 border-black ring-2 ring-black"
                   : "border-gray-300 hover:scale-105"

@@ -62,7 +62,7 @@ const MelangeColorPicker: React.FC<MelangeColorPickerProps> = ({
               key={option.id}
               type="button"
               onClick={() => onChange(option)}
-              className={`relative h-7 w-7 cursor-pointer overflow-hidden rounded-full border transition-transform ${selectionClass}`}
+              className={`relative h-10 w-10 sm:h-12 sm:w-12 cursor-pointer overflow-hidden rounded-md border transition-transform ${selectionClass}`}
               style={option.pattern ? undefined : { background }}
               title={option.name}
             >
@@ -71,7 +71,7 @@ const MelangeColorPicker: React.FC<MelangeColorPickerProps> = ({
                   src={option.pattern}
                   alt={option.name}
                   fill
-                  sizes="28px"
+                  sizes="(max-width: 640px) 40px, 48px"
                   className="object-cover"
                 />
               )}
