@@ -26,7 +26,7 @@ const ProductItemLayout: React.FC<ProductItemLayoutProps> = ({
   preview,
   onAddToBag,
 }) => {
-  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const scrollRef = useRef<HTMLElement | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
@@ -58,11 +58,11 @@ const ProductItemLayout: React.FC<ProductItemLayoutProps> = ({
       <div className="flex flex-col">
         <h1 className="flex mb-1 text-lg text-black font-semibold">{title}</h1>
 
-        <aside className="w-full max-w-full overflow-x-auto hide-scrollbar md:h-[80vh] md:w-100 md:overflow-x-visible">
-          <div
-            ref={scrollRef}
-            className="hide-scrollbar flex gap-4 pr-2 md:block md:h-full md:gap-0 md:overflow-y-auto"
-          >
+        <aside
+          ref={scrollRef}
+          className="hide-scrollbar w-full max-w-full overflow-x-auto md:h-[80vh] md:w-100 md:overflow-x-visible"
+        >
+          <div className="hide-scrollbar flex gap-4 pr-2 md:block md:h-full md:gap-0 md:overflow-y-auto">
             {pickers}
           </div>
         </aside>
