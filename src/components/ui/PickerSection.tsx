@@ -10,7 +10,7 @@ type PickerSectionProps = {
  */
 const PickerSection: React.FC<PickerSectionProps> = ({ children }) => {
   return (
-    <section className="mb-4 min-w-[50vw] rounded-md border border-gray-200 bg-white p-3 shadow-sm md:min-w-0 md:w-full">
+    <section className="mb-4 w-[calc(100vw-3rem)] max-w-full flex-none rounded-md border border-gray-200 bg-white p-3 shadow-sm md:min-w-0 md:w-full">
       {children}
     </section>
   );

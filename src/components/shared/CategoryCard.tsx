@@ -9,6 +9,11 @@ export interface CategoryCardItem {
   href: string;
   coverImageUrl: string | null;
   kind: "category" | "product";
+  /**
+   * Marks a top-level category card (e.g. Leisurewear, Sports Kit) which uses a
+   * landscape cover. Sub-category cards use a portrait cover instead.
+   */
+  isTopLevel?: boolean;
 }
 
 interface CategoryCardProps {
@@ -26,11 +31,28 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
         mobileTwoColumns ? "grid grid-cols-2 gap-3 md:gap-6" : "flex flex-wrap"
       }`}
     >
-      {cards.map((card) => (
+      {cards.map((card) => {
+        const isCategory = card.kind === "category";
+        const isTopLevelCategory = isCategory && card.isTopLevel === true;
+
+        // Product cards keep their original look; category covers fill the whole
+        // card without padding, using the aspect ratio of their cover asset
+        // (top-level categories are landscape, sub-categories are portrait).
+        const sizeClass = !isCategory
+          ? "h-72 w-full min-w-0 p-4 md:h-170 md:w-150 md:p-8"
+          : isTopLevelCategory
+            ? "aspect-[7/5] w-full min-w-0 p-0 md:w-150"
+            : "aspect-[5/7] w-full min-w-0 p-0 md:w-150";
+
+        const imageClass = isCategory
+          ? "object-cover transition-transform group-hover:scale-105"
+          : "object-contain p-6 transition-transform group-hover:scale-105";
+
+        return (
           <div key={card.id} className="flex min-w-0 flex-col items-center">
             <Link
                 href={card.href || "#"}
-                className={`group relative flex h-72 w-full min-w-0 flex-col items-center justify-center overflow-hidden rounded-2xl border border-gray-200 p-4 shadow-sm transition-transform hover:scale-[1.02] md:h-80 md:w-80 md:p-8 ${
+                className={`group relative flex flex-col items-center justify-center overflow-hidden rounded-2xl border border-gray-200 shadow-sm transition-transform hover:scale-[1.02] ${sizeClass} ${
                     card.coverImageUrl ? "bg-gray-100" : "bg-gray-300"
                 }`}
             >
@@ -40,7 +62,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
                       alt={card.title}
                       fill
                       sizes="(max-width: 768px) 50vw, 320px"
-                      className="object-contain p-6 transition-transform group-hover:scale-105"
+                      className={imageClass}
                   />
               )}
 
@@ -87,7 +109,8 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
               {card.title}
             </h2>
           </div>
-      ))}
+        );
+      })}
 
     </div>
   );
