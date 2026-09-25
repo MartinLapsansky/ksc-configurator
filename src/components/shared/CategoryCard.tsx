@@ -52,7 +52,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
           <div key={card.id} className="flex min-w-0 flex-col items-center">
             <Link
                 href={card.href || "#"}
-                className={`group relative flex flex-col items-center justify-center overflow-hidden rounded-2xl border border-gray-200 shadow-sm transition-transform hover:scale-[1.02] ${sizeClass} ${
+                className={`group relative flex flex-col items-center justify-center overflow-hidden border border-gray-200 shadow-sm transition-transform hover:scale-[1.02] ${sizeClass} ${
                     card.coverImageUrl ? "bg-gray-100" : "bg-gray-300"
                 }`}
             >
