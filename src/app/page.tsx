@@ -4,6 +4,10 @@ import TopBanner from "@/components/layout/TopBanner";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import { getTopLevelCategories } from "@/lib/catalog";
 
+// Force dynamic rendering so top-level category sort order always reflects the
+// latest database values instead of a build-time snapshot.
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const cards = await getTopLevelCategories();
 

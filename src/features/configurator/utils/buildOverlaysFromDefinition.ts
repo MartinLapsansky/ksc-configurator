@@ -27,8 +27,8 @@ function buildOverlayEntry(
   layer: OverlayLayerDef,
   values: ConfigValues,
 ): OverlayEntry {
-  const source = layer.source;
-  const raw = values[source.pickerKey];
+  const source = layer.source; //definition.overlay.source
+  const raw = values[source.pickerKey]; //map the concrete picker (object or src), one picker object from array of values = option
 
   switch (source.type) {
     case "tint": {
