@@ -57,7 +57,7 @@ export default async function CatchAllPage({ params }: CatchAllPageProps) {
       <main className="w-full min-h-screen bg-white">
         <TopBanner />
         <Breadcrumbs />
-        <section className="w-full px-4 md:px-8 min-h-[70vh]">
+        <section className="w-full px-4 mt-5 md:px-8 min-h-[70vh]">
           <CategoryCard cards={cards} />
         </section>
       </main>

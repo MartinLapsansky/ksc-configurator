@@ -32,7 +32,7 @@ const StaticLogoPicker: React.FC<StaticLogoPickerProps> = ({
               key={o.name}
               type="button"
               onClick={() => onChange(o)}
-              className={`flex h-12 w-12 items-center justify-center rounded-md border bg-white p-1 text-xs transition ${
+              className={`flex h-10 w-10 items-center justify-center rounded-md border bg-white p-1 text-xs transition ${
                 isSelected
                   ? "border-black ring-2 ring-black"
                   : "border-gray-300 hover:border-black"

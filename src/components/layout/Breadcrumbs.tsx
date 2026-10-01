@@ -26,7 +26,7 @@ export default function Breadcrumbs() {
   }
 
   return (
-    <div className="w-full bg-gray-700 p-6 md:px-8">
+    <div className="w-full p-4  md:px-8 bg-gray-200">
       <div className="flex items-center justify-between gap-4">
       <nav aria-label="Breadcrumb">
         <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
@@ -34,11 +34,11 @@ export default function Breadcrumbs() {
             const isCurrent = index === items.length - 1;
 
             return (
-              <li key={item.href} className="flex items-center gap-x-2">
+              <li key={item.href} className="flex items-center gap-x-2 cursor-pointer">
                 {isCurrent ? (
                   <span
                     aria-current="page"
-                    className="font-semibold text-lime-green"
+                    className="font-semibold text-[#008DD2]"
                   >
                     {item.label}
                   </span>
@@ -46,7 +46,7 @@ export default function Breadcrumbs() {
                   <>
                     <Link
                       href={item.href}
-                      className="font-medium transition-colors text-white hover:text-lime-green"
+                      className="font-medium transition-colors text-black hover:text-[#008DD2]"
                     >
                       {item.label}
                     </Link>
@@ -74,7 +74,7 @@ export default function Breadcrumbs() {
       <Link
         href="/checkout"
         aria-label="View checkout"
-        className="relative flex items-center justify-center text-white transition-colors hover:text-lime-green"
+        className="relative flex items-center justify-center text-black transition-colors hover:text-lime-green"
       >
         <FontAwesomeIcon icon={faBagShopping} style={{ height: "2rem", width: "2rem" }} />
         {totalItems > 0 && (

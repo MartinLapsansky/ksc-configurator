@@ -13,7 +13,7 @@ export default async function HomePage() {
       <TopBanner />
       <Breadcrumbs />
       {/* Cards Section */}
-      <section className="w-full p-4 md:px-8 min-h-[70vh]">
+      <section className="w-full mt-5 p-4 md:px-8 min-h-[70vh]">
         <CategoryCard cards={cards} />
       </section>
     </main>

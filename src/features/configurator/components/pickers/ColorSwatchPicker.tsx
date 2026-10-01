@@ -33,12 +33,12 @@ const ColorSwatchPicker: React.FC<ColorSwatchPickerProps> = ({
               key={o.name}
               type="button"
               onClick={() => onChange(o)}
-              className={`h-10 w-10 shrink-0 cursor-pointer rounded-md border transition-transform sm:h-12 sm:w-12 ${
+              className={`h-8 w-8 shrink-0 cursor-pointer rounded-md border transition-transform sm:h-10 sm:w-10 ${
                   isSelected
                       ? "scale-105 border-black ring-2 ring-black"
                       : "border-gray-300 hover:scale-105"
               }`}
-              style={{ backgroundColor: o.hex }}
+              style={{backgroundColor: o.hex }}
               title={o.name}
             />
           );
