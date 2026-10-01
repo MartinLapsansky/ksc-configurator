@@ -74,11 +74,11 @@ export default function Breadcrumbs() {
       <Link
         href="/checkout"
         aria-label="View checkout"
-        className="relative flex items-center justify-center text-black transition-colors hover:text-lime-green"
+        className="relative flex items-center justify-center text-black transition-colors hover:text-[#008DD2]"
       >
         <FontAwesomeIcon icon={faBagShopping} style={{ height: "2rem", width: "2rem" }} />
         {totalItems > 0 && (
-          <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-lime-green px-1 text-xs font-bold text-gray-900">
+          <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#008DD2] px-1 text-xs font-bold text-gray-900">
             {totalItems}
           </span>
         )}

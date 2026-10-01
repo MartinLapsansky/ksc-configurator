@@ -4,6 +4,7 @@ import { Prisma } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { orderRequestSchema } from "@/lib/validation/orderSchema";
+import { sendOrderNotifications } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   try {
@@ -59,6 +60,20 @@ export async function POST(req: NextRequest) {
         },
         userId: session?.user?.id ?? null,
       },
+    });
+
+    await sendOrderNotifications({
+      id: createdOrder.id,
+      firstName: createdOrder.firstName,
+      lastName: createdOrder.lastName,
+      email: createdOrder.email,
+      phoneCountryCode: createdOrder.phoneCountryCode,
+      phoneNumber: createdOrder.phoneNumber,
+      county: createdOrder.county,
+      country: createdOrder.country,
+      organisation: createdOrder.organisation,
+      quantity: createdOrder.quantity,
+      message: createdOrder.message,
     });
 
     return NextResponse.json(
