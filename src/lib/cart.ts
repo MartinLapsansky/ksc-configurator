@@ -10,16 +10,9 @@ import type { ProductConfig } from "@/types/preview";
 export function getProductTypeLabel(config: ProductConfig): string {
   return (
     config.productName ||
-    LEGACY_PRODUCT_TYPE_LABELS[config.productType] ||
     config.productType
   );
 }
-
-const LEGACY_PRODUCT_TYPE_LABELS: Record<string, string> = {
-  jersey: "Jersey",
-  halfZip: "Half Zip",
-  crewNeck: "Crew Neck",
-};
 
 /**
  * Resolves a thumbnail URL for a cart/order line item.

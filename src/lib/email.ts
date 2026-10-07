@@ -1,28 +1,13 @@
 import { Resend } from "resend";
+import type { OrderNotificationRecipient } from "@/types/preview";
 
 /**
  * Email notifications sent after an order/enquiry is created.
  *
- * The "from" address must be a domain verified in Resend. Until the
- * production domain's DNS records are configured, Resend's test address is
- * used as a placeholder.
+ * The "from" address must use a domain verified in Resend.
  */
-const FROM_EMAIL = "onboarding@resend.dev";
-const SALES_EMAIL = "martin.lapsa2@gmail.com";
-
-type OrderNotificationRecipient = {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneCountryCode: string;
-  phoneNumber: string;
-  county: string;
-  country: string;
-  organisation: string;
-  quantity: number;
-  message: string;
-};
+const FROM_EMAIL = "no-reply@customizeit.kcsports.ie";
+const SALES_EMAIL = "kcscustomizeit@gmail.com";
 
 /**
  * Sends the customer confirmation and the internal sales notification.

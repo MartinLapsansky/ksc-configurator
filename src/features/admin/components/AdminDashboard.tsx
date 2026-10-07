@@ -54,7 +54,7 @@ export default function AdminDashboard({
           <input
             type="search"
             value={query}
-            onChange={(event) => setQuery(event.target.value)}
+            onChange={(e) => setQuery(e.target.value)}
             placeholder="Search by name, slug or category…"
             className="w-full rounded-md border border-gray-200 py-2 pl-9 pr-3 text-sm text-black outline-none placeholder:text-gray-400 focus:border-black"
           />

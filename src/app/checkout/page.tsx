@@ -38,7 +38,7 @@ export default function CheckoutPage() {
             >
               Continue browsing
             </Link>
-          </div>
+          </div> //else map all products in cart
         ) : (
           <>
             {/* Header row (hidden on mobile) */}
@@ -58,7 +58,7 @@ export default function CheckoutPage() {
                     key={item.id}
                     className="grid grid-cols-1 items-center gap-4 py-5 md:grid-cols-[1.4fr_1fr_auto_1fr_auto]"
                   >
-                    {/* Produkt */}
+                    {/* Product */}
                     <div className="flex items-center gap-4">
                       {thumbnail ? (
                         <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-md border border-gray-200 bg-white">
@@ -88,14 +88,14 @@ export default function CheckoutPage() {
                       </div>
                     </div>
 
-                    {/* Názov */}
+                    {/* Name */}
                     <div>
                       <p className="font-semibold text-black">
                         {item.config.productName}
                       </p>
                     </div>
 
-                    {/* Množstvo */}
+                    {/* Quantity */}
                     <div className="flex items-center justify-center gap-3">
                       <button
                         type="button"

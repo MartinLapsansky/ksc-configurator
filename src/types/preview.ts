@@ -140,3 +140,17 @@ export type Order = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type OrderNotificationRecipient = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneCountryCode: string;
+  phoneNumber: string;
+  county: string;
+  country: string;
+  organisation: string;
+  quantity: number;
+  message: string;
+};

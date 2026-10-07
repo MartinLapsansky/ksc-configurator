@@ -24,6 +24,7 @@ export function filterCatalog(
   categories: AdminCategory[],
   products: AdminProduct[],
 ): { categories: AdminCategory[]; products: AdminProduct[] } {
+
   const normalizedQuery = query.trim().toLowerCase();
 
   const matchesQuery = (...values: (string | null | undefined)[]) =>

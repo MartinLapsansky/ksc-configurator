@@ -24,22 +24,16 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ cards }) => {
         const isCategory = card.kind === "category";
         const isTopLevelCategory = isCategory && card.isTopLevel === true;
 
-        // Product cards keep their original look; category covers fill the
-        // whole card without padding. Top-level categories use a 4:5 portrait
-        // cover while sub-categories use a 5:7 portrait cover.
         const sizeClass = !isCategory
-          ? "h-72 w-full min-w-0 p-4 md:h-170 md:w-150 md:p-8"
+          ? "aspect-[5/7] w-full min-w-0 p-0"
           : isTopLevelCategory
             ? "aspect-[4/5] w-full min-w-0 p-0"
             : "aspect-[5/7] w-full min-w-0 p-0";
 
-        const imageClass = isCategory
-          ? "object-cover transition-transform group-hover:scale-105"
-          : "object-contain p-6 transition-transform group-hover:scale-105";
+        const imageClass = "object-cover transition-transform group-hover:scale-105";
 
-        const imageSizes = isCategory
-          ? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          : "(max-width: 768px) 100vw, 600px";
+        const imageSizes =
+          "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw";
 
         return (
           <div key={card.id} className="flex min-w-0 flex-col items-center">
