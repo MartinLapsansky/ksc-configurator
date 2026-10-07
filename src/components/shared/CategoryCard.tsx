@@ -26,7 +26,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ cards }) => {
     ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
     : "grid-cols-2 md:grid-cols-3 lg:grid-cols-4";
 
-  const maxWidthClass = hasTopLevel ? "max-w-7xl 2xl:max-w-[1560px]" : "max-w-7xl";
+  const maxWidthClass = hasTopLevel ? "max-w-7xl 2xl:max-w-[1920px]" : "max-w-7xl";
 
   const imageSizes = hasTopLevel
     ? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
