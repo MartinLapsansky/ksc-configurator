@@ -26,7 +26,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ cards }) => {
     ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
     : "grid-cols-2 md:grid-cols-3 lg:grid-cols-4";
 
-  const maxWidthClass = hasTopLevel ? "max-w-7xl 2xl:max-w-[1920px]" : "max-w-7xl";
+  const maxWidthClass = "max-w-7xl 2xl:max-w-[1920px]";
 
   const imageSizes = hasTopLevel
     ? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -41,7 +41,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ cards }) => {
         const isTopLevelCategory = isCategory && card.isTopLevel === true;
 
         const sizeClass = !isCategory
-          ? "aspect-[5/7] w-full min-w-0 p-0 max-w-[340px] mx-auto"
+          ? "aspect-[5/7] w-full min-w-0 p-0 max-w-[340px] mx-auto 2xl:max-w-[420px]"
           : isTopLevelCategory
             ? "aspect-[4/5] w-full min-w-0 p-0"
             : "aspect-[5/7] w-full min-w-0 p-0";
