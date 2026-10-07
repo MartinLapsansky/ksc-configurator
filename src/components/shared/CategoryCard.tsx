@@ -18,22 +18,36 @@ interface CategoryCardProps {
 }
 
 const CategoryCard: React.FC<CategoryCardProps> = ({ cards }) => {
+  const hasTopLevel = cards.some(
+    (card) => card.kind === "category" && card.isTopLevel === true,
+  );
+
+  const gridClass = hasTopLevel
+    ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+    : "grid-cols-2 md:grid-cols-3 lg:grid-cols-4";
+
+  const maxWidthClass = "max-w-7xl";
+
+  const imageSizes = hasTopLevel
+    ? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+    : "(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw";
+
   return (
-    <div className="mx-auto h-full w-full max-w-none grid grid-cols-1 gap-6 pb-6 pt-2 sm:grid-cols-2 lg:grid-cols-3 md:pb-12 md:pt-2">
+    <div
+      className={`mx-auto h-full w-full grid gap-6 pb-6 pt-2 md:pb-12 md:pt-2 ${gridClass} ${maxWidthClass}`}
+    >
       {cards.map((card) => {
         const isCategory = card.kind === "category";
         const isTopLevelCategory = isCategory && card.isTopLevel === true;
 
         const sizeClass = !isCategory
-          ? "aspect-[5/7] w-full min-w-0 p-0"
+          ? "aspect-[5/7] w-full min-w-0 p-0 max-w-[340px] mx-auto"
           : isTopLevelCategory
             ? "aspect-[4/5] w-full min-w-0 p-0"
             : "aspect-[5/7] w-full min-w-0 p-0";
 
-        const imageClass = "object-cover transition-transform group-hover:scale-105";
-
-        const imageSizes =
-          "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw";
+        const imageClass =
+          "object-cover transition-transform group-hover:scale-105";
 
         return (
           <div key={card.id} className="flex min-w-0 flex-col items-center">
