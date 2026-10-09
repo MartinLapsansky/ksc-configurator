@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -21,12 +21,16 @@ export default function Breadcrumbs() {
   const items = getBreadcrumbItems(pathname ?? "/");
   const { totalItems } = useCart();
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
   if (items.length === 0) {
     return null;
   }
 
   return (
-    <div className="w-full p-4  md:px-8 bg-gray-200">
+    <div className="sticky top-0 z-40 w-full p-4 md:px-8 bg-gray-200">
       <div className="flex items-center justify-between gap-4">
       <nav aria-label="Breadcrumb">
         <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
