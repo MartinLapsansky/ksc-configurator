@@ -30,49 +30,70 @@ const GenericProductPreview: React.FC<GenericProductPreviewProps> = ({
   definition,
   values,
 }) => {
-  const [isBackView, setIsBackView] = useState(false);
+  // TODO (challenge): deklaruj state, dva useMemo a jeden useCallback.
+  //
+  // 1. State:
+  //      const [isBackView, setIsBackView] = useState(false);
+  //    (drží, či sa zobrazuje predná alebo zadná strana produktu.)
 
-  const overlays = useMemo(
-    () => buildOverlaysFromDefinition(definition, values, isBackView),
-    [definition, values, isBackView],
-  );
+    const [isBackView, setIsBackView] = useState(false);
 
-  const bgImageSrc = useMemo(
-    () =>
-      resolveBaseImageSrc(definition, values, isBackView, {
+    const overlays = useMemo(() => buildOverlaysFromDefinition(definition,values,isBackView),
+        [definition,values,isBackView]);
+
+
+  // 3. useMemo `bgImageSrc`:
+  //      const bgImageSrc = useMemo(
+  //        () =>
+  //          resolveBaseImageSrc(definition, values, isBackView, {
+  //            frontImageUrl,
+  //            backImageUrl,
+  //          }),
+  //        [definition, values, isBackView, frontImageUrl, backImageUrl],
+  //      );
+
+    const bgImageSrc = useMemo(() => resolveBaseImageSrc(definition, values, isBackView, {
         frontImageUrl,
         backImageUrl,
-      }),
-    [definition, values, isBackView, frontImageUrl, backImageUrl],
-  );
+      }), [definition, values, isBackView, frontImageUrl, backImageUrl]);
 
-  const renderTexts = useCallback(() => {
-    const view = isBackView ? "back" : "front";
 
-    return definition.pickers
-      .filter((picker) => picker.type === "text")
-      .map((picker) => {
-        const pickerView = picker.view ?? "front";
-        if (pickerView !== view) return null;
+  //
+  // 4. useCallback `renderTexts` — vráti pole <TextOverlay /> pre textové pickery:
+  //    - `view = isBackView ? "back" : "front"`
+  //    - prejdi `definition.pickers`, vyfiltruj tie s `picker.type === "text"`,
+  //    - preskoč tie, ktorých `picker.view ?? "front"` sa nerovná `view`,
+  //    - hodnota z `values[picker.key]` má typ:
+  //        { enabled?: boolean; text?: string; color?: { hex?: string } } | undefined
+  //    - ak `!value?.enabled || !value.text`, vráť null,
+  //    - `position = picker.position ?? { x: 0.49, y: 0.54 }`,
+  //    - vráť:
+  //        <TextOverlay key={picker.key} text={value.text}
+  //          colorHex={value.color?.hex ?? "#000000"} position={position} />
+  //    - dependency pole: `[definition.pickers, values, isBackView]`
 
-        const value = values[picker.key] as
-          | { enabled?: boolean; text?: string; color?: { hex?: string } }
-          | undefined;
+    const renderTexts = useCallback(() => {
+        const view = isBackView ? "back" : "front";
 
-        if (!value?.enabled || !value.text) return null;
+        return definition.pickers
+            .filter((picker) => picker.type === "text")
+            .map((picker) => {
+                    const pickerView = picker.view ?? "front";
+                    if (pickerView !== view) return null;
 
-        const position = picker.position ?? { x: 0.49, y: 0.54 };
+                    const value = values[picker.key] as
+                        | { enabled?: boolean; text?: string; color?: { hex?: string } }
+                        | undefined;
 
-        return (
-          <TextOverlay
-            key={picker.key}
-            text={value.text}
-            colorHex={value.color?.hex ?? "#000000"}
-            position={position}
-          />
-        );
-      });
-  }, [definition.pickers, values, isBackView]);
+                    if (!value?.enabled || !value.text) return null;
+
+                    const position = picker.position ?? { x: 0.49, y: 0.54 };
+
+                    return (
+                        <TextOverlay key={picker.key} text={value.text} colorHex={value.color?.hex ?? '#000000'} position={position}/>
+                    )
+            })
+    }, [definition.pickers, values, isBackView])
 
   return (
     <div className="flex flex-col w-full h-[70vh]">

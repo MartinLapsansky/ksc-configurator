@@ -20,7 +20,10 @@ export default async function CatchAllPage({ params }: CatchAllPageProps) {
   const { slug } = await params;
   const lastSegment = slug[slug.length - 1] ?? "";
 
-  const product = await getProductBySlug(lastSegment);
+  const [product, category] = await Promise.all([
+    getProductBySlug(lastSegment),
+    getCategoryBySlug(lastSegment),
+  ]);
 
   if (product) {
     return (
@@ -32,8 +35,6 @@ export default async function CatchAllPage({ params }: CatchAllPageProps) {
       </main>
     );
   }
-
-  const category = await getCategoryBySlug(lastSegment);
 
   if (category) {
     const cards: CategoryCardItem[] = [

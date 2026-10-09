@@ -21,29 +21,23 @@ type ProductConfiguratorProps = {
  * renders pickers + preview from its `definition`, replacing the previous
  * per-product `*ProductItem` screens.
  */
-const ProductConfigurator: React.FC<ProductConfiguratorProps> = ({
-  product,
-}) => {
+
+export default function ProductConfigurator({ product }: ProductConfiguratorProps) {
   const { addItem, openBag } = useCart();
 
   const [prevDefinition, setPrevDefinition] = useState(product.definition);
-  const [values, setValues] = useState<Record<string, unknown>>(() =>
-    buildDefaultValues(product.definition),
-  );
 
-  // Adjust state during render when the definition changes (e.g. while
-  // editing the product JSON in the admin form). Preserves the current
-  // selection while refreshing option data such as image URLs. This is the
-  // React-recommended pattern for deriving state from changed props without
-  // using an effect.
+  const [values, setValues] = useState<Record<string, unknown>>(() => buildDefaultValues(product.definition))
+
   if (prevDefinition !== product.definition) {
     setPrevDefinition(product.definition);
     setValues((prev) => reconcileValues(product.definition, prev));
   }
 
+
   const handlePickerChange = useCallback((key: string, value: unknown) => {
     setValues((prev) => ({ ...prev, [key]: value }));
-  }, []);
+  },[])
 
   const handleAddToBag = useCallback(() => {
     const config: ProductConfig = {
@@ -58,10 +52,9 @@ const ProductConfigurator: React.FC<ProductConfiguratorProps> = ({
     openBag();
   }, [addItem, openBag, product, values]);
 
-  const totalDots = useMemo(
-    () => Math.max(1, product.definition.pickers.length),
-    [product.definition.pickers.length],
-  );
+
+  const totalDots = useMemo(() => Math.max(1, product.definition.pickers.length),
+      [product.definition.pickers.length]);
 
   return (
     <ProductItemLayout
@@ -87,6 +80,4 @@ const ProductConfigurator: React.FC<ProductConfiguratorProps> = ({
       }
     />
   );
-};
-
-export default ProductConfigurator;
+}

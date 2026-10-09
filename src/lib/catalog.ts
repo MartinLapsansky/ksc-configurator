@@ -37,14 +37,20 @@ export async function getTopLevelCategories(): Promise<CatalogCardItem[]> {
 export async function getCategoryBySlug(slug: string) {
   return prisma.category.findUnique({
     where: { slug },
-    include: {
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      coverImageUrl: true,
       children: {
         where: { active: true },
         orderBy: { sortOrder: "asc" },
+        select: { id: true, name: true, slug: true, coverImageUrl: true },
       },
       products: {
         where: { active: true },
         orderBy: { sortOrder: "asc" },
+        select: { id: true, name: true, slug: true, coverImageUrl: true },
       },
     },
   });

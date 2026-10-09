@@ -3,8 +3,10 @@
 import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 export default function SignInForm() {
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -88,12 +90,12 @@ export default function SignInForm() {
                     {error && <p className="text-sm text-red-600">{error}</p>}
 
                     <div className="flex justify-start">
-                        <a
+                        <Link
                             href="/auth/forgot-password"
                             className="text-sm text-black hover:underline"
                         >
                             Forgot password?
-                        </a>
+                        </Link>
                     </div>
 
                     <div className="pt-2 text-center">

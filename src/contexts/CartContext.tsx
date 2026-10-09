@@ -53,8 +53,8 @@ function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
     case "addItem": {
       const key = configKey(action.config); // actual config 
-      const existing = state.items.find( // find config from all items where config of this item = actual config 
-        (item) => configKey(item.config) === key,
+      const existing = state.items.find( // find config from all items where config of this item is equal to actual config
+        (item) => configKey(item.config) === key, //key = action
       );
 
       if (existing) { //if exists this config then update items in carts weith adding same item and raise the quantity

@@ -27,12 +27,36 @@ const ProductItemLayout: React.FC<ProductItemLayoutProps> = ({
   onAddToBag,
 }) => {
   const scrollRef = useRef<HTMLElement | null>(null);
+
+  // TODO (challenge): deklaruj state a useEffect na sledovanie scrollu.
+  //
+  // 1. State:
+  //      const [activeIndex, setActiveIndex] = useState(0);
+  //    (drží index aktívnej bodky pre mobilnú pagináciu nižšie v JSX.)
+
   const [activeIndex, setActiveIndex] = useState(0);
+
+  //
+  // 2. useEffect:
+  //    - zober `scrollRef.current`; ak je null, skonči.
+  //    - definuj `handleScroll`, ktorý:
+  //        * zoberie `el.scrollLeft`, `el.scrollWidth`, `el.clientWidth`
+  //        * ak `el.scrollWidth - el.clientWidth <= 0`, zavolá `setActiveIndex(0)`
+  //          a skončí,
+  //        * inak vypočíta `progress = scrollLeft / maxScroll`,
+  //          `index = Math.round(progress * (totalDots - 1))` a zavolá
+  //          `setActiveIndex(index)`.
+  //    - pridaj listener: `el.addEventListener("scroll", handleScroll, { passive: true })`
+  //    - zavolaj `handleScroll()` raz hneď (nastaví počiatočný index).
+  //    - vráť cleanup, ktorý listener odstráni:
+  //        `return () => el.removeEventListener("scroll", handleScroll);`
+  //    - dependency pole: `[totalDots]`
+  //
+  // DÔLEŽITÉ: zachovaj názvy `activeIndex` a `scrollRef` (používajú sa v JSX).
 
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
-
     const handleScroll = () => {
       const scrollLeft = el.scrollLeft;
       const maxScroll = el.scrollWidth - el.clientWidth;
@@ -45,12 +69,13 @@ const ProductItemLayout: React.FC<ProductItemLayoutProps> = ({
       const progress = scrollLeft / maxScroll;
       const index = Math.round(progress * (totalDots - 1));
       setActiveIndex(index);
-    };
+    }
 
-    el.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
+    el.addEventListener("scroll", handleScroll, {passive: true});
+    handleScroll()
+    return () => {el.removeEventListener("scroll", handleScroll)}
 
-    return () => el.removeEventListener("scroll", handleScroll);
+
   }, [totalDots]);
 
   return (
