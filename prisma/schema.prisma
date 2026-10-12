@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      Role     @default(user)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orders Order[]
+}
+
+model Order {
+  id     String      @id @default(cuid())
+  status OrderStatus @default(new)
+
+  firstName        String
+  lastName         String
+  county           String @default("")
+  country          String @default("")
+  email            String
+  phoneCountryCode String
+  phoneNumber      String
+  organisation     String
+  quantity         Int
+  message          String
+
+  items OrderItem[]
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderItem {
+  id       String @id @default(cuid())
+  quantity Int
+  config   Json
+
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum OrderStatus {
+  new
+  processing
+  sent
+  cancelled
+}
+
+enum Role {
+  user
+  admin
+}
+
+model Category {
+  id            String     @id @default(cuid())
+  name          String
+  slug          String     @unique
+  parentId      String?
+  parent        Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children      Category[] @relation("CategoryTree")
+  sortOrder     Int        @default(0)
+  active        Boolean    @default(true)
+  coverImageUrl String?
+
+  products Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Product {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  name          String
+  categoryId    String
+  category      Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  active        Boolean  @default(true)
+  sortOrder     Int      @default(0)
+  hasBackView   Boolean  @default(false)
+  frontImageUrl String?
+  backImageUrl  String?
+  coverImageUrl String?
+  definition    Json
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

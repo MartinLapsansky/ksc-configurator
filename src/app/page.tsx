@@ -1,0 +1,25 @@
+import React from "react";
+import CategoryCard from "@/components/shared/CategoryCard";
+import TopBanner from "@/components/layout/TopBanner";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
+import { getTopLevelCategories } from "@/lib/catalog";
+
+// Force dynamic rendering so top-level category sort order always reflects the
+// latest database values instead of a build-time snapshot.
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const cards = await getTopLevelCategories();
+
+  return (
+    <main className="w-full min-h-screen bg-slate-100">
+      {/* Top Banner - navigates to home page */}
+      <TopBanner />
+      <Breadcrumbs />
+      {/* Cards Section */}
+      <section className="w-full mt-5 p-4 md:px-8 min-h-[70vh]">
+        <CategoryCard cards={cards} />
+      </section>
+    </main>
+  );
+}
