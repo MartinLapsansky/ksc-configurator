@@ -8,6 +8,7 @@ import {
   type AdminProduct,
   type CatalogFilterType,
 } from "@/features/admin/utils/filterCatalog";
+import {useRouter} from "next/navigation";
 
 const TYPE_OPTIONS: { value: CatalogFilterType; label: string }[] = [
   { value: "all", label: "All" },
@@ -24,11 +25,49 @@ export default function AdminDashboard({
 }) {
   const [query, setQuery] = useState("");
   const [filterType, setFilterType] = useState<CatalogFilterType>("all");
+  const [pendingIds, setPendingIds] = useState<Set<string>>(new Set());
+
+  const router = useRouter();
 
   const { categories: visibleCategories, products: visibleProducts } = useMemo(
     () => filterCatalog(query, filterType, categories, products),
     [query, filterType, categories, products],
   );
+
+
+  const handleActiveStatus = async (kind: "category" | "product", id: string, active: boolean) => {
+    setPendingIds((prev) => new Set(prev).add(id));
+    try {
+
+      const endpoint = kind === "category"
+          ? `/api/admin/categories/${id}/status`
+          : `/api/admin/products/${id}/status`;
+
+      const res = await fetch(endpoint, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ active }),
+      });
+
+      if(!res.ok){
+        console.error("Update failed", await res.json().catch(() => null));
+        return;
+      }
+
+      router.refresh();
+
+    } catch (error){
+      console.error("Error updating active status:", error);
+    } finally {
+      setPendingIds((prev) => {
+        const next = new Set(prev)
+        next.delete(id)
+        return next;
+      });
+    }
+  };
 
   const hasResults = visibleCategories.length > 0 || visibleProducts.length > 0;
 
@@ -131,13 +170,28 @@ export default function AdminDashboard({
                         <td className="px-4 py-2">
                           {category._count?.products ?? 0}
                         </td>
+
+
+
                         <td className="px-4 py-2">
-                          {category.active ? (
-                            <span className="text-green-600">Active</span>
-                          ) : (
-                            <span className="text-gray-400">Inactive</span>
-                          )}
+                          <select
+                            value = {category.active ? "true" : "false"}
+                            onChange={(e) => {
+                              handleActiveStatus(
+                                  "category",
+                                  category.id,
+                                  e.target.value === "true",
+                              )
+                          }}
+                            disabled={pendingIds.has(category.id)}
+                            className="rounded-md border border-gray-200 px-2 py-1 text-sm"
+                            >
+                            <option value="true">Active</option>
+                            <option value="false">Inactive</option>
+                          </select>
                         </td>
+
+
                       </tr>
                     ))}
                   </tbody>
@@ -190,11 +244,21 @@ export default function AdminDashboard({
                           {product.hasBackView ? "Yes" : "No"}
                         </td>
                         <td className="px-4 py-2">
-                          {product.active ? (
-                            <span className="text-green-600">Active</span>
-                          ) : (
-                            <span className="text-gray-400">Inactive</span>
-                          )}
+                          <select
+                              value = {product.active ? "true" : "false"}
+                              onChange={(e) => {
+                                handleActiveStatus(
+                                    "product",
+                                    product.id,
+                                    e.target.value === "true",
+                                )
+                              }}
+                              disabled={pendingIds.has(product.id)}
+                              className="rounded-md border border-gray-200 px-2 py-1 text-sm"
+                          >
+                            <option value="true">Active</option>
+                            <option value="false">Inactive</option>
+                          </select>
                         </td>
                       </tr>
                     ))}

@@ -14,6 +14,10 @@ export const categoryInputSchema = z.object({
   coverImageUrl: z.string().nullable().optional(),
 });
 
+export const statusUpdateSchema = z.object({
+  active: z.boolean(),
+});
+
 export const productInputSchema = z.object({
   name: z.string().trim().min(1),
   slug: z
