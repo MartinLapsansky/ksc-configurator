@@ -1,12 +1,22 @@
 "use client";
 
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/contexts/CartContext";
 import type { EnquiryFormInput } from "@/lib/validation/orderSchema";
 import { COUNTIES } from "@/features/orders/constants";
 
+const ENQUIRY_SUBMITTED_KEY = "enquirySubmitted";
+
 export default function EnquirePage() {
-  const { items, totalQuantity } = useCart();
+  const router = useRouter();
+  const { items, totalQuantity, clearCart } = useCart();
+
+  useEffect(() => {
+    if (sessionStorage.getItem(ENQUIRY_SUBMITTED_KEY) === "true") {
+      router.replace("/enquire/success");
+    }
+  }, [router]);
 
   const [form, setForm] = useState<EnquiryFormInput>({
     firstName: "",
@@ -53,8 +63,11 @@ export default function EnquirePage() {
       }
 
       const data = await response.json();
-      alert("Enquiry submitted successfully!");
       console.log("Response:", data);
+
+      sessionStorage.setItem(ENQUIRY_SUBMITTED_KEY, "true");
+      clearCart();
+      router.replace("/enquire/success");
     } catch (error) {
       console.error("Enquiry submission failed:", error);
       alert("Failed to submit enquiry. Please try again.");
