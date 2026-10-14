@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { registerWithInvitation } from "@/features/auth/actions/registerWithInvitation";
+import PasswordInput from "@/components/ui/PasswordInput";
 
 type RegisterFormProps = {
   email: string;
@@ -78,13 +79,12 @@ export default function RegisterForm({ email, token }: RegisterFormProps) {
             >
               Password
             </label>
-            <input
-              type="password"
+            <PasswordInput
               id="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-black shadow-sm outline-none transition focus:ring-2 focus:ring-(--highlight)"
+              onChange={setPassword}
               required
+              className=""
             />
             <p className="mt-1 text-xs text-gray-500">
               At least 8 characters, one uppercase letter, one number and one
@@ -99,13 +99,12 @@ export default function RegisterForm({ email, token }: RegisterFormProps) {
             >
               Confirm password
             </label>
-            <input
-              type="password"
+            <PasswordInput
               id="confirmPassword"
               value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-black shadow-sm outline-none transition focus:ring-2 focus:ring-(--highlight)"
+              onChange={setConfirmPassword}
               required
+              className=""
             />
           </div>
 

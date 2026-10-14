@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import AuthProvider from "@/components/layout/AuthProvider";
 import { CartProvider } from "@/contexts/CartContext";
 import BagDrawer from "@/components/shared/BagDrawer";
 
@@ -30,10 +31,12 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body>
-        <CartProvider>
-          {children}
-          <BagDrawer />
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            {children}
+            <BagDrawer />
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

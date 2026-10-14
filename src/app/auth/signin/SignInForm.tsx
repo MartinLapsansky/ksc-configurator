@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import PasswordInput from "@/components/ui/PasswordInput";
 
 export default function SignInForm() {
 
@@ -77,13 +78,12 @@ export default function SignInForm() {
                         >
                             Password
                         </label>
-                        <input
-                            type="password"
+                        <PasswordInput
                             id="password"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-black shadow-sm outline-none transition focus:ring-2 focus:ring-(--highlight)"
+                            onChange={setPassword}
                             required
+                            className=""
                         />
                     </div>
 

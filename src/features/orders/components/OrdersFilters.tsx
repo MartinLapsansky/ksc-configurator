@@ -39,6 +39,7 @@ export default function OrdersFilters({ from, status }: OrdersFiltersProps) {
         From date
         <input
           type="date"
+          lang="en"
           defaultValue={from}
           onChange={(event) => applyFilter("from", event.target.value)}
           className="rounded-md border border-gray-300 px-3 py-2 text-black"

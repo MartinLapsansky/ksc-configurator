@@ -3,8 +3,9 @@
 import React, { useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBagShopping } from "@fortawesome/free-solid-svg-icons";
+import { faBagShopping, faClipboardList } from "@fortawesome/free-solid-svg-icons";
 import { getBreadcrumbItems } from "@/lib/breadcrumbs";
 import { useCart } from "@/contexts/CartContext";
 
@@ -20,6 +21,7 @@ export default function Breadcrumbs() {
   const pathname = usePathname();
   const items = getBreadcrumbItems(pathname ?? "/");
   const { totalItems } = useCart();
+  const { status } = useSession();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -75,18 +77,30 @@ export default function Breadcrumbs() {
         </ol>
       </nav>
 
-      <Link
-        href="/checkout"
-        aria-label="View checkout"
-        className="relative flex items-center justify-center text-black transition-colors hover:text-[#008DD2]"
-      >
-        <FontAwesomeIcon icon={faBagShopping} style={{ height: "2rem", width: "2rem" }} />
-        {totalItems > 0 && (
-          <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#008DD2] px-1 text-xs font-bold text-gray-900">
-            {totalItems}
-          </span>
+      <div className="flex items-center gap-4">
+        {status === "authenticated" && (
+          <Link
+            href="/orders"
+            aria-label="View orders"
+            className="relative flex items-center justify-center text-black transition-colors hover:text-[#008DD2]"
+          >
+            <FontAwesomeIcon icon={faClipboardList} style={{ height: "2rem", width: "2rem" }} />
+          </Link>
         )}
-      </Link>
+
+        <Link
+          href="/checkout"
+          aria-label="View checkout"
+          className="relative flex items-center justify-center text-black transition-colors hover:text-[#008DD2]"
+        >
+          <FontAwesomeIcon icon={faBagShopping} style={{ height: "2rem", width: "2rem" }} />
+          {totalItems > 0 && (
+            <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#008DD2] px-1 text-xs font-bold text-gray-900">
+              {totalItems}
+            </span>
+          )}
+        </Link>
+      </div>
       </div>
     </div>
   );
