@@ -19,6 +19,15 @@ model User {
   orders Order[]
 }
 
+model Invitation {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  token     String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+}
+
 model Order {
   id          String      @id @default(cuid())
   orderNumber Int         @unique @default(autoincrement())
