@@ -12,6 +12,7 @@ model User {
   password  String
   name      String?
   role      Role     @default(user)
+  counties  String[] @default([])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

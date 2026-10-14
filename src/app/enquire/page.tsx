@@ -3,42 +3,7 @@
 import React, {useState} from "react";
 import { useCart } from "@/contexts/CartContext";
 import type { EnquiryFormInput } from "@/lib/validation/orderSchema";
-
-const COUNTIES = [
-  "Antrim",
-  "Armagh",
-  "Carlow",
-  "Cavan",
-  "Clare",
-  "Cork",
-  "Derry",
-  "Donegal",
-  "Down",
-  "Dublin",
-  "Fermanagh",
-  "Galway",
-  "Kerry",
-  "Kildare",
-  "Kilkenny",
-  "Laois",
-  "Leitrim",
-  "Limerick",
-  "Longford",
-  "Louth",
-  "Mayo",
-  "Meath",
-  "Monaghan",
-  "Offaly",
-  "Roscommon",
-  "Sligo",
-  "Tipperary",
-  "Tyrone",
-  "Waterford",
-  "Westmeath",
-  "Wexford",
-  "Wicklow",
-  "Rest of the world",
-];
+import { COUNTIES } from "@/features/orders/constants";
 
 export default function EnquirePage() {
   const { items, totalQuantity } = useCart();

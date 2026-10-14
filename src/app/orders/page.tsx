@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import OrderCard from "@/features/orders/components/OrderCard";
+import { resolveCountyFilter } from "@/features/orders/utils/scopeOrders";
 import type { Order, ProductConfig } from "@/types/preview";
 
 export default async function OrdersPage() {
@@ -12,7 +13,17 @@ export default async function OrdersPage() {
     redirect("/auth/signin");
   }
 
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { role: true, counties: true },
+  });
+
+  if (!user) {
+    redirect("/auth/signin");
+  }
+
   const orders = await prisma.order.findMany({
+    where: resolveCountyFilter(user.role, user.counties),
     orderBy: { createdAt: "desc" },
     include: { items: true },
   });

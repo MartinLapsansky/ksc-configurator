@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import type { Order, ProductConfig } from "@/types/preview";
 import ProductConfigSummary from "./ProductConfigSummary";
 
@@ -27,11 +29,12 @@ export default function OrderCard({ order }: OrderCardProps) {
 
 
     return (
-        <div className="rounded-xl border cursor-pointer border-gray-200 bg-white p-4 shadow-sm">
+        <div className="relative rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
             <button
                 type="button"
                 onClick={() => setOpen((prev) => !prev)}
-                className="flex w-full flex-col gap-3 text-left md:flex-row md:items-center md:justify-between"
+                aria-expanded={open}
+                className="flex w-full flex-col gap-3 pr-10 text-left md:flex-row md:items-center md:justify-between"
             >
                 <div>
                     <h2 className="text-lg font-semibold text-black">
@@ -45,6 +48,18 @@ export default function OrderCard({ order }: OrderCardProps) {
                 <div className="text-sm text-gray-500">
                     Status: <span className="font-medium text-black">{order.status}</span>
                 </div>
+            </button>
+
+            <button
+                type="button"
+                onClick={() => setOpen((prev) => !prev)}
+                aria-label={open ? "Collapse order details" : "Expand order details"}
+                className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-100 hover:text-black"
+            >
+                <FontAwesomeIcon
+                    icon={faChevronDown}
+                    className={`h-4 w-4 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+                />
             </button>
 
             <div className="mt-3 grid gap-2 text-sm text-gray-700 md:grid-cols-2">

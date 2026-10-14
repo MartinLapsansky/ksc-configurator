@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { productDefinitionSchema } from "@/features/configurator/schemas/productDefinitionSchema";
+import { COUNTIES } from "@/features/orders/constants";
 
 export const categoryInputSchema = z.object({
   name: z.string().trim().min(1),
@@ -33,4 +34,8 @@ export const productInputSchema = z.object({
   backImageUrl: z.string().nullable().optional(),
   coverImageUrl: z.string().nullable().optional(),
   definition: productDefinitionSchema,
+});
+
+export const userCountiesSchema = z.object({
+  counties: z.array(z.enum(COUNTIES)),
 });

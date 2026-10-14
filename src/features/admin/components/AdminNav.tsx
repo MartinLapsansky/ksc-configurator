@@ -7,6 +7,7 @@ const links = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/categories/new", label: "New category" },
   { href: "/admin/products/new", label: "New product" },
+  { href: "/admin/sales-reps", label: "Sales-reps" },
 ];
 
 export default function AdminNav() {
