@@ -3,10 +3,16 @@ import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import OrderCard from "@/features/orders/components/OrderCard";
-import { resolveCountyFilter } from "@/features/orders/utils/scopeOrders";
+import OrdersFilters from "@/features/orders/components/OrdersFilters";
+import { buildOrdersWhere } from "@/features/orders/utils/buildOrdersWhere";
+import type { OrderRole } from "@/features/orders/utils/scopeOrders";
 import type { Order, ProductConfig } from "@/types/preview";
 
-export default async function OrdersPage() {
+type OrdersPageProps = {
+  searchParams: Promise<{ from?: string; status?: string }>;
+};
+
+export default async function OrdersPage({ searchParams }: OrdersPageProps) {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
@@ -22,8 +28,15 @@ export default async function OrdersPage() {
     redirect("/auth/signin");
   }
 
+  const { from, status } = await searchParams;
+
   const orders = await prisma.order.findMany({
-    where: resolveCountyFilter(user.role, user.counties),
+    where: buildOrdersWhere({
+      role: user.role as OrderRole,
+      counties: user.counties,
+      from,
+      status,
+    }),
     orderBy: { createdAt: "desc" },
     include: { items: true },
   });
@@ -55,6 +68,8 @@ export default async function OrdersPage() {
     <main className="min-h-screen bg-slate-100 p-6">
       <div className="mx-auto max-w-6xl rounded-lg bg-white p-6 shadow-sm">
         <h1 className="text-2xl font-semibold text-black">Orders</h1>
+
+        <OrdersFilters from={from ?? ""} status={status ?? ""} />
 
         <div className="mt-6 space-y-4">
           {orderList.length === 0 ? (
