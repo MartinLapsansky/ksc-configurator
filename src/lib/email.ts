@@ -118,7 +118,7 @@ export async function sendInvitationEmail({
                                 </tr>
                                 <tr>
                                     <td align="center" style="padding: 16px 0 24px 0;">
-                                        <a href="${link}" style="display: inline-block; padding: 12px 24px; background-color: #166534; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 600;">
+                                        <a href="${link}" style="display: inline-block; padding: 12px 24px; background-color: #008DD2; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 600;">
                                             Create your account
                                         </a>
                                     </td>
@@ -126,7 +126,7 @@ export async function sendInvitationEmail({
                                 <tr>
                                     <td style="font-size: 13px; line-height: 1.6; color: #a1a1aa; padding-top: 8px; border-top: 1px solid #f0f0f2;">
                                         If the button does not work, copy and paste this link into your browser:<br>
-                                        <a href="${link}" style="color: #166534; word-break: break-all;">${link}</a>
+                                        <a href="${link}" style="color: #008DD2; word-break: break-all;">${link}</a>
                                     </td>
                                 </tr>
                                 <tr>
