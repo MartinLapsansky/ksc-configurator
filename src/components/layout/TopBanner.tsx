@@ -39,10 +39,11 @@ export default function TopBanner() {
         </Link>
       </div>
 
-      <div className="flex w-full items-center justify-center py-4">
-        <h2 className="text-center text-lg font-normal text-black sm:text-3xl">
-          WELCOME TEXT HERE
+      <div className="flex flex-col w-full items-center justify-center py-4">
+        <h2 className="text-center text-lg font-bold text-black sm:text-3xl">
+            DESIGNED BY YOU. MADE BY KCS.
         </h2>
+          <h3 className="text-center text-sm font-normal italic text-black sm:text-2xl">Bring your idea to life. Choose your design and colours, then add your crest, logos or text to create something special.</h3>
       </div>
     </div>
   );

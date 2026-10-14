@@ -20,8 +20,9 @@ model User {
 }
 
 model Order {
-  id     String      @id @default(cuid())
-  status OrderStatus @default(new)
+  id          String      @id @default(cuid())
+  orderNumber Int         @unique @default(autoincrement())
+  status      OrderStatus @default(new)
 
   firstName        String
   lastName         String

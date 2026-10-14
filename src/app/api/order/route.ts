@@ -64,6 +64,7 @@ export async function POST(req: NextRequest) {
 
     await sendOrderNotifications({
       id: createdOrder.id,
+      orderNumber: createdOrder.orderNumber,
       firstName: createdOrder.firstName,
       lastName: createdOrder.lastName,
       email: createdOrder.email,

@@ -143,6 +143,7 @@ export type Order = {
 
 export type OrderNotificationRecipient = {
   id: string;
+  orderNumber: number;
   firstName: string;
   lastName: string;
   email: string;
