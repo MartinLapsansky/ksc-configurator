@@ -46,6 +46,7 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
     status: order.status,
     firstName: order.firstName,
     lastName: order.lastName,
+    orderNumber: order.orderNumber,
     county: order.county,
     country: order.country,
     email: order.email,
