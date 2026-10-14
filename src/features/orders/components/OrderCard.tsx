@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import type { Order, ProductConfig } from "@/types/preview";
+import { formatOrderNumber } from "@/lib/orderNumber";
 import ProductConfigSummary from "./ProductConfigSummary";
 import OrderStatusBadge from "./OrderStatusBadge";
 import { updateOrderStatus } from "@/features/orders/actions/updateOrderStatus";
@@ -108,7 +109,8 @@ export default function OrderCard({ order }: OrderCardProps) {
           <span className="font-medium">Country:</span> {order.country || "—"}
         </p>
         <p>
-          <span className="font-medium">User ID:</span> {order.orderNumber}
+          <span className="font-medium">Order Number:</span>{" "}
+          {formatOrderNumber(order.orderNumber)}
         </p>
       </div>
 
