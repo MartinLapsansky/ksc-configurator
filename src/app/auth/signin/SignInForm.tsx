@@ -102,7 +102,7 @@ export default function SignInForm() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-md bg-green-800 px-4 py-2 font-semibold text-white transition-colors hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-60"
+                            className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-md bg-[#008DD2] px-4 py-2 font-semibold text-white transition-colors hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-60"
                         >
                             {isLoading && (
                                 <span
