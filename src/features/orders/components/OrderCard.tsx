@@ -108,7 +108,7 @@ export default function OrderCard({ order }: OrderCardProps) {
           <span className="font-medium">Country:</span> {order.country || "—"}
         </p>
         <p>
-          <span className="font-medium">User ID:</span> {order.userId ?? "Guest"}
+          <span className="font-medium">User ID:</span> {order.orderNumber}
         </p>
       </div>
 

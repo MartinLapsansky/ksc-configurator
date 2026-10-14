@@ -126,6 +126,7 @@ export type Order = {
   status: string;
   firstName: string;
   lastName: string;
+  orderNumber: number;
   county: string;
   country: string;
   email: string;
