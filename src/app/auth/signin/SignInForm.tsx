@@ -81,7 +81,7 @@ export default function SignInForm() {
                         <PasswordInput
                             id="password"
                             value={password}
-                            onChange={setPassword}
+                            onChangeAction={setPassword}
                             required
                             className=""
                         />
