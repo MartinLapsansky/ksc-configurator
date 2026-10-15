@@ -32,8 +32,6 @@ model Order {
   id          String      @id @default(cuid())
   orderNumber Int         @unique @default(autoincrement())
   status      OrderStatus @default(new)
-  offset      Int
-  take        Int
 
   firstName        String
   lastName         String
