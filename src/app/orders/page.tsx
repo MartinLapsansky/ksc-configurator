@@ -73,7 +73,7 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
       prisma.order.count({where}),
   ])
 
-  const totalPages = Math.ceil(totalOrders / ORDERS_PER_PAGE);
+  // const totalPages = Math.ceil(totalOrders / ORDERS_PER_PAGE);
 
   const orderList: Order[] = orders.map((order) => ({
     id: order.id,

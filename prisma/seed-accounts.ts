@@ -13,41 +13,28 @@ const prisma = new PrismaClient({
 });
 
 async function main() {
-  const seedAdminPassword = process.env.SEED_ACCOUNTS_ADMIN_PASSWORD;
-  const seedManagerPassword = process.env.SEED_ACCOUNTS_MANAGER_PASSWORD;
+  const seedAdminPassword = process.env.SEED_ADMIN_PASSWORD;
 
-  if (!seedAdminPassword || !seedManagerPassword) {
+  if (!seedAdminPassword) {
     throw new Error(
       "SEED_ACCOUNTS_ADMIN_PASSWORD and SEED_ACCOUNTS_MANAGER_PASSWORD must be set",
     );
   }
 
   const adminPassword = await hash(seedAdminPassword, 10);
-  const managerPassword = await hash(seedManagerPassword, 10);
 
   await prisma.user.upsert({
-    where: { email: "mbaca130@gmail.com" },
+    where: { email: "martin.lapsa2@gmail.com" },
     update: { name: "Admin", password: adminPassword, role: "admin" },
     create: {
-      email: "mbaca130@gmail.com",
+      email: "martin.lapsa2@gmail.com",
       password: adminPassword,
       name: "Admin",
       role: "admin",
     },
   });
 
-  await prisma.user.upsert({
-    where: { email: "kcstestcustomizeit@gmail.com" },
-    update: { name: "Manager", password: managerPassword, role: "user" },
-    create: {
-      email: "kcstestcustomizeit@gmail.com",
-      password: managerPassword,
-      name: "Manager",
-      role: "user",
-    },
-  });
-
-  console.log("Seeded admin and manager accounts.");
+  console.log("Seeded admin account.");
 }
 
 main()

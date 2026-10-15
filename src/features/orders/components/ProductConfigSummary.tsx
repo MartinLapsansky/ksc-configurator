@@ -68,6 +68,7 @@ function PickerValue({
 
     case "imageUpload": {
       const imageUrl = typeof value === "string" ? value : undefined;
+      console.log("Uploaded image URL:", imageUrl);
       return <LogoPreview label={picker.label} src={imageUrl}/>;
     }
 

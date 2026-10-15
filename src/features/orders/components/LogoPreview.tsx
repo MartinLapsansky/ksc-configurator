@@ -30,6 +30,9 @@ export default function LogoPreview({
   const [failed, setFailed] = useState(false);
 
   const usable = isUsableSrc(src) && !failed;
+  const downloadHref = src
+      ? `/api/download-image?url=${encodeURIComponent(src)}`
+      : undefined;
 
   if (!src || !usable) {
     return (
@@ -65,7 +68,7 @@ export default function LogoPreview({
             Open
           </a>
           <a
-            href={src}
+            href={downloadHref}
             download
             className="text-sm font-medium text-blue-600 hover:underline"
           >
