@@ -103,6 +103,7 @@ export default function EnquirePage() {
                     name="firstName"
                     type="text"
                     required
+                    lang="en"
                     value={form.firstName}
                     onChange={handleChange}
                     className={inputClass}
@@ -117,6 +118,7 @@ export default function EnquirePage() {
                     id="lastName"
                     name="lastName"
                     type="text"
+                    lang="en"
                     required
                     value={form.lastName}
                     onChange={handleChange}
@@ -136,6 +138,7 @@ export default function EnquirePage() {
                     id="county"
                     name="county"
                     required
+                    lang="en"
                     value={form.county}
                     onChange={handleChange}
                     className={inputClass}
@@ -177,6 +180,7 @@ export default function EnquirePage() {
                     id="phoneCountryCode"
                     name="phoneCountryCode"
                     required
+                    lang="en"
                     value={form.phoneCountryCode}
                     onChange={handleChange}
                     className={inputClass}
@@ -198,6 +202,7 @@ export default function EnquirePage() {
                     name="phoneNumber"
                     type="tel"
                     required
+                    lang="en"
                     value={form.phoneNumber}
                     onChange={handleChange}
                     className={inputClass}
@@ -216,6 +221,7 @@ export default function EnquirePage() {
                   name="email"
                   type="email"
                   required
+                  lang="en"
                   value={form.email}
                   onChange={handleChange}
                   className={inputClass}

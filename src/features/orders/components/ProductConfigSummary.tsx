@@ -66,13 +66,10 @@ function PickerValue({
     case "melange":
       return <ColorChip label={picker.label} color={value as never} />;
 
-    case "imageUpload":
-      return (
-        <LogoPreview
-          label={picker.label}
-          src={typeof value === "string" ? value : undefined}
-        />
-      );
+    case "imageUpload": {
+      const imageUrl = typeof value === "string" ? value : undefined;
+      return <LogoPreview label={picker.label} src={imageUrl}/>;
+    }
 
     case "staticLogo": {
       const logo = value as { name?: string; src?: string } | undefined;
