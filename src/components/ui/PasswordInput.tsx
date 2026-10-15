@@ -7,7 +7,7 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 type PasswordInputProps = {
   id: string;
   value: string;
-  onChange: (value: string) => void;
+  onChangeAction: (value: string) => void;
   required?: boolean;
   className?: string;
 };
@@ -15,7 +15,7 @@ type PasswordInputProps = {
 export default function PasswordInput({
   id,
   value,
-  onChange,
+  onChangeAction,
   required,
   className,
 }: PasswordInputProps) {
@@ -27,7 +27,7 @@ export default function PasswordInput({
         type={visible ? "text" : "password"}
         id={id}
         value={value}
-        onChange={(event) => onChange(event.target.value)}
+        onChange={(event) => onChangeAction(event.target.value)}
         required={required}
         className={`mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 pr-10 text-black shadow-sm outline-none transition focus:ring-2 focus:ring-(--highlight) ${className ?? ""}`}
       />
@@ -37,7 +37,7 @@ export default function PasswordInput({
         aria-label={visible ? "Hide password" : "Show password"}
         className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center p-1 text-gray-500 transition-colors hover:text-black"
       >
-        <FontAwesomeIcon icon={visible ? faEyeSlash : faEye} />
+        <FontAwesomeIcon icon={visible ? faEye : faEyeSlash } />
       </button>
     </div>
   );

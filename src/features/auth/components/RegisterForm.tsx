@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { registerWithInvitation } from "@/features/auth/actions/registerWithInvitation";
 import PasswordInput from "@/components/ui/PasswordInput";
+import validatePassword, {validateEmail} from "@/features/auth/utils/validateCredentials";
 
 type RegisterFormProps = {
   email: string;
@@ -22,6 +23,27 @@ export default function RegisterForm({ email, token }: RegisterFormProps) {
     e.preventDefault();
     setError("");
     setIsLoading(true);
+
+    const passwordError = validatePassword(password);
+    const validEmail = validateEmail(email);
+
+    if (passwordError) {
+      setError(passwordError);
+      setIsLoading(false);
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!validEmail) {
+      setError("Invalid email address.");
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const result = await registerWithInvitation({
@@ -82,7 +104,7 @@ export default function RegisterForm({ email, token }: RegisterFormProps) {
             <PasswordInput
               id="password"
               value={password}
-              onChange={setPassword}
+              onChangeAction={setPassword}
               required
               className=""
             />
@@ -102,7 +124,7 @@ export default function RegisterForm({ email, token }: RegisterFormProps) {
             <PasswordInput
               id="confirmPassword"
               value={confirmPassword}
-              onChange={setConfirmPassword}
+              onChangeAction={setConfirmPassword}
               required
               className=""
             />

@@ -7,10 +7,31 @@ import OrdersFilters from "@/features/orders/components/OrdersFilters";
 import { buildOrdersWhere } from "@/features/orders/utils/buildOrdersWhere";
 import type { OrderRole } from "@/features/orders/utils/scopeOrders";
 import type { Order, ProductConfig } from "@/types/preview";
+import Link from "next/link";
 
 type OrdersPageProps = {
-  searchParams: Promise<{ from?: string; status?: string }>;
+  searchParams: Promise<{ from?: string; status?: string; page?: string }>;
 };
+
+const ORDERS_PER_PAGE = 10;
+
+function buildPaginationHref({
+    page, from, status
+}: {page: number; from?: string; status?: string}) {
+  const params = new URLSearchParams();
+  params.set("page", page.toString());
+
+  if (from) {
+    params.set("from", from);
+  }
+
+  if (status) {
+    params.set("status", status);
+  }
+
+  return `/orders?${params.toString()}`;
+}
+
 
 export default async function OrdersPage({ searchParams }: OrdersPageProps) {
   const session = await getServerSession(authOptions);
@@ -28,18 +49,31 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
     redirect("/auth/signin");
   }
 
-  const { from, status } = await searchParams;
+  const { from, status, page } = await searchParams;
 
-  const orders = await prisma.order.findMany({
-    where: buildOrdersWhere({
-      role: user.role as OrderRole,
-      counties: user.counties,
-      from,
-      status,
-    }),
-    orderBy: { createdAt: "desc" },
-    include: { items: true },
+
+  const currentPage = Math.max(Number(page) || 1, 1);
+  const skip = (currentPage - 1) * ORDERS_PER_PAGE;
+
+  const where = buildOrdersWhere({
+    role: user.role as OrderRole,
+    counties: user.counties,
+    from,
+    status,
   });
+
+  const [orders, totalOrders] = await prisma.$transaction([
+      prisma.order.findMany({
+        where,
+        orderBy: {createdAt: "desc"},
+        skip,
+        take: ORDERS_PER_PAGE,
+        include: {items: true}
+      }),
+      prisma.order.count({where}),
+  ])
+
+  const totalPages = Math.ceil(totalOrders / ORDERS_PER_PAGE);
 
   const orderList: Order[] = orders.map((order) => ({
     id: order.id,
@@ -79,6 +113,19 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
             orderList.map((order) => <OrderCard key={order.id} order={order} />)
           )}
         </div>
+        {totalPages > 1 && (
+            <Link
+                href={buildPaginationHref({
+                  page: currentPage - 1,
+                  from,
+                  status,
+                })}
+                className="rounded-md border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Previous
+            </Link>
+        )
+        }
       </div>
     </main>
   );
