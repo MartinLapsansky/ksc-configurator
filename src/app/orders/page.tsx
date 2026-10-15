@@ -113,7 +113,7 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
             orderList.map((order) => <OrderCard key={order.id} order={order} />)
           )}
         </div>
-        {totalPages > 1 && (
+        {currentPage > 1 && (
             <Link
                 href={buildPaginationHref({
                   page: currentPage - 1,
