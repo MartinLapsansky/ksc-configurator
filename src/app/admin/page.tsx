@@ -13,7 +13,14 @@ export default async function AdminDashboardPage() {
     }),
     prisma.product.findMany({
       orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
-      include: {
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        active: true,
+        hasBackView: true,
+        coverImageUrl: true,
+        frontImageUrl: true,
         category: { select: { id: true, name: true, slug: true } },
       },
     }),

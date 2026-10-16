@@ -1,14 +1,15 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   filterCatalog,
   type AdminCategory,
   type AdminProduct,
   type CatalogFilterType,
 } from "@/features/admin/utils/filterCatalog";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const TYPE_OPTIONS: { value: CatalogFilterType; label: string }[] = [
   { value: "all", label: "All" },
@@ -26,13 +27,41 @@ export default function AdminDashboard({
   const [query, setQuery] = useState("");
   const [filterType, setFilterType] = useState<CatalogFilterType>("all");
   const [pendingIds, setPendingIds] = useState<Set<string>>(new Set());
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
+    null,
+  );
+  const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
+  const categoryDropdownRef = useRef<HTMLDivElement | null>(null);
 
   const router = useRouter();
 
   const { categories: visibleCategories, products: visibleProducts } = useMemo(
-    () => filterCatalog(query, filterType, categories, products),
-    [query, filterType, categories, products],
+    () =>
+      filterCatalog(
+        query,
+        filterType,
+        categories,
+        products,
+        selectedCategoryId,
+      ),
+    [query, filterType, categories, products, selectedCategoryId],
   );
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        categoryDropdownRef.current &&
+        !categoryDropdownRef.current.contains(event.target as Node)
+      ) {
+        setCategoryDropdownOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+
 
 
   const handleActiveStatus = async (kind: "category" | "product", id: string, active: boolean) => {
@@ -216,9 +245,83 @@ export default function AdminDashboard({
                 <table className="w-full min-w-160 text-left text-sm">
                   <thead className="bg-gray-50 text-gray-500">
                     <tr>
+                      <th className="px-4 py-2 font-medium">Preview</th>
                       <th className="px-4 py-2 font-medium">Name</th>
                       <th className="px-4 py-2 font-medium">Slug</th>
-                      <th className="px-4 py-2 font-medium">Category</th>
+                      <th className="px-4 py-2 font-medium">
+                        <div ref={categoryDropdownRef} className="relative">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setCategoryDropdownOpen((open) => !open)
+                            }
+                            className="inline-flex items-center gap-1 rounded hover:text-black focus:outline-none"
+                          >
+                            Category
+                            <svg
+                              className="h-3 w-3"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              aria-hidden="true"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="m19 9-7 7-7-7"
+                              />
+                            </svg>
+                          </button>
+
+                          {categoryDropdownOpen && (
+                            <div className="absolute left-0 top-full z-20 mt-1 w-56 overflow-hidden rounded-md border border-gray-200 bg-white shadow-lg">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedCategoryId(null);
+                                  setCategoryDropdownOpen(false);
+                                }}
+                                className={
+                                  "block w-full px-3 py-2 text-left text-sm hover:bg-gray-50 " +
+                                  (selectedCategoryId === null
+                                    ? "bg-gray-50 font-semibold text-black"
+                                    : "text-gray-700")
+                                }
+                              >
+                                All categories
+                              </button>
+
+                              {categories.map((category) => {
+                                const label = category.parent?.name
+                                  ? `${category.parent.name} / ${category.name}`
+                                  : category.name;
+                                const isSelected =
+                                  category.id === selectedCategoryId;
+
+                                return (
+                                  <button
+                                    key={category.id}
+                                    type="button"
+                                    onClick={() => {
+                                      setSelectedCategoryId(category.id);
+                                      setCategoryDropdownOpen(false);
+                                    }}
+                                    className={
+                                      "block w-full px-3 py-2 text-left text-sm hover:bg-gray-50 " +
+                                      (isSelected
+                                        ? "bg-gray-50 font-semibold text-black"
+                                        : "text-gray-700")
+                                    }
+                                  >
+                                    {label}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      </th>
                       <th className="px-4 py-2 font-medium">Back view</th>
                       <th className="px-4 py-2 font-medium">Status</th>
                     </tr>
@@ -226,6 +329,21 @@ export default function AdminDashboard({
                   <tbody className="divide-y divide-gray-100">
                     {visibleProducts.map((product) => (
                       <tr key={product.id} className="text-gray-700">
+                        <td className="px-4 py-2">
+                          {product.coverImageUrl || product.frontImageUrl ? (
+                            <Image
+                              src={product.coverImageUrl ?? product.frontImageUrl ?? ""}
+                              alt={product.name}
+                              width={48}
+                              height={48}
+                              className="h-12 w-12 rounded-md border border-gray-200 object-cover"
+                            />
+                          ) : (
+                            <div className="flex h-12 w-12 items-center justify-center rounded-md border border-gray-200 bg-gray-50 text-xs text-gray-400">
+                              —
+                            </div>
+                          )}
+                        </td>
                         <td className="px-4 py-2">
                           <Link
                             href={`/admin/products/${product.id}`}

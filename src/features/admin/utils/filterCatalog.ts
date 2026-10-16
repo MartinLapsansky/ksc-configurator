@@ -13,6 +13,8 @@ export type AdminProduct = {
   slug: string;
   active: boolean;
   hasBackView: boolean;
+  coverImageUrl?: string | null;
+  frontImageUrl?: string | null;
   category?: { id: string; name: string; slug: string } | null;
 };
 
@@ -23,6 +25,7 @@ export function filterCatalog(
   filterType: CatalogFilterType,
   categories: AdminCategory[],
   products: AdminProduct[],
+  categoryId?: string | null,
 ): { categories: AdminCategory[]; products: AdminProduct[] } {
 
   const normalizedQuery = query.trim().toLowerCase();
@@ -35,6 +38,9 @@ export function filterCatalog(
         value.toLowerCase().includes(normalizedQuery),
     );
 
+  const matchesCategory = (product: AdminProduct) =>
+    !categoryId || product.category?.id === categoryId;
+
   const filteredCategories =
     filterType === "products"
       ? []
@@ -45,8 +51,10 @@ export function filterCatalog(
   const filteredProducts =
     filterType === "categories"
       ? []
-      : products.filter((product) =>
-          matchesQuery(product.name, product.slug, product.category?.name),
+      : products.filter(
+          (product) =>
+            matchesQuery(product.name, product.slug, product.category?.name) &&
+            matchesCategory(product),
         );
 
   return { categories: filteredCategories, products: filteredProducts };

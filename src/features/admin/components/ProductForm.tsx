@@ -190,7 +190,7 @@ export default function ProductForm({ categories, initial }: ProductFormProps) {
     "mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-black focus:border-black focus:outline-none focus:ring-1 focus:ring-black";
 
   return (
-    <form onSubmit={handleSubmit} className="grid gap-6 lg:grid-cols-2">
+    <form onSubmit={handleSubmit} className="grid items-start gap-6 lg:grid-cols-2">
       <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-6">
         <h2 className="text-lg font-bold text-black text-center">
           {initial ? "Edit product" : "New product"}
@@ -321,7 +321,7 @@ export default function ProductForm({ categories, initial }: ProductFormProps) {
 
       </div>
 
-      <div>
+      <div className="lg:sticky lg:top-8 lg:max-h-[calc(100vh-4rem)] lg:overflow-y-auto">
         <div className="mb-3 flex items-center justify-between"></div>
         <h2 className="mb-3 text-lg font-bold text-black">Live preview</h2>
         {previewProduct ? (
