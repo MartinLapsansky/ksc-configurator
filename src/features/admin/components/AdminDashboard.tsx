@@ -292,7 +292,9 @@ export default function AdminDashboard({
                                 All categories
                               </button>
 
-                              {categories.map((category) => {
+                              {categories
+                                .filter((category) => category.parent)
+                                .map((category) => {
                                 const label = category.parent?.name
                                   ? `${category.parent.name} / ${category.name}`
                                   : category.name;
