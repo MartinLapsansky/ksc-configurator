@@ -112,6 +112,7 @@ const jerseyDefinition = {
       label: "Front Sponsor Text",
       view: "front",
       position: { x: 0.49, y: 0.54 },
+      areaMaskUrl: jerseyLayer("sponsor-logo-layer.png"),
       colorOptions: [
         { id: "front-text-black", name: "Black", hex: "#000000" },
         { id: "front-text-gold", name: "Gold", hex: "#F4C531" },
@@ -139,6 +140,7 @@ const jerseyDefinition = {
       label: "Back Sponsor Text",
       view: "back",
       position: { x: 0.49, y: 0.54 },
+      areaMaskUrl: jerseyLayer("back-sponsor-logo-layer.png"),
       colorOptions: [
         { id: "back-text-black", name: "Black", hex: "#000000" },
         { id: "back-text-gold", name: "Gold", hex: "#F4C531" },

@@ -123,6 +123,12 @@ const textPickerDefSchema = z.object({
     .optional(),
   /** Which view the text is rendered on. Defaults to "front". */
   view: z.enum(["front", "back"]).optional(),
+  /**
+   * URL of an alpha-mask image describing the printable area. When set, text
+   * is centered inside that area (and clamped to it) instead of using
+   * `position`.
+   */
+  areaMaskUrl: z.string().optional(),
 });
 
 export const pickerDefSchema = z.discriminatedUnion("type", [

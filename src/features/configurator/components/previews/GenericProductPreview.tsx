@@ -59,7 +59,13 @@ const GenericProductPreview: React.FC<GenericProductPreviewProps> = ({
                     const position = picker.position ?? { x: 0.49, y: 0.54 };
 
                     return (
-                        <TextOverlay key={picker.key} text={value.text} colorHex={value.color?.hex ?? '#000000'} position={position}/>
+                        <TextOverlay
+                            key={picker.key}
+                            text={value.text}
+                            colorHex={value.color?.hex ?? '#000000'}
+                            position={position}
+                            areaSrc={picker.areaMaskUrl}
+                        />
                     )
             })
     }, [definition.pickers, values, isBackView])

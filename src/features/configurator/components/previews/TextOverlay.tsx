@@ -1,28 +1,50 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { useProductCanvasContext } from "@/contexts/ProductCanvasContext";
+import {
+  getImageAlphaBounds,
+  type ImageAlphaBounds,
+} from "@/lib/previewHelpers";
 
 type TextOverlayProps = {
   text: string;
   colorHex: string;
   /** Percentage position (0..1) within the drawn product image. */
   position: { x: number; y: number };
+  /**
+   * URL of an alpha-mask image describing the printable area. When provided,
+   * the text is centered inside that area (and clamped so it never overflows
+   * it). When omitted, `position` is used directly.
+   */
+  areaSrc?: string;
 };
 
+type Pos = { left: number; top: number };
+
 /**
- * Renders customer-provided text over the product preview at a configurable
- * percentage position. Used by the data-driven configurator for any text picker.
+ * Renders customer-provided text over the product preview. If an `areaSrc`
+ * mask is given, the text is positioned from the mask's opaque bounds rather
+ * than the raw percentage point.
  */
 const TextOverlay: React.FC<TextOverlayProps> = ({
   text,
   colorHex,
   position,
+  areaSrc,
 }) => {
   const { containerRef, bgImageRef } = useProductCanvasContext();
-  const [pos, setPos] = useState<{ left: number; top: number } | null>(null);
+  const textRef = useRef<HTMLDivElement | null>(null);
+  const areaBoundsRef = useRef<ImageAlphaBounds | null>(null);
+  const [pos, setPos] = useState<Pos | null>(null);
 
-  const recalc = useCallback(() => {
+  const measure = useCallback(() => {
     const container = containerRef.current;
     const bgImg = bgImageRef.current;
     if (!container || !bgImg || !bgImg.naturalWidth || !bgImg.naturalHeight) {
@@ -30,48 +52,127 @@ const TextOverlay: React.FC<TextOverlayProps> = ({
     }
 
     const rect = container.getBoundingClientRect();
-    const w = rect.width;
-    const h = rect.height;
-    const iw = bgImg.naturalWidth;
-    const ih = bgImg.naturalHeight;
-    const s = Math.min(w / iw, h / ih);
-    const drawnWidth = iw * s;
-    const drawnHeight = ih * s;
-    const offsetX = (w - drawnWidth) / 2;
-    const offsetY = (h - drawnHeight) / 2;
+    if (rect.width <= 0 || rect.height <= 0) return;
 
-    const xPx = offsetX + position.x * drawnWidth;
-    const yPx = offsetY + position.y * drawnHeight;
+    const scale = Math.min(
+      rect.width / bgImg.naturalWidth,
+      rect.height / bgImg.naturalHeight,
+    );
+    const drawnWidth = bgImg.naturalWidth * scale;
+    const drawnHeight = bgImg.naturalHeight * scale;
+    const offsetX = (rect.width - drawnWidth) / 2;
+    const offsetY = (rect.height - drawnHeight) / 2;
+
+    let centerX: number;
+    let centerY: number;
+
+    const area = areaBoundsRef.current;
+    if (area) {
+      const areaX = offsetX + area.left * drawnWidth;
+      const areaY = offsetY + area.top * drawnHeight;
+      const areaW = area.width * drawnWidth;
+      const areaH = area.height * drawnHeight;
+
+      const textEl = textRef.current;
+      const textW = textEl?.offsetWidth ?? 0;
+      const textH = textEl?.offsetHeight ?? 0;
+
+      const minX = areaX + textW / 2;
+      const maxX = areaX + areaW - textW / 2;
+      const minY = areaY + textH / 2;
+      const maxY = areaY + areaH - textH / 2;
+
+      const rawCenterX = areaX + areaW / 2;
+      const rawCenterY = areaY + areaH / 2;
+
+      centerX =
+        maxX >= minX
+          ? Math.min(Math.max(rawCenterX, minX), maxX)
+          : rawCenterX;
+      centerY =
+        maxY >= minY
+          ? Math.min(Math.max(rawCenterY, minY), maxY)
+          : rawCenterY;
+    } else {
+      centerX = offsetX + position.x * drawnWidth;
+      centerY = offsetY + position.y * drawnHeight;
+    }
 
     setPos({
-      left: (xPx / w) * 100,
-      top: (yPx / h) * 100,
+      left: (centerX / rect.width) * 100,
+      top: (centerY / rect.height) * 100,
     });
   }, [containerRef, bgImageRef, position.x, position.y]);
 
+  // Load and measure the optional area mask. Reads are done in async callbacks
+  // (or a rAF) so no state is updated synchronously in the effect body.
   useEffect(() => {
-    recalc();
-    window.addEventListener("resize", recalc);
-    return () => window.removeEventListener("resize", recalc);
-  }, [recalc]);
+    if (!areaSrc) {
+      areaBoundsRef.current = null;
+      const rafId = requestAnimationFrame(measure);
+      return () => cancelAnimationFrame(rafId);
+    }
 
+    let cancelled = false;
+    const img = document.createElement("img");
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      if (cancelled) return;
+      areaBoundsRef.current = getImageAlphaBounds(img) ?? null;
+      requestAnimationFrame(measure);
+    };
+    img.onerror = () => {
+      if (cancelled) return;
+      areaBoundsRef.current = null;
+      requestAnimationFrame(measure);
+    };
+    img.src = areaSrc;
+
+    return () => {
+      cancelled = true;
+    };
+  }, [areaSrc, measure]);
+
+  // Initial measurement + resize handling.
+  useEffect(() => {
+    let rafId = requestAnimationFrame(measure);
+    const onResize = () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(measure);
+    };
+    window.addEventListener("resize", onResize);
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [measure]);
+
+  // Re-measure once the background image finishes decoding.
   useEffect(() => {
     const bgImg = bgImageRef.current;
-    if (bgImg) {
-      bgImg.addEventListener("load", recalc);
-      return () => bgImg.removeEventListener("load", recalc);
-    }
-  }, [bgImageRef, recalc]);
+    if (!bgImg) return;
+    const onLoad = () => requestAnimationFrame(measure);
+    bgImg.addEventListener("load", onLoad);
+    return () => bgImg.removeEventListener("load", onLoad);
+  }, [bgImageRef, measure]);
 
-  if (!pos || !text) return null;
+  // Re-measure when the text changes so the clamp uses the new text size.
+  useLayoutEffect(() => {
+    const rafId = requestAnimationFrame(measure);
+    return () => cancelAnimationFrame(rafId);
+  }, [measure, text]);
+
+  if (!text) return null;
 
   return (
     <div
+      ref={textRef}
       className="pointer-events-none absolute text-xl font-extrabold tracking-widest -translate-x-1/2 -translate-y-1/2"
       style={{
         color: colorHex,
-        left: `${pos.left}%`,
-        top: `${pos.top}%`,
+        left: `${pos?.left ?? 0}%`,
+        top: `${pos?.top ?? 0}%`,
+        visibility: pos ? "visible" : "hidden",
       }}
     >
       {text}

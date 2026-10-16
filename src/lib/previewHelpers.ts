@@ -1,3 +1,65 @@
+export type ImageAlphaBounds = {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+};
+
+/**
+ * Computes the opaque (alpha) bounding box of `img` as fractions of its
+ * natural dimensions. Used to derive a printable text area from a layer mask.
+ * Returns `undefined` when the image has no visible pixels.
+ */
+export const getImageAlphaBounds = (
+  img: HTMLImageElement,
+): ImageAlphaBounds | undefined => {
+  const iw = img.naturalWidth;
+  const ih = img.naturalHeight;
+  if (!iw || !ih) return undefined;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = iw;
+  canvas.height = ih;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return undefined;
+
+  ctx.drawImage(img, 0, 0, iw, ih);
+
+  let imageData: ImageData;
+  try {
+    imageData = ctx.getImageData(0, 0, iw, ih);
+  } catch {
+    return undefined;
+  }
+
+  const pixels = imageData.data;
+  let minX = iw;
+  let minY = ih;
+  let maxX = -1;
+  let maxY = -1;
+
+  for (let y = 0; y < ih; y++) {
+    for (let x = 0; x < iw; x++) {
+      const alpha = pixels[(y * iw + x) * 4 + 3];
+      if (alpha > 10) {
+        if (x < minX) minX = x;
+        if (x > maxX) maxX = x;
+        if (y < minY) minY = y;
+        if (y > maxY) maxY = y;
+      }
+    }
+  }
+
+  if (maxX < minX || maxY < minY) return undefined;
+
+  return {
+    left: minX / iw,
+    top: minY / ih,
+    width: (maxX - minX + 1) / iw,
+    height: (maxY - minY + 1) / ih,
+  };
+};
+
 type DrawFittedParams = {
   targetCtx: CanvasRenderingContext2D;
   img: HTMLImageElement;
