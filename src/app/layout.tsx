@@ -1,18 +1,13 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Roboto_Condensed } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "@/components/layout/AuthProvider";
 import { CartProvider } from "@/contexts/CartContext";
 import BagDrawer from "@/components/shared/BagDrawer";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const robotoCondensed = Roboto_Condensed({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["400", "500", "700"],
 });
 
 export const metadata: Metadata = {
@@ -28,7 +23,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${robotoCondensed.className} h-full antialiased`}
     >
       <body>
         <AuthProvider>

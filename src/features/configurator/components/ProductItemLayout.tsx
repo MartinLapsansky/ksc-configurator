@@ -58,7 +58,7 @@ const ProductItemLayout: React.FC<ProductItemLayoutProps> = ({
   return (
     <div className="flex min-h-150 flex-col gap-6 rounded-lg border border-gray-200 bg-gray-50 p-4 md:flex-row md:h-[90vh] mx-auto">
       <div className="flex flex-col">
-        <h1 className="flex mb-1 text-lg text-black font-semibold">{title}</h1>
+        <h1 className="flex mb-5 text-2xl text-black font-semibold">{title}</h1>
 
         <aside
           ref={scrollRef}
