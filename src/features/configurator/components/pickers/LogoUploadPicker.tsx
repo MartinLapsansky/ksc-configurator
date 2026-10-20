@@ -20,9 +20,6 @@ const LogoUploadPicker: React.FC<LogoUploadPickerProps> = ({
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Track blob URLs created by this component so we can revoke them when they
-  // are no longer needed. Without revoking, every upload leaks the full image
-  // into memory, which on mobile quickly causes "page crashed".
   const createdBlobUrls = useRef<Set<string>>(new Set());
 
   const revokeBlobUrl = useCallback((url?: string) => {
@@ -33,8 +30,6 @@ const LogoUploadPicker: React.FC<LogoUploadPickerProps> = ({
     }
   }, []);
 
-  // Revoke any blob URLs this component created when it unmounts, so memory is
-  // released when navigating between categories/pages.
   useEffect(() => {
     const blobUrls = createdBlobUrls.current;
     return () => {
@@ -55,9 +50,6 @@ const LogoUploadPicker: React.FC<LogoUploadPickerProps> = ({
       setUploading(true);
 
       try {
-        // Upload the file to the server (Vercel Blob) so we get a persistent
-        // URL that works across sessions/reloads. A local blob: URL would only
-        // be valid in the current browser session and would break on /orders.
         const formData = new FormData();
         formData.append("file", file);
 
@@ -86,7 +78,6 @@ const LogoUploadPicker: React.FC<LogoUploadPickerProps> = ({
   );
 
   const handleClear = () => {
-    // Revoke the current blob URL (if we created it) before clearing.
     revokeBlobUrl(imageUrl);
     onImageChange(undefined);
   };
