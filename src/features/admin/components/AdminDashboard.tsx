@@ -1,15 +1,17 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  filterCatalog,
-  type AdminCategory,
-  type AdminProduct,
-  type CatalogFilterType,
-} from "@/features/admin/utils/filterCatalog";
 import { useRouter } from "next/navigation";
+import { useDebounce } from "@/hooks/useDebounce";
+import { buildAdminHref } from "@/features/admin/utils/buildAdminHref";
+import type {
+  AdminCategory,
+  AdminProduct,
+  CatalogFilterType,
+  CategoryOption,
+} from "@/features/admin/types";
 
 const TYPE_OPTIONS: { value: CatalogFilterType; label: string }[] = [
   { value: "all", label: "All" },
@@ -17,35 +19,57 @@ const TYPE_OPTIONS: { value: CatalogFilterType; label: string }[] = [
   { value: "products", label: "Products" },
 ];
 
+type AdminDashboardProps = {
+  categories: AdminCategory[];
+  products: AdminProduct[];
+  categoryOptions: CategoryOption[];
+  filterType: CatalogFilterType;
+  query: string;
+  categoryId: string;
+  currentPage: number;
+  categoryTotalPages: number;
+  productTotalPages: number;
+  showCategories: boolean;
+  showProducts: boolean;
+};
+
 export default function AdminDashboard({
   categories,
   products,
-}: {
-  categories: AdminCategory[];
-  products: AdminProduct[];
-}) {
-  const [query, setQuery] = useState("");
-  const [filterType, setFilterType] = useState<CatalogFilterType>("all");
+  categoryOptions,
+  filterType,
+  query,
+  categoryId,
+  currentPage,
+  categoryTotalPages,
+  productTotalPages,
+  showCategories,
+  showProducts,
+}: AdminDashboardProps) {
+  const router = useRouter();
+  const [queryInput, setQueryInput] = useState(query);
   const [pendingIds, setPendingIds] = useState<Set<string>>(new Set());
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
-    null,
-  );
   const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
   const categoryDropdownRef = useRef<HTMLDivElement | null>(null);
 
-  const router = useRouter();
+  const debouncedQuery = useDebounce(queryInput, 300);
+  const latestParams = useRef({ filterType, categoryId, query });
+  latestParams.current = { filterType, categoryId, query };
 
-  const { categories: visibleCategories, products: visibleProducts } = useMemo(
-    () =>
-      filterCatalog(
-        query,
-        filterType,
-        categories,
-        products,
-        selectedCategoryId,
-      ),
-    [query, filterType, categories, products, selectedCategoryId],
-  );
+  useEffect(() => {
+    const normalized = debouncedQuery.trim();
+    const current = latestParams.current.query.trim();
+
+    if (normalized === current) return;
+
+    router.replace(
+      buildAdminHref({
+        type: latestParams.current.filterType,
+        q: normalized,
+        category: latestParams.current.categoryId,
+      }),
+    );
+  }, [debouncedQuery, router]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -61,14 +85,15 @@ export default function AdminDashboard({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-
-
-
-  const handleActiveStatus = async (kind: "category" | "product", id: string, active: boolean) => {
+  const handleActiveStatus = async (
+    kind: "category" | "product",
+    id: string,
+    active: boolean,
+  ) => {
     setPendingIds((prev) => new Set(prev).add(id));
     try {
-
-      const endpoint = kind === "category"
+      const endpoint =
+        kind === "category"
           ? `/api/admin/categories/${id}/status`
           : `/api/admin/products/${id}/status`;
 
@@ -80,25 +105,24 @@ export default function AdminDashboard({
         body: JSON.stringify({ active }),
       });
 
-      if(!res.ok){
+      if (!res.ok) {
         console.error("Update failed", await res.json().catch(() => null));
         return;
       }
 
       router.refresh();
-
-    } catch (error){
+    } catch (error) {
       console.error("Error updating active status:", error);
     } finally {
       setPendingIds((prev) => {
-        const next = new Set(prev)
-        next.delete(id)
+        const next = new Set(prev);
+        next.delete(id);
         return next;
       });
     }
   };
 
-  const hasResults = visibleCategories.length > 0 || visibleProducts.length > 0;
+  const hasResults = categories.length > 0 || products.length > 0;
 
   return (
     <div className="space-y-8">
@@ -121,28 +145,35 @@ export default function AdminDashboard({
           </svg>
           <input
             type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            value={queryInput}
+            onChange={(e) => setQueryInput(e.target.value)}
             placeholder="Search by name, slug or category…"
             className="w-full rounded-md border border-gray-200 py-2 pl-9 pr-3 text-sm text-black outline-none placeholder:text-gray-400 focus:border-black"
           />
         </label>
 
         <div className="flex gap-1 rounded-md bg-gray-100 p-1">
-          {TYPE_OPTIONS.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              onClick={() => setFilterType(option.value)}
-              className={
-                filterType === option.value
-                  ? "rounded bg-black px-3 py-1.5 text-sm font-semibold text-white"
-                  : "rounded px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-black"
-              }
-            >
-              {option.label}
-            </button>
-          ))}
+          {TYPE_OPTIONS.map((option) => {
+            const isActive = filterType === option.value;
+
+            return (
+              <Link
+                key={option.value}
+                href={buildAdminHref({
+                  type: option.value,
+                  q: query,
+                  category: categoryId,
+                })}
+                className={
+                  isActive
+                    ? "rounded bg-black px-3 py-1.5 text-sm font-semibold text-white"
+                    : "rounded px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-black"
+                }
+              >
+                {option.label}
+              </Link>
+            );
+          })}
         </div>
       </section>
 
@@ -152,7 +183,7 @@ export default function AdminDashboard({
         </div>
       ) : (
         <>
-          {(filterType === "all" || filterType === "categories") && (
+          {showCategories && (
             <section>
               <div className="mb-3 flex items-center justify-between">
                 <h2 className="text-xl font-bold text-black">Categories</h2>
@@ -177,7 +208,7 @@ export default function AdminDashboard({
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
-                    {visibleCategories.map((category) => (
+                    {categories.map((category) => (
                       <tr key={category.id} className="text-gray-700">
                         <td className="px-4 py-2">
                           <Link
@@ -199,37 +230,74 @@ export default function AdminDashboard({
                         <td className="px-4 py-2">
                           {category._count?.products ?? 0}
                         </td>
-
-
-
                         <td className="px-4 py-2">
                           <select
-                            value = {category.active ? "true" : "false"}
+                            value={category.active ? "true" : "false"}
                             onChange={(e) => {
                               handleActiveStatus(
-                                  "category",
-                                  category.id,
-                                  e.target.value === "true",
-                              )
-                          }}
+                                "category",
+                                category.id,
+                                e.target.value === "true",
+                              );
+                            }}
                             disabled={pendingIds.has(category.id)}
                             className="rounded-md border border-gray-200 px-2 py-1 text-sm"
-                            >
+                          >
                             <option value="true">Active</option>
                             <option value="false">Inactive</option>
                           </select>
                         </td>
-
-
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
+
+              <div className="mt-3 flex items-center justify-end gap-2">
+                {currentPage > 1 ? (
+                  <Link
+                    href={buildAdminHref({
+                      type: filterType,
+                      q: query,
+                      category: categoryId,
+                      page: currentPage - 1,
+                    })}
+                    className="rounded-md border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  >
+                    Previous
+                  </Link>
+                ) : (
+                  <span className="rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-400">
+                    Previous
+                  </span>
+                )}
+
+                <span className="text-sm text-gray-600">
+                  Page {currentPage} of {categoryTotalPages || 1}
+                </span>
+
+                {currentPage < categoryTotalPages ? (
+                  <Link
+                    href={buildAdminHref({
+                      type: filterType,
+                      q: query,
+                      category: categoryId,
+                      page: currentPage + 1,
+                    })}
+                    className="rounded-md border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  >
+                    Next
+                  </Link>
+                ) : (
+                  <span className="rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-400">
+                    Next
+                  </span>
+                )}
+              </div>
             </section>
           )}
 
-          {(filterType === "all" || filterType === "products") && (
+          {showProducts && (
             <section>
               <div className="mb-3 flex items-center justify-between">
                 <h2 className="text-xl font-bold text-black">Products</h2>
@@ -279,12 +347,17 @@ export default function AdminDashboard({
                               <button
                                 type="button"
                                 onClick={() => {
-                                  setSelectedCategoryId(null);
+                                  router.replace(
+                                    buildAdminHref({
+                                      type: filterType,
+                                      q: query,
+                                    }),
+                                  );
                                   setCategoryDropdownOpen(false);
                                 }}
                                 className={
                                   "block w-full px-3 py-2 text-left text-sm hover:bg-gray-50 " +
-                                  (selectedCategoryId === null
+                                  (categoryId === ""
                                     ? "bg-gray-50 font-semibold text-black"
                                     : "text-gray-700")
                                 }
@@ -292,21 +365,24 @@ export default function AdminDashboard({
                                 All categories
                               </button>
 
-                              {categories
-                                .filter((category) => category.parent)
-                                .map((category) => {
-                                const label = category.parent?.name
-                                  ? `${category.parent.name} / ${category.name}`
-                                  : category.name;
-                                const isSelected =
-                                  category.id === selectedCategoryId;
+                              {categoryOptions.map((option) => {
+                                const label = option.parentName
+                                  ? `${option.parentName} / ${option.name}`
+                                  : option.name;
+                                const isSelected = option.id === categoryId;
 
                                 return (
                                   <button
-                                    key={category.id}
+                                    key={option.id}
                                     type="button"
                                     onClick={() => {
-                                      setSelectedCategoryId(category.id);
+                                      router.replace(
+                                        buildAdminHref({
+                                          type: filterType,
+                                          q: query,
+                                          category: option.id,
+                                        }),
+                                      );
                                       setCategoryDropdownOpen(false);
                                     }}
                                     className={
@@ -329,12 +405,16 @@ export default function AdminDashboard({
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
-                    {visibleProducts.map((product) => (
+                    {products.map((product) => (
                       <tr key={product.id} className="text-gray-700">
                         <td className="px-4 py-2">
                           {product.coverImageUrl || product.frontImageUrl ? (
                             <Image
-                              src={product.coverImageUrl ?? product.frontImageUrl ?? ""}
+                              src={
+                                product.coverImageUrl ??
+                                product.frontImageUrl ??
+                                ""
+                              }
                               alt={product.name}
                               width={48}
                               height={48}
@@ -365,16 +445,16 @@ export default function AdminDashboard({
                         </td>
                         <td className="px-4 py-2">
                           <select
-                              value = {product.active ? "true" : "false"}
-                              onChange={(e) => {
-                                handleActiveStatus(
-                                    "product",
-                                    product.id,
-                                    e.target.value === "true",
-                                )
-                              }}
-                              disabled={pendingIds.has(product.id)}
-                              className="rounded-md border border-gray-200 px-2 py-1 text-sm"
+                            value={product.active ? "true" : "false"}
+                            onChange={(e) => {
+                              handleActiveStatus(
+                                "product",
+                                product.id,
+                                e.target.value === "true",
+                              );
+                            }}
+                            disabled={pendingIds.has(product.id)}
+                            className="rounded-md border border-gray-200 px-2 py-1 text-sm"
                           >
                             <option value="true">Active</option>
                             <option value="false">Inactive</option>
@@ -384,6 +464,48 @@ export default function AdminDashboard({
                     ))}
                   </tbody>
                 </table>
+              </div>
+
+              <div className="mt-3 flex items-center justify-end gap-2">
+                {currentPage > 1 ? (
+                  <Link
+                    href={buildAdminHref({
+                      type: filterType,
+                      q: query,
+                      category: categoryId,
+                      page: currentPage - 1,
+                    })}
+                    className="rounded-md border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  >
+                    Previous
+                  </Link>
+                ) : (
+                  <span className="rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-400">
+                    Previous
+                  </span>
+                )}
+
+                <span className="text-sm text-gray-600">
+                  Page {currentPage} of {productTotalPages || 1}
+                </span>
+
+                {currentPage < productTotalPages ? (
+                  <Link
+                    href={buildAdminHref({
+                      type: filterType,
+                      q: query,
+                      category: categoryId,
+                      page: currentPage + 1,
+                    })}
+                    className="rounded-md border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  >
+                    Next
+                  </Link>
+                ) : (
+                  <span className="rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-400">
+                    Next
+                  </span>
+                )}
               </div>
             </section>
           )}
