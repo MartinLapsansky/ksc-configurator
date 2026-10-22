@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { del } from "@vercel/blob";
 import { z } from "zod";
-import { requireAdmin } from "@/lib/adminAuth";
+import { requireAdmin } from "@/lib/auth/adminAuth";
 
 const deleteBlobSchema = z.object({
   url: z.string().min(1),

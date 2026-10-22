@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/adminAuth";
+import { requireAdmin } from "@/lib/auth/adminAuth";
 import { userCountiesSchema } from "@/app/api/admin/schemas";
 
 type Params = { params: Promise<{ id: string }> };

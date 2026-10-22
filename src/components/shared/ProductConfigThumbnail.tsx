@@ -5,7 +5,7 @@ import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBagShopping } from "@fortawesome/free-solid-svg-icons";
 import type { ProductConfig } from "@/types/preview";
-import { getThumbnail } from "@/lib/cart";
+import { getThumbnail } from "@/lib/cart/cart";
 import { ProductCanvas } from "@/components/ui/ProductCanvas";
 import { buildOverlaysFromDefinition } from "@/features/configurator/utils/buildOverlaysFromDefinition";
 import { resolveBaseImageSrc } from "@/features/configurator/utils/configurationValues";

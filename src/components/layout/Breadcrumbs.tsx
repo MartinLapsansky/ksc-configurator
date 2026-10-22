@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBagShopping, faClipboardList } from "@fortawesome/free-solid-svg-icons";
-import { getBreadcrumbItems } from "@/lib/breadcrumbs";
+import { getBreadcrumbItems } from "@/lib/navigation/breadcrumbs";
 import { useCart } from "@/contexts/CartContext";
 
 /**

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import type { Order, ProductConfig } from "@/types/preview";
-import { formatOrderNumber } from "@/lib/orderNumber";
+import { formatOrderNumber } from "@/lib/cart/orderNumber";
 import ProductConfigSummary from "./ProductConfigSummary";
 import OrderStatusBadge from "./OrderStatusBadge";
 import { updateOrderStatus } from "@/features/orders/actions/updateOrderStatus";

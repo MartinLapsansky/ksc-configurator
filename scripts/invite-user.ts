@@ -2,8 +2,8 @@ import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
 import "dotenv/config";
-import { generateInvitationToken, INVITATION_DEFAULT_EXPIRY_DAYS } from "@/lib/invitation";
-import { sendInvitationEmail } from "@/lib/email";
+import { generateInvitationToken, INVITATION_DEFAULT_EXPIRY_DAYS } from "@/lib/invitations/invitation";
+import { sendInvitationEmail } from "@/lib/email/email";
 
 const APP_URL = process.env.APP_URL ?? "https://customizeit.kcsports.ie";
 

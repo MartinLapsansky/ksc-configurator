@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/adminAuth";
+import { requireAdmin } from "@/lib/auth/adminAuth";
 import { categoryInputSchema } from "@/app/api/admin/schemas";
 import { CATALOG_CACHE_TAG } from "@/lib/catalog";
 

@@ -1,5 +1,5 @@
 import {NextRequest, NextResponse} from "next/server";
-import {requireAdmin} from "@/lib/adminAuth";
+import {requireAdmin} from "@/lib/auth/adminAuth";
 import {prisma} from "@/lib/prisma";
 import {revalidateTag} from "next/cache";
 import {CATALOG_CACHE_TAG} from "@/lib/catalog";

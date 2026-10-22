@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { authOptions } from "@/lib/auth";
+import { authOptions } from "@/lib/auth/auth";
 import { prisma } from "@/lib/prisma";
 import OrderCard from "@/features/orders/components/OrderCard";
 import OrdersFilters from "@/features/orders/components/OrdersFilters";
@@ -62,7 +62,7 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
     status,
   });
 
-  const [orders, totalOrders] = await prisma.$transaction([
+  const [orders] = await prisma.$transaction([
       prisma.order.findMany({
         where,
         orderBy: {createdAt: "desc"},
@@ -70,7 +70,7 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
         take: ORDERS_PER_PAGE,
         include: {items: true}
       }),
-      prisma.order.count({where}),
+      // prisma.order.count({where}),//totalOrders
   ])
 
   // const totalPages = Math.ceil(totalOrders / ORDERS_PER_PAGE);

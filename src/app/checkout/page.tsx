@@ -5,7 +5,7 @@ import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBagShopping, faMinus, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useCart } from "@/contexts/CartContext";
-import { getProductTypeLabel, getSelectedColorName } from "@/lib/cart";
+import { getProductTypeLabel, getSelectedColorName } from "@/lib/cart/cart";
 import ProductConfigThumbnail from "@/components/shared/ProductConfigThumbnail";
 
 export default function CheckoutPage() {

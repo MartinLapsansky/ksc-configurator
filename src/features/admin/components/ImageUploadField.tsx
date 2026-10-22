@@ -30,12 +30,12 @@ export default function ImageUploadField({
     setError(null);
 
     try {
-      const formData = new FormData();
-      formData.append("file", file);
+      const fileData = new FormData();
+      fileData.append("file", file);
 
       const res = await fetch("/api/upload", {
         method: "POST",
-        body: formData,
+        body: fileData,
       });
 
       if (!res.ok) {

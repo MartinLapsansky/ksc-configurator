@@ -1,4 +1,4 @@
-import { getBreadcrumbItems } from "@/lib/breadcrumbs";
+import { getBreadcrumbItems } from "@/lib/navigation/breadcrumbs";
 
 describe("getBreadcrumbItems", () => {
   it("returns only Home for the root path", () => {

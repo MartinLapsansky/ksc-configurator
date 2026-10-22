@@ -15,10 +15,8 @@ const prisma = new PrismaClient({
 // ── Asset URL helpers ──
 const jerseyBase = (file: string) => `/products/jerseys/base/${file}`;
 const jerseyLayer = (file: string) => `/products/jerseys/layers/${file}`;
-const crewFront = (file: string) =>
-  `/products/crewnecks/base/front/${file}`;
-const crewBack = (file: string) => `/products/crewnecks/base/back/${file}`;
-const crewLayer = (file: string) => `/products/crewnecks/layers/${file}`;
+// const crewFront = (file: string) =>
+//   `/products/crewnecks/base/front/${file}`;
 const zipBase = (file: string) => `/products/zip-tops/base/${file}`;
 const zipLayer = (file: string) => `/products/zip-tops/layers/${file}`;
 const logos = (file: string) => `/products/logos/${file}`;
@@ -385,24 +383,24 @@ async function main() {
     },
   });
 
-  const crewNecks = await prisma.category.upsert({
-    where: { slug: "crew-necks" },
-    update: {
-      name: "Crew necks",
-      parentId: leisurewear.id,
-      sortOrder: 1,
-      active: true,
-      coverImageUrl: crewFront("helios_crewneck_navy_royal_white.png"),
-    },
-    create: {
-      name: "Crew necks",
-      slug: "crew-necks",
-      parentId: leisurewear.id,
-      sortOrder: 1,
-      active: true,
-      coverImageUrl: crewFront("helios_crewneck_navy_royal_white.png"),
-    },
-  });
+  // const crewNecks = await prisma.category.upsert({
+  //   where: { slug: "crew-necks" },
+  //   update: {
+  //     name: "Crew necks",
+  //     parentId: leisurewear.id,
+  //     sortOrder: 1,
+  //     active: true,
+  //     coverImageUrl: crewFront("helios_crewneck_navy_royal_white.png"),
+  //   },
+  //   create: {
+  //     name: "Crew necks",
+  //     slug: "crew-necks",
+  //     parentId: leisurewear.id,
+  //     sortOrder: 1,
+  //     active: true,
+  //     coverImageUrl: crewFront("helios_crewneck_navy_royal_white.png"),
+  //   },
+  // });
 
   // ── Products ──
   await prisma.product.upsert({

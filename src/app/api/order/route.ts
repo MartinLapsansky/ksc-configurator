@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { authOptions } from "@/lib/auth/auth";
 import { orderRequestSchema } from "@/lib/validation/orderSchema";
-import { sendOrderNotifications } from "@/lib/email";
+import { sendOrderNotifications } from "@/lib/email/email";
 
 export async function POST(req: NextRequest) {
   try {

@@ -2,7 +2,7 @@
 
 import { hash } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
-import { getValidInvitation, consumeInvitation } from "@/lib/invitation";
+import { getValidInvitation, consumeInvitation } from "@/lib/invitations/invitation";
 import { registerSchema } from "@/features/auth/schemas/registerSchema";
 
 export type RegisterResult = {

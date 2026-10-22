@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { getServerSession } from "next-auth";
 import { z } from "zod";
 import { OrderStatus } from "@prisma/client";
-import { authOptions } from "@/lib/auth";
+import { authOptions } from "@/lib/auth/auth";
 import { prisma } from "@/lib/prisma";
 import { resolveCountyFilter } from "@/features/orders/utils/scopeOrders";
 import type { OrderRole } from "@/features/orders/utils/scopeOrders";

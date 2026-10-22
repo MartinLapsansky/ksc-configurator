@@ -1,6 +1,6 @@
 import { Resend } from "resend";
 import type { OrderNotificationRecipient } from "@/types/preview";
-import { formatOrderNumber } from "@/lib/orderNumber";
+import { formatOrderNumber } from "@/lib/cart/orderNumber";
 
 /**
  * Email notifications sent after an order/enquiry is created.

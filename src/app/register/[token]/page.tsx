@@ -1,4 +1,4 @@
-import { getValidInvitation } from "@/lib/invitation";
+import { getValidInvitation } from "@/lib/invitations/invitation";
 import RegisterForm from "@/features/auth/components/RegisterForm";
 
 type RegisterPageProps = {
