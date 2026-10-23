@@ -2,9 +2,9 @@ import type { CatalogFilterType } from "@/features/admin/types";
 
 export type AdminFilterParams = {
   page?: number;
-  type?: CatalogFilterType;
-  q?: string;
-  category?: string;
+  type?: CatalogFilterType;// all | categories | products
+  q?: string; //search text
+  category?: string; //category slug
 };
 
 /**

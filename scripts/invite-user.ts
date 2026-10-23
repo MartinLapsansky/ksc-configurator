@@ -64,3 +64,5 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
+
+//usage: npx ts-node scripts/invite-user.ts  -- someemail@gmail.com

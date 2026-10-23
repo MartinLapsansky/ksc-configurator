@@ -52,7 +52,7 @@ export default function BagDrawer() {
         </div>
 
         <p className="border-b border-gray-100 px-5 py-3 text-sm text-green-700">
-          Item successfully added to cart
+          Item successfully added to bag !
         </p>
 
         {items.length === 0 ? (

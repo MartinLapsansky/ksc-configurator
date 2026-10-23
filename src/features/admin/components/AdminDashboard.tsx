@@ -181,7 +181,7 @@ export default function AdminDashboard({
         <div className="rounded-lg border border-gray-200 bg-white p-8 text-center text-sm text-gray-500">
           No categories or products match your search.
         </div>
-      ) : (
+      ) : ( //ELSE IF THERE IS SOME CATEGORIES OR PRODUCTS
         <>
           {showCategories && (
             <section>
