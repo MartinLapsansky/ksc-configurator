@@ -1,3 +1,6 @@
+/**
+ * @jest-environment node
+ */
 import {ListBlobResultBlob} from "@vercel/blob";
 import {extractBlobPathname, findOrphanedBlobs} from "@/lib/blob/blobCleanup";
 

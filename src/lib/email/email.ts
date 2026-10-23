@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 import type { OrderNotificationRecipient } from "@/types/preview";
 import { formatOrderNumber } from "@/lib/cart/orderNumber";
+import { formatPhone } from "@/lib/phone/formatPhone";
 
 /**
  * Email notifications sent after an order/enquiry is created.
@@ -206,7 +207,7 @@ export async function sendOrderNotifications(
           `Name: ${order.firstName} ${order.lastName}`,
           `Email: ${order.email}`,
           `Organisation: ${order.organisation || "-"}`,
-          `Phone: ${order.phoneCountryCode} ${order.phoneNumber}`,
+          `Phone: ${formatPhone({ dialCode: order.phoneCountryCode, national: order.phoneNumber })}`,
           `County: ${order.county}`,
           `Country: ${order.country || "-"}`,
           `Quantity: ${order.quantity}`,

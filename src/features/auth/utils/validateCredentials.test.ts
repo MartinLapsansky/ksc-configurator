@@ -4,7 +4,7 @@ import validateCredentials, {
 
 describe("validatePassword", () => {
   it("returns null for a valid password", () => {
-    expect(validateCredentials("Password1")).toBeNull();
+    expect(validateCredentials("Password1*")).toBeNull();
   });
 
   it("rejects passwords shorter than 8 characters", () => {
@@ -26,7 +26,13 @@ describe("validatePassword", () => {
   });
 
   it("validates an 8-character password with uppercase and digit", () => {
-    expect(validateCredentials("Abcdefg1")).toBeNull();
+    expect(validateCredentials("Abcdefg1*")).toBeNull();
+  });
+
+  it("rejects passwords without a special character", () => {
+    expect(validateCredentials("Password1")).toBe(
+        "Password must contain at least one special character",
+    );
   });
 });
 

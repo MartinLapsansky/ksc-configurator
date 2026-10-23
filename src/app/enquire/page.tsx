@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/contexts/CartContext";
 import type { EnquiryFormInput } from "@/lib/validation/orderSchema";
 import { COUNTIES } from "@/features/orders/constants";
+import PhoneInput from "@/features/orders/components/PhoneInput";
 
 const ENQUIRY_SUBMITTED_KEY = "enquirySubmitted";
 
@@ -170,44 +171,24 @@ export default function EnquirePage() {
               </div>
 
               {/* Country code + Phone number */}
-              <div className="grid gap-4 md:grid-cols-[0.6fr_1.4fr]">
-                <div>
-                  <label htmlFor="phoneCountryCode" className={labelClass}>
-                    Country code<span className="text-red-500"> *</span>
+              <div>
+                <label htmlFor="phoneNumber" className={labelClass}>
+                  Phone number<span className="text-red-500"> *</span>
 
-                  </label>
-                  <select
-                    id="phoneCountryCode"
-                    name="phoneCountryCode"
-                    required
-                    lang="en"
-                    value={form.phoneCountryCode}
-                    onChange={handleChange}
-                    className={inputClass}
-                  >
-                    <option value="+353">🇮🇪 +353</option>
-                    <option value="+44">🇬🇧 +44</option>
-                    <option value="+1">🇺🇸 +1</option>
-                    <option value="+421">🇸🇰 +421</option>
-                    <option value="+420">🇨🇿 +420</option>
-                  </select>
-                </div>
-                <div>
-                  <label htmlFor="phoneNumber" className={labelClass}>
-                    Phone number<span className="text-red-500"> *</span>
-
-                  </label>
-                  <input
-                    id="phoneNumber"
-                    name="phoneNumber"
-                    type="tel"
-                    required
-                    lang="en"
-                    value={form.phoneNumber}
-                    onChange={handleChange}
-                    className={inputClass}
-                  />
-                </div>
+                </label>
+                <PhoneInput
+                  id="phoneNumber"
+                  countryCode={form.phoneCountryCode}
+                  phoneNumber={form.phoneNumber}
+                  required
+                  onChangeAction={({ phoneCountryCode, phoneNumber }) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      phoneCountryCode,
+                      phoneNumber,
+                    }))
+                  }
+                />
               </div>
 
               {/* Email address */}

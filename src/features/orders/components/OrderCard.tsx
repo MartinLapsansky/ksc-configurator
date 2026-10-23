@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import type { Order, ProductConfig } from "@/types/preview";
 import { formatOrderNumber } from "@/lib/cart/orderNumber";
+import PhoneNumberLink from "@/components/shared/PhoneNumberLink";
 import ProductConfigSummary from "./ProductConfigSummary";
 import OrderStatusBadge from "./OrderStatusBadge";
 import { updateOrderStatus } from "@/features/orders/actions/updateOrderStatus";
@@ -74,7 +75,12 @@ export default function OrderCard({ order }: OrderCardProps) {
             {order.firstName} {order.lastName}
           </h2>
           <p className="text-sm text-gray-600">
-            {order.email} · {order.phoneCountryCode} {order.phoneNumber}
+            {order.email} ·{" "}
+            <PhoneNumberLink
+              dialCode={order.phoneCountryCode}
+              national={order.phoneNumber}
+              className="text-gray-600 hover:text-black hover:underline"
+            />
           </p>
         </div>
 

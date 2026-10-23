@@ -9,6 +9,7 @@ module.exports = {
     "^@/(.*)$": "<rootDir>/src/$1",
     "\\.(png|jpg|jpeg|gif|webp|svg)$":
       "<rootDir>/src/test/assetStub.cjs",
+    "\\.css$": "<rootDir>/src/test/styleStub.cjs",
   },
   setupFilesAfterEnv: ["<rootDir>/src/test/jest.setup.ts"],
 };
