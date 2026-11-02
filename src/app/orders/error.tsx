@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Button from "@/components/shared/Button";
 
 export default function OrdersError({
   reset,
@@ -15,13 +16,14 @@ export default function OrdersError({
         <p className="mt-6 text-red-600">
           Failed to load orders. Please try again.
         </p>
-        <button
+        <Button
           type="button"
           onClick={() => reset()}
-          className="mt-4 rounded-md bg-black px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-600"
+          size="sm"
+          className="mt-4"
         >
           Try again
-        </button>
+        </Button>
       </div>
     </main>
   );

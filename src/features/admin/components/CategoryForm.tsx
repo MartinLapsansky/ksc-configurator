@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import ImageUploadField from "@/features/admin/components/ImageUploadField";
+import Button from "@/components/shared/Button";
 
 type CategoryOption = {
   id: string;
@@ -179,22 +180,19 @@ export default function CategoryForm({ categories, initial }: CategoryFormProps)
       {error && <p className="text-sm text-red-600">{error}</p>}
 
       <div className="flex justify-center gap-3">
-        <button
-          type="submit"
-          disabled={saving || deleting}
-          className="rounded-md cursor-pointer bg-black px-5 py-2.5 text-sm font-semibold text-white hover:bg-gray-600 disabled:opacity-50"
-        >
+        <Button type="submit" disabled={saving || deleting} size="sm">
           {saving ? "Saving…" : "Save category"}
-        </button>
+        </Button>
         {initial && (
-          <button
+          <Button
             type="button"
             onClick={handleDelete}
             disabled={deleting || saving}
-            className="rounded-md cursor-pointer bg-red-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-50"
+            variant="danger"
+            size="sm"
           >
             {deleting ? "Deleting…" : "Delete category"}
-          </button>
+          </Button>
         )}
       </div>
     </form>

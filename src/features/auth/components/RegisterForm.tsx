@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { registerWithInvitation } from "@/features/auth/actions/registerWithInvitation";
 import PasswordInput from "@/components/ui/PasswordInput";
 import validatePassword, {validateEmail} from "@/features/auth/utils/validateCredentials";
+import Button from "@/components/shared/Button";
 
 type RegisterFormProps = {
   email: string;
@@ -133,10 +134,11 @@ export default function RegisterForm({ email, token }: RegisterFormProps) {
           {error && <p className="text-sm text-red-600">{error}</p>}
 
           <div className="pt-2 text-center">
-            <button
+            <Button
               type="submit"
               disabled={isLoading}
-              className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-md bg-[#008DD2] px-4 py-2 font-semibold text-white transition-colors hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-60"
+              variant="brand"
+              size="sm"
             >
               {isLoading && (
                 <span
@@ -145,7 +147,7 @@ export default function RegisterForm({ email, token }: RegisterFormProps) {
                 />
               )}
               {isLoading ? "Creating account..." : "Create account"}
-            </button>
+            </Button>
           </div>
         </form>
       </div>

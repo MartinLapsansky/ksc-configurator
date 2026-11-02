@@ -1,13 +1,51 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import Button from "@/components/shared/Button";
+
+const ENQUIRY_SUBMITTED_KEY = "enquirySubmitted";
+const ENQUIRY_SUCCESS_KEY = "enquirySuccess";
+
+type EnquirySuccessData = {
+  firstName: string;
+  lastName: string;
+  orderNumber: number;
+};
+
+function readEnquirySuccess(): EnquirySuccessData | null {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  const raw = window.sessionStorage.getItem(ENQUIRY_SUCCESS_KEY);
+
+  if (!raw) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(raw) as EnquirySuccessData;
+  } catch {
+    return null;
+  }
+}
 
 export default function EnquireSuccessPage() {
   const router = useRouter();
+  const [successData] = useState<EnquirySuccessData | null>(() =>
+    readEnquirySuccess(),
+  );
+
+  const customerName =
+    [successData?.firstName, successData?.lastName]
+      .filter(Boolean)
+      .join(" ")
+      .trim();
 
   const handleContinueBrowsing = () => {
-    sessionStorage.removeItem("enquirySubmitted");
+    sessionStorage.removeItem(ENQUIRY_SUBMITTED_KEY);
+    sessionStorage.removeItem(ENQUIRY_SUCCESS_KEY);
     router.push("/");
   };
 
@@ -19,18 +57,31 @@ export default function EnquireSuccessPage() {
             Enquiry sent successfully
           </h1>
 
-          <p className="text-base text-gray-600">
-            Your enquiry was sent successfully, please wait until our sales
-            representatives will process this order.
-          </p>
+          <div className="space-y-4 text-base text-gray-600">
+            <p>Hi {customerName},</p>
 
-          <button
-            type="button"
-            onClick={handleContinueBrowsing}
-            className="inline-flex items-center justify-center rounded-md bg-black px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-          >
+            <p>
+              Thank you for submitting your quote request through Customizeit.
+              {successData?.orderNumber
+                ? ` Your reference number is ${successData.orderNumber}.`
+                : ""}
+            </p>
+
+            <p>
+              Our sales team is currently reviewing your request and will be in
+              contact shortly.
+            </p>
+
+            <p>
+              Kind regards,
+              <br />
+              The KCS Sales Team
+            </p>
+          </div>
+
+          <Button type="button" onClick={handleContinueBrowsing} size="sm">
             Continue browsing
-          </button>
+          </Button>
         </div>
       </div>
     </main>

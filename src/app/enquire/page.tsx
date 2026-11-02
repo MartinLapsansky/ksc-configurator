@@ -6,12 +6,13 @@ import { useCart } from "@/contexts/CartContext";
 import type { EnquiryFormInput } from "@/lib/validation/orderSchema";
 import { COUNTIES } from "@/features/orders/constants";
 import PhoneInput from "@/features/orders/components/PhoneInput";
+import Button from "@/components/shared/Button";
 
 const ENQUIRY_SUBMITTED_KEY = "enquirySubmitted";
 
 export default function EnquirePage() {
   const router = useRouter();
-  const { items, totalQuantity, clearCart } = useCart();
+  const { items, clearCart } = useCart();
 
   useEffect(() => {
     if (sessionStorage.getItem(ENQUIRY_SUBMITTED_KEY) === "true") {
@@ -28,7 +29,7 @@ export default function EnquirePage() {
     phoneCountryCode: "+353",
     phoneNumber: "",
     organisation: "",
-    quantity: totalQuantity > 0 ? String(totalQuantity) : "",
+    quantity: "",
     message: "",
   });
 
@@ -66,7 +67,16 @@ export default function EnquirePage() {
       const data = await response.json();
       console.log("Response:", data);
 
+      const order = data.data;
       sessionStorage.setItem(ENQUIRY_SUBMITTED_KEY, "true");
+      sessionStorage.setItem(
+        "enquirySuccess",
+        JSON.stringify({
+          firstName: order.firstName,
+          lastName: order.lastName,
+          orderNumber: order.orderNumber,
+        }),
+      );
       clearCart();
       router.replace("/enquire/success");
     } catch (error) {
@@ -260,12 +270,9 @@ export default function EnquirePage() {
               </div>
 
               <div className="flex justify-center pt-2">
-                <button
-                  type="submit"
-                  className="inline-flex items-center rounded-md cursor-pointer bg-black px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                >
+                <Button type="submit" size="sm">
                   Submit
-                </button>
+                </Button>
               </div>
             </form>
           </section>

@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useDebounce } from "@/hooks/useDebounce";
 import { buildAdminHref } from "@/features/admin/utils/buildAdminHref";
+import Button from "@/components/shared/Button";
 import type {
   AdminCategory,
   AdminProduct,
@@ -187,12 +188,9 @@ export default function AdminDashboard({
             <section>
               <div className="mb-3 flex items-center justify-between">
                 <h2 className="text-xl font-bold text-black">Categories</h2>
-                <Link
-                  href="/admin/categories/new"
-                  className="rounded-md bg-black px-4 py-2 text-sm font-semibold text-white hover:bg-gray-600"
-                >
+                <Button href="/admin/categories/new" size="sm">
                   New category
-                </Link>
+                </Button>
               </div>
 
               <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white">
@@ -301,12 +299,9 @@ export default function AdminDashboard({
             <section>
               <div className="mb-3 flex items-center justify-between">
                 <h2 className="text-xl font-bold text-black">Products</h2>
-                <Link
-                  href="/admin/products/new"
-                  className="rounded-md bg-black px-4 py-2 text-sm font-semibold text-white hover:bg-gray-600"
-                >
+                <Button href="/admin/products/new" size="sm">
                   New product
-                </Link>
+                </Button>
               </div>
 
               <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white">

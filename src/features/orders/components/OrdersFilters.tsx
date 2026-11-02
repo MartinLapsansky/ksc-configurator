@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { ORDER_STATUSES, ORDER_STATUS_LABELS } from "@/features/orders/constants";
+import Button from "@/components/shared/Button";
 
 type OrdersFiltersProps = {
   from: string;
@@ -62,13 +63,14 @@ export default function OrdersFilters({ from, status }: OrdersFiltersProps) {
         </select>
       </label>
 
-      <button
+      <Button
         type="button"
         onClick={resetFilters}
-        className="rounded-md border border-gray-300 px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-100"
+        variant="outline"
+        size="sm"
       >
         Reset
-      </button>
+      </Button>
     </div>
   );
 }

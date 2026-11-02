@@ -2,6 +2,7 @@
 
 import React, { useRef, useState } from "react";
 import Image from "next/image";
+import Button from "@/components/shared/Button";
 
 type UploadedAsset = {
   url: string;
@@ -136,14 +137,15 @@ export default function ImageAssetUploader({
         persistent — paste it into the definition JSON.
       </p>
 
-      <button
+      <Button
         type="button"
         onClick={() => inputRef.current?.click()}
         disabled={uploading}
-        className="mt-3 rounded-md cursor-pointer bg-black px-4 py-2 text-sm font-semibold text-white hover:bg-gray-600 disabled:opacity-50"
+        size="sm"
+        className="mt-3"
       >
         {uploading ? "Uploading…" : "Upload images"}
-      </button>
+      </Button>
       <input
         ref={inputRef}
         type="file"

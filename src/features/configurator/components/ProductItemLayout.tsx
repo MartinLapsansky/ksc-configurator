@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import Button from "@/components/shared/Button";
 
 type ProductItemLayoutProps = {
   title: string;
@@ -86,13 +87,9 @@ const ProductItemLayout: React.FC<ProductItemLayoutProps> = ({
         {preview}
         <div className="flex flex-1 justify-center items-center">
           <div className="mt-3 h-15 flex md:justify-center items-center">
-            <button
-              type="button"
-              onClick={onAddToBag}
-              className="inline-flex items-center cursor-pointer rounded-md bg-black px-5 py-2.5 text-xl font-semibold text-white shadow-sm hover:bg-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-            >
+            <Button type="button" onClick={onAddToBag} size="lg">
               Add to bag
-            </button>
+            </Button>
           </div>
         </div>
       </div>

@@ -1,12 +1,12 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBagShopping, faMinus, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useCart } from "@/contexts/CartContext";
 import { getProductTypeLabel, getSelectedColorName } from "@/lib/cart/cart";
 import ProductConfigThumbnail from "@/components/shared/ProductConfigThumbnail";
+import Button from "@/components/shared/Button";
 
 export default function CheckoutPage() {
   const { items, totalItems, setQuantity, removeItem } = useCart();
@@ -32,12 +32,9 @@ export default function CheckoutPage() {
               className="h-16 w-16 text-gray-300"
             />
             <p className="text-lg text-gray-600">Your bag is empty.</p>
-            <Link
-              href="/"
-              className="inline-flex items-center rounded-md bg-black px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-600"
-            >
+            <Button href="/" size="sm">
               Continue browsing
-            </Link>
+            </Button>
           </div> //else map all products in cart
         ) : (
           <>
@@ -124,18 +121,18 @@ export default function CheckoutPage() {
             </ul>
 
             <div className="mt-8 flex flex-col gap-4 border-t border-gray-200 pt-6 sm:flex-row sm:items-center sm:justify-between">
-              <Link
-                  href="/"
-                  className="inline-flex w-full items-center justify-center whitespace-nowrap rounded-md bg-black px-8 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-gray-600 sm:w-auto"
+              <Button
+                href="/"
+                className="w-full px-8 py-3 whitespace-nowrap sm:w-auto"
               >
-              Continue shopping
-              </Link>
-              <Link
+                Continue shopping
+              </Button>
+              <Button
                 href="/enquire"
-                className="inline-flex w-full items-center justify-center whitespace-nowrap rounded-md bg-black px-8 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-gray-600 sm:w-auto"
+                className="w-full px-8 py-3 whitespace-nowrap sm:w-auto"
               >
                 Enquiry
-              </Link>
+              </Button>
 
             </div>
           </>

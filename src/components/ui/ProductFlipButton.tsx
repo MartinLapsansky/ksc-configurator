@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Button from "@/components/shared/Button";
 
 type ProductFlipButtonProps = {
   isBackView: boolean;
@@ -13,10 +14,12 @@ const ProductFlipButton: React.FC<ProductFlipButtonProps> = ({
 }) => {
   return (
     <div className="mt-3 flex justify-center">
-      <button
+      <Button
         type="button"
         onClick={onToggle}
-        className="inline-flex items-center gap-2 rounded-md border border-gray-400 bg-gray-700 px-4 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-gray-600"
+        variant="secondary"
+        size="sm"
+        className="py-1.5"
       >
         <span
           className={`inline-block transition-transform ${
@@ -26,7 +29,7 @@ const ProductFlipButton: React.FC<ProductFlipButtonProps> = ({
           ↺
         </span>
         <span>{isBackView ? "Show front" : "Show back"}</span>
-      </button>
+      </Button>
     </div>
   );
 };

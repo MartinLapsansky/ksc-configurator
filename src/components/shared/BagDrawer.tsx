@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBagShopping,
@@ -12,6 +11,7 @@ import {
 import { useCart } from "@/contexts/CartContext";
 import { getProductTypeLabel, getSelectedColorName } from "@/lib/cart/cart";
 import ProductConfigThumbnail from "@/components/shared/ProductConfigThumbnail";
+import Button from "@/components/shared/Button";
 
 export default function BagDrawer() {
   const { items, totalItems, isBagOpen, closeBag, setQuantity, removeItem } =
@@ -129,13 +129,13 @@ export default function BagDrawer() {
           <p className="mb-4 text-base font-semibold text-black">
             Total items: {totalItems}
           </p>
-          <Link
+          <Button
             href="/checkout"
             onClick={closeBag}
-            className="inline-flex w-full items-center justify-center rounded-md bg-black px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-gray-600"
+            className="w-full py-3"
           >
             View bag and checkout
-          </Link>
+          </Button>
         </div>
       </aside>
     </>

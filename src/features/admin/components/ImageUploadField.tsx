@@ -2,6 +2,7 @@
 
 import React, { useRef, useState } from "react";
 import Image from "next/image";
+import Button from "@/components/shared/Button";
 
 type ImageUploadFieldProps = {
   label: string;
@@ -64,14 +65,16 @@ export default function ImageUploadField({
           placeholder="/products/... or https://..."
           className="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-black focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
         />
-        <button
+        <Button
           type="button"
           onClick={() => inputRef.current?.click()}
           disabled={uploading}
-          className="shrink-0 rounded-md border border-gray-300 bg-gray-50 px-3 py-2 text-xs font-medium text-black hover:bg-gray-100 disabled:opacity-50"
+          variant="outline"
+          size="sm"
+          className="shrink-0 px-3 py-2 text-xs font-medium"
         >
           {uploading ? "Uploading…" : "Upload"}
-        </button>
+        </Button>
         <input
           ref={inputRef}
           type="file"

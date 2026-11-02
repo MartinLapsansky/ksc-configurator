@@ -5,6 +5,7 @@ import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import PasswordInput from "@/components/ui/PasswordInput";
+import Button from "@/components/shared/Button";
 
 export default function SignInForm() {
 
@@ -99,10 +100,11 @@ export default function SignInForm() {
                     </div>
 
                     <div className="pt-2 text-center">
-                        <button
+                        <Button
                             type="submit"
                             disabled={isLoading}
-                            className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-md bg-[#008DD2] px-4 py-2 font-semibold text-white transition-colors hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-60"
+                            variant="brand"
+                            size="sm"
                         >
                             {isLoading && (
                                 <span
@@ -111,7 +113,7 @@ export default function SignInForm() {
                                 />
                             )}
                             {isLoading ? "Logging in..." : "Log in"}
-                        </button>
+                        </Button>
                     </div>
                 </form>
             </div>

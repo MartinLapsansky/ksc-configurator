@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { COUNTIES, type County } from "@/features/orders/constants";
+import Button from "@/components/shared/Button";
 
 export type ManagerUser = {
   id: string;
@@ -102,14 +103,14 @@ export default function ManagerCountyManager({
                   {user.email} · {user.role}
                 </p>
               </div>
-              <button
+              <Button
                 type="button"
                 onClick={() => save(user)}
                 disabled={savingId === user.id || !isDirty(user)}
-                className="rounded-md bg-black px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-gray-600 disabled:cursor-not-allowed disabled:bg-gray-300"
+                size="sm"
               >
                 {savingId === user.id ? "Saving…" : "Save"}
-              </button>
+              </Button>
             </div>
 
             <div className="flex flex-wrap gap-2">
