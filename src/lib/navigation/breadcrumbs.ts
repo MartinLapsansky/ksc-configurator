@@ -12,16 +12,17 @@ export interface BreadcrumbEntry {
  * `titleCase` below. Adding new products (even hundreds of jerseys) does not
  * require touching this file.
  */
-const SEGMENT_LABELS: Record<string, string> = {
-  gaa: "GAA",
-  kcs: "KCS",
-};
+const ACRONYMS = new Set(["gaa", "kcs", "lgfa"]);
+
 
 function titleCase(segment: string): string {
   return segment
     .split("-")
     .filter(Boolean)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .map((word) => {
+      const normalized = word.toLowerCase()
+    return ACRONYMS.has(normalized) ? normalized.toUpperCase() : word.charAt(0).toUpperCase() + word.slice(1)
+  })
     .join(" ");
 }
 
@@ -40,7 +41,7 @@ export function getBreadcrumbItems(pathname: string): BreadcrumbEntry[] {
 
   segments.forEach((segment, index) => {
     items.push({
-      label: SEGMENT_LABELS[segment] ?? titleCase(segment),
+      label: titleCase(segment),
       href: `/${segments.slice(0, index + 1).join("/")}`,
     });
   });
