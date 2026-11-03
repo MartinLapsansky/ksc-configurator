@@ -270,7 +270,7 @@ export default function EnquirePage() {
               </div>
 
               <div className="flex justify-center pt-2">
-                <Button type="submit" size="sm">
+                <Button>
                   Submit
                 </Button>
               </div>
