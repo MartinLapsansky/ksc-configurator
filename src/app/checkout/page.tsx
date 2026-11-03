@@ -16,7 +16,7 @@ export default function CheckoutPage() {
       <div className="mx-auto max-w-4xl rounded-lg bg-white p-6 shadow-sm md:p-8">
         <div className="flex items-center justify-between gap-4">
           <h1 className="text-2xl font-bold tracking-tight text-black">
-            Checkout{" "}
+            Your designs{" "}
             <span className="text-gray-500">
               ({totalItems} {totalItems === 1 ? "item" : "items"})
             </span>
@@ -81,6 +81,16 @@ export default function CheckoutPage() {
                         <FontAwesomeIcon icon={faXmark} className="h-5 w-5" />
                       </button>
                     </div>
+
+                    {/* Delete — desktop: in the trailing column */}
+                    <button
+                        type="button"
+                        aria-label={`Remove ${item.config.productName}`}
+                        onClick={() => removeItem(item.id)}
+                        className="hidden h-8 w-8 items-center justify-center justify-self-end rounded-md text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600 md:col-start-3 md:flex"
+                    >
+                      <FontAwesomeIcon icon={faXmark} className="h-5 w-5" />
+                    </button>
 
                     {/*/!* Quantity *!/*/}
                     {/*<div className="flex items-center justify-center gap-3">*/}

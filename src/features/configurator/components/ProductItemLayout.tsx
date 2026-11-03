@@ -88,7 +88,7 @@ const ProductItemLayout: React.FC<ProductItemLayoutProps> = ({
         {preview}
         <div className="flex flex-1 flex-col items-center justify-center gap-2 pt-3">
           <Button type="button" onClick={onAddToBag} size="lg">
-            Submit design
+            Submit Design
           </Button>
           <TermsAndConditionsDisclosure />
         </div>

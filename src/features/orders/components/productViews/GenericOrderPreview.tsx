@@ -62,13 +62,15 @@ export default function GenericOrderPreview({
         }
         className="relative mx-auto aspect-4/5 w-full max-w-sm overflow-hidden rounded-xl bg-slate-50"
         canvasClassName="pointer-events-none absolute inset-0 h-full w-full"
-      />
-        {productConfig.productName && definition.overlays.back && (
-            <ProductFlipButton
-                isBackView={isBackView}
-                onToggle={() => setIsBackView((prev) => !prev)}
-            />
-        )}
+      >
+          {productConfig.productName && definition.overlays.back && (
+              <ProductFlipButton
+                  isBackView={isBackView}
+                  onToggle={() => setIsBackView((prev) => !prev)}
+              />
+          )}
+      </ProductCanvas>
+
 
     </div>
   );

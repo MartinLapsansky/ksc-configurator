@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 
 type ButtonSize = "sm" | "md" | "lg";
-type ButtonVariant = "primary" | "danger" | "brand" | "secondary" | "outline";
+type ButtonVariant = "primary" | "danger" | "brand" | "secondary" | "outline" | "information";
 
 const sizeClasses: Record<ButtonSize, string> = {
   sm: "px-2 py-2 md:px-6 py-2.5 text-sm",
@@ -16,6 +16,7 @@ const variantClasses: Record<ButtonVariant, string> = {
   brand: "bg-[#008DD2] text-white shadow-sm hover:bg-green-700",
   secondary: "border border-gray-400 bg-gray-700 text-white shadow-sm hover:bg-gray-600",
   outline: "border border-gray-300 bg-white text-gray-700 hover:bg-gray-100",
+  information: "border border-gray-300 bg-transparent text-gray-700 hover:bg-gray-100",
 };
 
 const baseClasses =

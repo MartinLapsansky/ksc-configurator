@@ -4,6 +4,7 @@ import React, {useEffect, useId, useRef, useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { TERMS_AND_CONDITIONS_PARAGRAPHS } from "@/features/configurator/constants";
+import Button from "@/components/shared/Button";
 
 /**
  * Collapsible "Terms & Conditions" disclosure shown under the Submit button.
@@ -28,22 +29,23 @@ export default function TermsAndConditionsDisclosure() {
     },[isOpen])
 
   return (
-    <div className="flex w-full max-w-sm flex-col items-center">
-      <button
+    <div className="flex w-full max-w-sm flex-col items-center mt-5 md:max-w-2xl">
+      <Button
+        variant="information"
+        size="sm"
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
         aria-expanded={isOpen}
         aria-controls={panelId}
-        className="inline-flex items-center gap-2 text-sm font-medium text-gray-600 underline-offset-4 transition-colors hover:text-black hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
       >
         Terms &amp; Conditions
-          <FontAwesomeIcon
-              icon={faChevronDown}
-              className={`h-3 w-3 transition-transform duration-300 ${
-                  isOpen ? "rotate-180" : ""
-              }`}
-          />
-      </button>
+        <FontAwesomeIcon
+          icon={faChevronDown}
+          className={`h-3 w-3 transition-transform duration-300 ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
+      </Button>
 
       <div
         id={panelId}

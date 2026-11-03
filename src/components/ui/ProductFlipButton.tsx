@@ -13,7 +13,7 @@ const ProductFlipButton: React.FC<ProductFlipButtonProps> = ({
   onToggle,
 }) => {
   return (
-    <div className="absolute top-0.5 right-0.5 z-10 md:top-2 md:right-2">
+    <div className="absolute top-0.5 right-0.5 z-10 md:top-2 md:right-20">
       <Button
         type="button"
         onClick={onToggle}
@@ -28,7 +28,7 @@ const ProductFlipButton: React.FC<ProductFlipButtonProps> = ({
         >
           ↺
         </span>
-        <span>{isBackView ? "Show front" : "Show back"}</span>
+        <span>{isBackView ? "Show Front" : "Show Back"}</span>
       </Button>
     </div>
   );

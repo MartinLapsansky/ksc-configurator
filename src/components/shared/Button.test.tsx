@@ -37,6 +37,14 @@ describe("Button", () => {
     expect(link).toHaveAttribute("href", "/checkout");
   });
 
+  it("renders the information variant without a background and with a light border", () => {
+    render(<Button variant="information">Info</Button>);
+
+    const button = screen.getByRole("button", { name: "Info" });
+    expect(button).toHaveClass("bg-transparent");
+    expect(button).toHaveClass("border-gray-300");
+  });
+
   it("applies the unified 35px corner radius", () => {
     render(<Button>Save</Button>);
 
