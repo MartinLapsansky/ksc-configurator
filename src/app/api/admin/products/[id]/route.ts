@@ -5,6 +5,10 @@ import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth/adminAuth";
 import { productInputSchema } from "@/app/api/admin/schemas";
 import { CATALOG_CACHE_TAG } from "@/lib/catalog";
+import {
+  createProductVersion,
+  hasDefinitionChanged,
+} from "@/features/admin/services/productVersions";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -45,20 +49,52 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   }
 
   try {
-    const product = await prisma.product.update({
-      where: { id },
-      data: {
-        name: parsed.data.name,
-        slug: parsed.data.slug,
-        categoryId: parsed.data.categoryId,
-        active: parsed.data.active,
-        sortOrder: parsed.data.sortOrder,
-        hasBackView: parsed.data.hasBackView,
-        frontImageUrl: parsed.data.frontImageUrl ?? null,
-        backImageUrl: parsed.data.backImageUrl ?? null,
-        coverImageUrl: parsed.data.coverImageUrl ?? null,
-        definition: parsed.data.definition as Prisma.InputJsonValue,
-      },
+    const product = await prisma.$transaction(async (tx) => {
+      const existing = await tx.product.findUnique({
+        where: { id },
+        select: { definition: true },
+      });
+
+      const updated = await tx.product.update({
+        where: { id },
+        data: {
+          name: parsed.data.name,
+          slug: parsed.data.slug,
+          categoryId: parsed.data.categoryId,
+          active: parsed.data.active,
+          sortOrder: parsed.data.sortOrder,
+          hasBackView: parsed.data.hasBackView,
+          frontImageUrl: parsed.data.frontImageUrl ?? null,
+          backImageUrl: parsed.data.backImageUrl ?? null,
+          coverImageUrl: parsed.data.coverImageUrl ?? null,
+          definition: parsed.data.definition as Prisma.InputJsonValue,
+        },
+      });
+
+      if (
+        existing &&
+        hasDefinitionChanged(existing.definition, parsed.data.definition)
+      ) {
+        await createProductVersion(
+          {
+            productId: updated.id,
+            slug: updated.slug,
+            name: updated.name,
+            categoryId: updated.categoryId,
+            active: updated.active,
+            sortOrder: updated.sortOrder,
+            hasBackView: updated.hasBackView,
+            frontImageUrl: updated.frontImageUrl,
+            backImageUrl: updated.backImageUrl,
+            coverImageUrl: updated.coverImageUrl,
+            definition: parsed.data.definition as Prisma.InputJsonValue,
+            createdBy: admin.id,
+          },
+          tx,
+        );
+      }
+
+      return updated;
     });
 
     revalidateTag(CATALOG_CACHE_TAG, { expire: 0 });

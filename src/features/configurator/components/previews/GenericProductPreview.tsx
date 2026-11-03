@@ -80,14 +80,15 @@ const GenericProductPreview: React.FC<GenericProductPreviewProps> = ({
         }
       >
         {renderTexts()}
+          {hasBackView && (
+              <ProductFlipButton
+                  isBackView={isBackView}
+                  onToggle={() => setIsBackView((prev) => !prev)}
+              />
+          )}
       </ProductCanvas>
 
-      {hasBackView && (
-        <ProductFlipButton
-          isBackView={isBackView}
-          onToggle={() => setIsBackView((prev) => !prev)}
-        />
-      )}
+
     </div>
   );
 };

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useMemo, useState } from "react";
+import {useRouter} from "next/navigation";
 import { useCart } from "@/contexts/CartContext";
 import type { ProductConfig } from "@/types/preview";
 import type { CatalogProduct } from "@/features/configurator/types";
@@ -23,7 +24,8 @@ type ProductConfiguratorProps = {
  */
 
 export default function ProductConfigurator({ product }: ProductConfiguratorProps) {
-  const { addItem, openBag } = useCart();
+  const { addItem} = useCart();
+  const router = useRouter();
 
   const [prevDefinition, setPrevDefinition] = useState(product.definition);
 
@@ -49,8 +51,10 @@ export default function ProductConfigurator({ product }: ProductConfiguratorProp
     };
 
     addItem(config);
-    openBag();
-  }, [addItem, openBag, product, values]);
+    //openBag();
+    router.push("/checkout");
+
+  }, [addItem, product,router, values]);
 
 
   const totalDots = useMemo(() => Math.max(1, product.definition.pickers.length),

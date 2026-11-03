@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Button from "@/components/shared/Button";
+import TermsAndConditionsDisclosure from "@/features/configurator/components/TermsAndConditionsDisclosure";
 
 type ProductItemLayoutProps = {
   title: string;
@@ -57,7 +58,7 @@ const ProductItemLayout: React.FC<ProductItemLayoutProps> = ({
   }, [totalDots]);
 
   return (
-    <div className="flex min-h-150 flex-col gap-6 rounded-lg border border-gray-200 bg-gray-50 p-4 md:flex-row md:h-[90vh] mx-auto">
+    <div className="flex min-h-150 flex-col gap-6 rounded-lg border border-gray-200 bg-gray-50 p-4 md:flex-row md:min-h-[90vh] mx-auto">
       <div className="flex flex-col">
         <h1 className="flex mb-5 text-2xl text-black font-semibold">{title}</h1>
 
@@ -85,12 +86,11 @@ const ProductItemLayout: React.FC<ProductItemLayoutProps> = ({
 
       <div className="flex flex-col w-full">
         {preview}
-        <div className="flex flex-1 justify-center items-center">
-          <div className="mt-3 h-15 flex md:justify-center items-center">
-            <Button type="button" onClick={onAddToBag} size="lg">
-              Add to bag
-            </Button>
-          </div>
+        <div className="flex flex-1 flex-col items-center justify-center gap-2 pt-3">
+          <Button type="button" onClick={onAddToBag} size="lg">
+            Submit design
+          </Button>
+          <TermsAndConditionsDisclosure />
         </div>
       </div>
     </div>

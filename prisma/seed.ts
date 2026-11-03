@@ -207,110 +207,110 @@ const jerseyDefinition = {
 };
 
 // ── Soul Half Zip definition ──
-const halfZipDefinition = {
-  version: 1,
-  baseImage: { pickerKey: "bgColor" },
-  pickers: [
-    {
-      key: "bgColor",
-      type: "doubleColor",
-      label: "Main Body Colour",
-      options: [
-        {
-          id: "zip-black-graphite",
-          name: "Black / Graphite",
-          hex1: "#1a1a1a",
-          hex2: "#4a4a4a",
-          imageUrl: zipBase("zip_black_graphite.png"),
-        },
-        {
-          id: "zip-black-green",
-          name: "Black / Green",
-          hex1: "#1a1a1a",
-          hex2: "#008937",
-          imageUrl: zipBase("zip_black_green.png"),
-        },
-        {
-          id: "zip-black-red",
-          name: "Black / Red",
-          hex1: "#1a1a1a",
-          hex2: "#d4002a",
-          imageUrl: zipBase("zip_black_red.png"),
-        },
-        {
-          id: "zip-navy-green",
-          name: "Navy / Green",
-          hex1: "#0C4A9F",
-          hex2: "#008937",
-          imageUrl: zipBase("zip_navy_green.png"),
-        },
-        {
-          id: "zip-navy-maroon",
-          name: "Navy / Maroon",
-          hex1: "#0C4A9F",
-          hex2: "#800020",
-          imageUrl: zipBase("zip_navy_maroon.png"),
-        },
-        {
-          id: "zip-navy-royal",
-          name: "Navy / Royal",
-          hex1: "#0C4A9F",
-          hex2: "#4169E1",
-          imageUrl: zipBase("zip_navy_royal.png"),
-        },
-        {
-          id: "zip-navy-sky",
-          name: "Navy / Sky",
-          hex1: "#0C4A9F",
-          hex2: "#87CEEB",
-          imageUrl: zipBase("zip_navy_sky.png"),
-        },
-      ],
-    },
-    { key: "leftChestLogoUrl", type: "imageUpload", label: "Left Chest Logo" },
-    {
-      key: "rightChestLogoUrl",
-      type: "imageUpload",
-      label: "Right Chest Logo",
-    },
-  ],
-  overlays: {
-    front: [
-      {
-        key: "leftChest",
-        layerUrl: zipLayer("left_chest_logo_layer.png"),
-        source: { type: "upload", pickerKey: "leftChestLogoUrl" },
-      },
-      {
-        key: "rightChest",
-        layerUrl: zipLayer("right_chest_logo_layer.png"),
-        source: { type: "upload", pickerKey: "rightChestLogoUrl" },
-      },
-    ],
-  },
-};
+// const halfZipDefinition = {
+//   version: 1,
+//   baseImage: { pickerKey: "bgColor" },
+//   pickers: [
+//     {
+//       key: "bgColor",
+//       type: "doubleColor",
+//       label: "Main Body Colour",
+//       options: [
+//         {
+//           id: "zip-black-graphite",
+//           name: "Black / Graphite",
+//           hex1: "#1a1a1a",
+//           hex2: "#4a4a4a",
+//           imageUrl: zipBase("zip_black_graphite.png"),
+//         },
+//         {
+//           id: "zip-black-green",
+//           name: "Black / Green",
+//           hex1: "#1a1a1a",
+//           hex2: "#008937",
+//           imageUrl: zipBase("zip_black_green.png"),
+//         },
+//         {
+//           id: "zip-black-red",
+//           name: "Black / Red",
+//           hex1: "#1a1a1a",
+//           hex2: "#d4002a",
+//           imageUrl: zipBase("zip_black_red.png"),
+//         },
+//         {
+//           id: "zip-navy-green",
+//           name: "Navy / Green",
+//           hex1: "#0C4A9F",
+//           hex2: "#008937",
+//           imageUrl: zipBase("zip_navy_green.png"),
+//         },
+//         {
+//           id: "zip-navy-maroon",
+//           name: "Navy / Maroon",
+//           hex1: "#0C4A9F",
+//           hex2: "#800020",
+//           imageUrl: zipBase("zip_navy_maroon.png"),
+//         },
+//         {
+//           id: "zip-navy-royal",
+//           name: "Navy / Royal",
+//           hex1: "#0C4A9F",
+//           hex2: "#4169E1",
+//           imageUrl: zipBase("zip_navy_royal.png"),
+//         },
+//         {
+//           id: "zip-navy-sky",
+//           name: "Navy / Sky",
+//           hex1: "#0C4A9F",
+//           hex2: "#87CEEB",
+//           imageUrl: zipBase("zip_navy_sky.png"),
+//         },
+//       ],
+//     },
+//     { key: "leftChestLogoUrl", type: "imageUpload", label: "Left Chest Logo" },
+//     {
+//       key: "rightChestLogoUrl",
+//       type: "imageUpload",
+//       label: "Right Chest Logo",
+//     },
+//   ],
+//   overlays: {
+//     front: [
+//       {
+//         key: "leftChest",
+//         layerUrl: zipLayer("left_chest_logo_layer.png"),
+//         source: { type: "upload", pickerKey: "leftChestLogoUrl" },
+//       },
+//       {
+//         key: "rightChest",
+//         layerUrl: zipLayer("right_chest_logo_layer.png"),
+//         source: { type: "upload", pickerKey: "rightChestLogoUrl" },
+//       },
+//     ],
+//   },
+// };
 
 async function main() {
-  const seedAdminPassword = process.env.SEED_ADMIN_PASSWORD;
+  // const seedAdminPassword = process.env.SEED_ADMIN_PASSWORD;
+  //
+  // if (!seedAdminPassword) {
+  //   throw new Error("SEED_ADMIN_PASSWORD must be set");
+  // }
+  //
+  // const hashedPassword = await hash(seedAdminPassword, 10);
+  //
+  // await prisma.user.upsert({
+  //   where: { email: "mbaca130@gmail.com" },
+  //   update: { name: "Admin", password: hashedPassword, role: "admin" },
+  //   create: {
+  //     email: "mbaca130@gmail.com",
+  //     password: hashedPassword,
+  //     name: "Admin",
+  //     role: "admin",
+  //   },
+  // });
 
-  if (!seedAdminPassword) {
-    throw new Error("SEED_ADMIN_PASSWORD must be set");
-  }
-
-  const hashedPassword = await hash(seedAdminPassword, 10);
-
-  await prisma.user.upsert({
-    where: { email: "mbaca130@gmail.com" },
-    update: { name: "Admin", password: hashedPassword, role: "admin" },
-    create: {
-      email: "mbaca130@gmail.com",
-      password: hashedPassword,
-      name: "Admin",
-      role: "admin",
-    },
-  });
-
-  // ── Categories ──
+  // // ── Categories ──
   const sportswear = await prisma.category.upsert({
     where: { slug: "sportswear" },
     update: {
@@ -327,24 +327,24 @@ async function main() {
       coverImageUrl: jerseyBase("jersey-purple.png"),
     },
   });
-
-  const leisurewear = await prisma.category.upsert({
-    where: { slug: "leisurewear" },
-    update: {
-      name: "Leisurewear",
-      sortOrder: 1,
-      active: true,
-      coverImageUrl: zipBase("zip_navy_royal.png"),
-    },
-    create: {
-      name: "Leisurewear",
-      slug: "leisurewear",
-      sortOrder: 1,
-      active: true,
-      coverImageUrl: zipBase("zip_navy_royal.png"),
-    },
-  });
-
+  //
+  // const leisurewear = await prisma.category.upsert({
+  //   where: { slug: "leisurewear" },
+  //   update: {
+  //     name: "Leisurewear",
+  //     sortOrder: 1,
+  //     active: true,
+  //     coverImageUrl: zipBase("zip_navy_royal.png"),
+  //   },
+  //   create: {
+  //     name: "Leisurewear",
+  //     slug: "leisurewear",
+  //     sortOrder: 1,
+  //     active: true,
+  //     coverImageUrl: zipBase("zip_navy_royal.png"),
+  //   },
+  // });
+  //
   const jerseys = await prisma.category.upsert({
     where: { slug: "jerseys" },
     update: {
@@ -361,25 +361,6 @@ async function main() {
       sortOrder: 0,
       active: true,
       coverImageUrl: jerseyBase("jersey-purple.png"),
-    },
-  });
-
-  const zipTops = await prisma.category.upsert({
-    where: { slug: "zip-tops" },
-    update: {
-      name: "Zip Tops",
-      parentId: leisurewear.id,
-      sortOrder: 0,
-      active: true,
-      coverImageUrl: zipBase("zip_navy_royal.png"),
-    },
-    create: {
-      name: "Zip Tops",
-      slug: "zip-tops",
-      parentId: leisurewear.id,
-      sortOrder: 0,
-      active: true,
-      coverImageUrl: zipBase("zip_navy_royal.png"),
     },
   });
 
@@ -422,27 +403,8 @@ async function main() {
     },
   });
 
-  await prisma.product.upsert({
-    where: { slug: "soul-half-zip" },
-    update: {
-      name: "Soul Half Zip",
-      categoryId: zipTops.id,
-      hasBackView: false,
-      coverImageUrl: zipBase("zip_navy_royal.png"),
-      definition: halfZipDefinition as Prisma.InputJsonValue,
-    },
-    create: {
-      slug: "soul-half-zip",
-      name: "Soul Half Zip",
-      categoryId: zipTops.id,
-      hasBackView: false,
-      coverImageUrl: zipBase("zip_navy_royal.png"),
-      definition: halfZipDefinition as Prisma.InputJsonValue,
-    },
-  });
 
-
-  console.log("Seeded auth user, categories and products.");
+  console.log("Seeded products.");
 }
 
 main()

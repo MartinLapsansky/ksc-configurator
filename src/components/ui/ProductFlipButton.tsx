@@ -13,11 +13,11 @@ const ProductFlipButton: React.FC<ProductFlipButtonProps> = ({
   onToggle,
 }) => {
   return (
-    <div className="mt-3 flex justify-center">
+    <div className="absolute top-0.5 right-0.5 z-10 md:top-2 md:right-2">
       <Button
         type="button"
         onClick={onToggle}
-        variant="secondary"
+        variant="outline"
         size="sm"
         className="py-1.5"
       >

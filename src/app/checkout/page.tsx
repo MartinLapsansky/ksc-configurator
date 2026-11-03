@@ -33,16 +33,16 @@ export default function CheckoutPage() {
             />
             <p className="text-lg text-gray-600">Your bag is empty.</p>
             <Button href="/" size="sm">
-              Continue browsing
+              Continue Designing
             </Button>
           </div> //else map all products in cart
         ) : (
           <>
             {/* Header row (hidden on mobile) */}
-            <div className="mt-8 hidden grid-cols-[1.4fr_1fr_auto_1fr_auto] gap-4 border-b border-gray-200 pb-3 text-sm font-semibold uppercase tracking-wide text-gray-500 md:grid">
+            <div className="mt-8 hidden grid-rows-[1.4fr_1fr_auto] gap-4 border-b border-gray-200 pb-3 text-sm font-semibold uppercase tracking-wide text-gray-500 md:grid">
               <span>Product</span>
               <span>Name</span>
-              <span className="text-center">Quantity</span>
+              {/*<span className="text-center">Quantity</span>*/}
               <span></span>
             </div>
 
@@ -51,70 +51,61 @@ export default function CheckoutPage() {
                 return (
                   <li
                     key={item.id}
-                    className="grid grid-cols-1 items-center gap-4 py-5 md:grid-cols-[1.4fr_1fr_auto_1fr_auto]"
+                    className="grid items-center gap-4 py-5 md:grid-cols-[1.4fr_1fr_auto]"
                   >
                     {/* Product */}
                     <div className="flex items-center gap-4">
                       <ProductConfigThumbnail
-                        config={item.config}
-                        sizeClassName="h-16 w-16"
+                          config={item.config}
+                          sizeClassName="h-16 w-16"
                       />
 
-                      <div>
+                      <div className="min-w-0 flex-1">
                         <p className="font-medium text-black">
                           {getProductTypeLabel(item.config)}
                         </p>
                         {getSelectedColorName(item.config) && (
-                          <p className="text-sm text-gray-500">
-                            {getSelectedColorName(item.config)}
-                          </p>
+                            <p className="text-sm text-gray-500">
+                              {getSelectedColorName(item.config)}
+                            </p>
                         )}
                       </div>
-                    </div>
 
-                    {/* Name */}
-                    <div>
-                      <p className="font-semibold text-black">
-                        {item.config.productName}
-                      </p>
-                    </div>
-
-                    {/* Quantity */}
-                    <div className="flex items-center justify-center gap-3">
+                      {/* Delete — mobile: at the end of the row */}
                       <button
-                        type="button"
-                        aria-label="Decrease quantity"
-                        onClick={() => setQuantity(item.id, item.quantity - 1)}
-                        className="flex h-8 w-8 items-center justify-center rounded-md border border-gray-300 text-gray-700 transition-colors hover:bg-gray-100"
-                      >
-                        <FontAwesomeIcon icon={faMinus} className="h-3 w-3" />
-                      </button>
-
-                      <span className="w-6 text-center text-base font-medium text-black tabular-nums">
-                        {item.quantity}
-                      </span>
-
-                      <button
-                        type="button"
-                        aria-label="Increase quantity"
-                        onClick={() => setQuantity(item.id, item.quantity + 1)}
-                        className="flex h-8 w-8 items-center justify-center rounded-md border border-gray-300 text-gray-700 transition-colors hover:bg-gray-100"
-                      >
-                        <FontAwesomeIcon icon={faPlus} className="h-3 w-3" />
-                      </button>
-                    </div>
-
-                    {/* Delete */}
-                    <div className="flex justify-end md:justify-center">
-                      <button
-                        type="button"
-                        aria-label={`Remove ${item.config.productName}`}
-                        onClick={() => removeItem(item.id)}
-                        className="flex h-8 w-8 items-center justify-center rounded-md text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                          type="button"
+                          aria-label={`Remove ${item.config.productName}`}
+                          onClick={() => removeItem(item.id)}
+                          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600 md:hidden"
                       >
                         <FontAwesomeIcon icon={faXmark} className="h-5 w-5" />
                       </button>
                     </div>
+
+                    {/*/!* Quantity *!/*/}
+                    {/*<div className="flex items-center justify-center gap-3">*/}
+                    {/*  <button*/}
+                    {/*    type="button"*/}
+                    {/*    aria-label="Decrease quantity"*/}
+                    {/*    onClick={() => setQuantity(item.id, item.quantity - 1)}*/}
+                    {/*    className="flex h-8 w-8 items-center justify-center rounded-md border border-gray-300 text-gray-700 transition-colors hover:bg-gray-100"*/}
+                    {/*  >*/}
+                    {/*    <FontAwesomeIcon icon={faMinus} className="h-3 w-3" />*/}
+                    {/*  </button>*/}
+
+                    {/*  <span className="w-6 text-center text-base font-medium text-black tabular-nums">*/}
+                    {/*    {item.quantity}*/}
+                    {/*  </span>*/}
+
+                    {/*  <button*/}
+                    {/*    type="button"*/}
+                    {/*    aria-label="Increase quantity"*/}
+                    {/*    onClick={() => setQuantity(item.id, item.quantity + 1)}*/}
+                    {/*    className="flex h-8 w-8 items-center justify-center rounded-md border border-gray-300 text-gray-700 transition-colors hover:bg-gray-100"*/}
+                    {/*  >*/}
+                    {/*    <FontAwesomeIcon icon={faPlus} className="h-3 w-3" />*/}
+                    {/*  </button>*/}
+                    {/*</div>*/}
                   </li>
                 );
               })}
@@ -125,13 +116,13 @@ export default function CheckoutPage() {
                 href="/"
                 className="w-full px-8 py-3 whitespace-nowrap sm:w-auto"
               >
-                Continue shopping
+                Continue Designing
               </Button>
               <Button
                 href="/enquire"
                 className="w-full px-8 py-3 whitespace-nowrap sm:w-auto"
               >
-                Enquiry
+                Enquire
               </Button>
 
             </div>

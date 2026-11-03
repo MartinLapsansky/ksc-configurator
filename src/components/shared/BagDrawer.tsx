@@ -134,7 +134,7 @@ export default function BagDrawer() {
             onClick={closeBag}
             className="w-full py-3"
           >
-            View bag and checkout
+            View design and enquire
           </Button>
         </div>
       </aside>
