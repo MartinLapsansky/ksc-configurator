@@ -1,6 +1,6 @@
 import React from "react";
-import { renderHook, act } from "@testing-library/react";
-import type { ProductConfig } from "@/types/preview";
+import { renderHook, act, waitFor } from "@testing-library/react";
+import type { CartItem, ProductConfig } from "@/types/preview";
 import { CartProvider, useCart } from "@/contexts/CartContext";
 
 const baseConfig: ProductConfig = {
@@ -14,6 +14,10 @@ const wrapper = ({ children }: { children: React.ReactNode }) => (
 );
 
 describe("useCart", () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
   it("initializes with an empty cart", () => {
     const { result } = renderHook(() => useCart(), { wrapper });
 
@@ -115,6 +119,68 @@ describe("useCart", () => {
     });
 
     expect(result.current.items).toEqual([]);
+  });
+
+  it("hydrates items from localStorage on mount", async () => {
+    const stored: CartItem[] = [
+      { id: "item-1", quantity: 2, config: baseConfig },
+    ];
+    localStorage.setItem("cart:items", JSON.stringify(stored));
+
+    const { result } = renderHook(() => useCart(), { wrapper });
+
+    await waitFor(() => {
+      expect(result.current.items).toHaveLength(1);
+    });
+
+    expect(result.current.items[0].id).toBe("item-1");
+    expect(result.current.items[0].quantity).toBe(2);
+    expect(result.current.totalItems).toBe(1);
+    expect(result.current.totalQuantity).toBe(2);
+  });
+
+  it("persists items to localStorage when the cart changes", async () => {
+    const { result } = renderHook(() => useCart(), { wrapper });
+
+    act(() => {
+      result.current.addItem(baseConfig);
+    });
+
+    await waitFor(() => {
+      const raw = localStorage.getItem("cart:items");
+      expect(raw).toBeTruthy();
+      expect(JSON.parse(raw as string)).toHaveLength(1);
+    });
+  });
+
+  it("clears localStorage when the cart is cleared", async () => {
+    const { result } = renderHook(() => useCart(), { wrapper });
+
+    act(() => {
+      result.current.addItem(baseConfig);
+    });
+
+    await waitFor(() => {
+      expect(JSON.parse(localStorage.getItem("cart:items") as string)).toHaveLength(1);
+    });
+
+    act(() => {
+      result.current.clearCart();
+    });
+
+    await waitFor(() => {
+      expect(JSON.parse(localStorage.getItem("cart:items") as string)).toHaveLength(0);
+    });
+  });
+
+  it("ignores corrupt localStorage data", async () => {
+    localStorage.setItem("cart:items", "not-json");
+
+    const { result } = renderHook(() => useCart(), { wrapper });
+
+    await waitFor(() => {
+      expect(result.current.items).toEqual([]);
+    });
   });
 
   it("throws when used outside the provider", () => {

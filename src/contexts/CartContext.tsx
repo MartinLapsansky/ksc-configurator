@@ -3,17 +3,23 @@
 import React, {
   createContext,
   useContext,
+  useEffect,
   useMemo,
   useReducer,
   useState,
 } from "react";
 import type { CartItem, ProductConfig } from "@/types/preview";
 
+const CART_STORAGE_KEY = "cart:items";
+
 type CartState = {
   items: CartItem[];
+  /** Becomes true once the client has hydrated from localStorage. */
+  hydrated: boolean;
 };
 
 type CartAction =
+  | { type: "hydrate"; items: CartItem[] }
   | { type: "addItem"; config: ProductConfig }
   | { type: "removeItem"; id: string }
   | { type: "setQuantity"; id: string; quantity: number }
@@ -49,8 +55,58 @@ function configKey(config: ProductConfig): string {
   return JSON.stringify(config);
 }
 
+/**
+ * Reads persisted cart items from `localStorage`. Returns an empty array when
+ * storage is unavailable (SSR) or the stored value is missing/corrupt.
+ */
+function readStoredCart(): CartItem[] {
+  if (typeof window === "undefined") {
+    return [];
+  }
+
+  try {
+    const raw = window.localStorage.getItem(CART_STORAGE_KEY);
+    if (!raw) {
+      return [];
+    }
+
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+
+    return parsed.filter(
+      (item): item is CartItem =>
+        item !== null &&
+        typeof item === "object" &&
+        typeof item.id === "string" &&
+        typeof item.quantity === "number" &&
+        item.config !== null &&
+        typeof item.config === "object",
+    );
+  } catch {
+    return [];
+  }
+}
+
+function writeStoredCart(items: CartItem[]): void {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  try {
+    window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+  } catch {
+    // Storage may be unavailable (private mode / quota). The cart still works
+    // in memory for the current session.
+  }
+}
+
 function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
+    case "hydrate":
+      return { items: action.items, hydrated: true };
+
     case "addItem": {
       const key = configKey(action.config);
       const existing = state.items.find(
@@ -102,7 +158,7 @@ function cartReducer(state: CartState, action: CartAction): CartState {
     }
 
     case "clearCart":
-      return { items: [] };
+      return { ...state, items: [] };
 
     default:
       return state;
@@ -112,8 +168,26 @@ function cartReducer(state: CartState, action: CartAction): CartState {
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [state, dispatch] = useReducer(cartReducer, { items: [] });
+  const [state, dispatch] = useReducer(cartReducer, {
+    items: [],
+    hydrated: false,
+  });
   const [isBagOpen, setIsBagOpen] = useState(false);
+
+  // Hydrate the cart from localStorage once on the client. This runs in an
+  // effect (rather than a lazy initializer) so the server-rendered HTML always
+  // matches the initial client render and there is no hydration mismatch.
+  useEffect(() => {
+    dispatch({ type: "hydrate", items: readStoredCart() });
+  }, []);
+
+  // Persist cart changes back to localStorage, but only after hydration so we
+  // never overwrite stored items with the empty initial state.
+  useEffect(() => {
+    if (state.hydrated) {
+      writeStoredCart(state.items);
+    }
+  }, [state.items, state.hydrated]);
 
   const value = useMemo<CartContextValue>(() => {
     const totalItems = state.items.length;
