@@ -57,6 +57,8 @@ const ProductItemLayout: React.FC<ProductItemLayoutProps> = ({
 
   }, [totalDots]);
 
+
+
   return (
     <div className="flex min-h-150 flex-col gap-6 rounded-lg border border-gray-200 bg-gray-50 p-4 md:flex-row md:min-h-[90vh] mx-auto">
       <div className="flex flex-col">
@@ -90,7 +92,7 @@ const ProductItemLayout: React.FC<ProductItemLayoutProps> = ({
           <Button type="button" onClick={onAddToBag} size="lg">
             Submit Design
           </Button>
-          <TermsAndConditionsDisclosure />
+          <TermsAndConditionsDisclosure  />
         </div>
       </div>
     </div>

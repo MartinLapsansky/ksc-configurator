@@ -11,20 +11,18 @@ import Button from "@/components/shared/Button";
  * Owns its open/closed state and animates the panel with a CSS grid-rows
  * transition so the text "rolls out" smoothly without an animation library.
  */
+
+
 export default function TermsAndConditionsDisclosure() {
   const [isOpen, setIsOpen] = useState(false);
   const panelId = useId();
   const panelRef = useRef<HTMLDivElement | null>(null)
 
     useEffect(() => {
-
         if (!isOpen) return;
-
-        const timeout = setTimeout(() => {
-            panelRef.current?.scrollIntoView({behavior: "smooth", block: "nearest"})
-        }, 300)
-
-        return () => clearTimeout(timeout)
+        setTimeout(() => {
+            panelRef.current?.scrollIntoView({behavior: "smooth", block: "end"})
+        },320)
 
     },[isOpen])
 
@@ -55,7 +53,7 @@ export default function TermsAndConditionsDisclosure() {
         }`}
       >
         <div className="min-h-0 overflow-hidden">
-          <div className="mt-3 max-h-64 overflow-y-auto rounded-lg border border-gray-200 bg-white p-4 text-sm leading-relaxed text-gray-700">
+          <div className="mt-3 rounded-lg border border-gray-200 bg-white p-4 text-sm leading-relaxed text-gray-700">
             {TERMS_AND_CONDITIONS_PARAGRAPHS.map((paragraph, index) => (
               <li key={index} className="mb-3 ml-2 last:mb-0">
                 {paragraph}

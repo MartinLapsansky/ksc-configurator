@@ -52,7 +52,7 @@ export default function EnquirePage() {
         body: JSON.stringify({
           form,
           items: items.map((item) => ({
-            quantity: item.quantity,
+            quantity: form.quantity,
             productConfig: item.config,
           })),
         }),

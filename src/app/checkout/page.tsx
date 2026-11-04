@@ -16,7 +16,7 @@ export default function CheckoutPage() {
       <div className="mx-auto max-w-4xl rounded-lg bg-white p-6 shadow-sm md:p-8">
         <div className="flex items-center justify-between gap-4">
           <h1 className="text-2xl font-bold tracking-tight text-black">
-            Your designs{" "}
+            Your Designs{" "}
             <span className="text-gray-500">
               ({totalItems} {totalItems === 1 ? "item" : "items"})
             </span>
@@ -31,30 +31,22 @@ export default function CheckoutPage() {
               icon={faBagShopping}
               className="h-16 w-16 text-gray-300"
             />
-            <p className="text-lg text-gray-600">Your bag is empty.</p>
+            <p className="text-lg text-gray-600">Your list is empty.</p>
             <Button href="/" size="sm">
               Continue Designing
             </Button>
           </div> //else map all products in cart
         ) : (
           <>
-            {/* Header row (hidden on mobile) */}
-            <div className="mt-8 hidden grid-rows-[1.4fr_1fr_auto] gap-4 border-b border-gray-200 pb-3 text-sm font-semibold uppercase tracking-wide text-gray-500 md:grid">
-              <span>Product</span>
-              <span>Name</span>
-              {/*<span className="text-center">Quantity</span>*/}
-              <span></span>
-            </div>
-
-            <ul className="divide-y divide-gray-100">
+            <ul className="divide-y divide-gray-100 mt-5">
               {items.map((item) => {
                 return (
                   <li
                     key={item.id}
-                    className="grid items-center gap-4 py-5 md:grid-cols-[1.4fr_1fr_auto]"
+                    className="grid items-center gap-4 py-5"
                   >
                     {/* Product */}
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-4 w-full">
                       <ProductConfigThumbnail
                           config={item.config}
                           sizeClassName="h-16 w-16"
@@ -71,26 +63,15 @@ export default function CheckoutPage() {
                         )}
                       </div>
 
-                      {/* Delete — mobile: at the end of the row */}
-                      <button
-                          type="button"
-                          aria-label={`Remove ${item.config.productName}`}
-                          onClick={() => removeItem(item.id)}
-                          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600 md:hidden"
-                      >
-                        <FontAwesomeIcon icon={faXmark} className="h-5 w-5" />
-                      </button>
-                    </div>
-
-                    {/* Delete — desktop: in the trailing column */}
                     <button
                         type="button"
                         aria-label={`Remove ${item.config.productName}`}
                         onClick={() => removeItem(item.id)}
-                        className="hidden h-8 w-8 items-center justify-center justify-self-end rounded-md text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600 md:col-start-3 md:flex"
+                        className="flex h-8 w-8 mr-5 items-center justify-center justify-self-end rounded-md text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600 md:flex"
                     >
                       <FontAwesomeIcon icon={faXmark} className="h-5 w-5" />
                     </button>
+                    </div>
 
                     {/*/!* Quantity *!/*/}
                     {/*<div className="flex items-center justify-center gap-3">*/}
